@@ -1,0 +1,228 @@
+<span class='mt-1 tag is-dark is-small is-vcentered ml-3' 
+    *ngIf='msg1.length > 0'>
+    {{msg1}} 
+</span>
+
+<div class='mt-3 '>
+  <span class='button is-info'
+        (click)='prevButClick()'
+  >  &#5176; prev</span> &nbsp;
+  <span class='button is-info'
+      (click)='nextButClick()'
+  > next &#5171;  </span> &nbsp;
+  <!-- <span class='button is-info'
+  (click)='filtButClick()'
+> Filter Group: {{filterBySubset}}  </span> &nbsp; -->
+  <span class='button is-info'
+     (click)='addButClick()'
+  > add  </span> &nbsp;
+
+  <span class='button is-info'
+    (click)='delButClick()'
+  > delete </span> &nbsp;
+
+  <span class='button is-info'
+    (click)='saveButClick()'
+  > save </span> &nbsp;
+</div>
+
+<div class='mt-3'>  
+<table class=' table has-background-success-light is-narrow'>
+  <tr>
+    <td><label>Question nbr: </label></td>
+    <td><input  disabled
+      class='has-background-success-light '
+      value= {{questionsIn2[qx].questNbr}}
+      size="4"
+      autocomplete="off"></td>
+  </tr>
+  <tr>
+<td><label>Sequence: </label>  &nbsp;
+    <span class='tag is-info is-clickable' 
+    (click)='ranSeqButClick(qx)'>
+     randomize</span></td>
+ <td><input  
+  class=' is-small '
+  value= {{questionsIn2[qx].questSeq}}
+  size="7"
+  (change)=questSeqChg($event,qx)              
+  autocomplete="off"></td>
+  </tr>
+  <tr>
+  <td><label>Pre-Question: </label></td>
+  <td><input  
+    class=' is-small '
+  value= {{questionsIn2[qx].preQuest}}
+  size="110"
+  (change)=preQuestChg($event,qx)              
+  autocomplete="off"> </td>
+  </tr>
+  <tr>
+  <td><label>Question: </label></td>
+  <td><input  
+    class=' is-small '
+    value= {{questionsIn2[qx].questTxt}}
+    size="110"
+    (change)=questTxtChg($event,qx)              
+    autocomplete="off"> </td>
+  </tr>
+  
+  <tr>
+    <td><label>Group: </label></td>
+    <td><input  
+       type='text'
+      class=' is-small '
+      value= {{questionsIn2[qx].subset}}
+       size="20"
+        (change)='subsetChg($event,qx)'            
+    autocomplete='off'> </td>
+    </tr>
+    <tr *ngIf='fullRuleWords.length > 0'>
+      <td><label>Rely on Scoreboard: </label></td>
+      <td><input disabled 
+        class=' is-small '
+        value= {{fullRuleWords}}
+         size="20">
+      </td>
+    </tr>
+    <!-- <tr>&nbsp;</tr> -->
+    <tr>
+    <td>Add to ScoreBoards:</td>
+    <td>
+      <input  size=20
+      class=' is-small'
+      value= {{questionsIn2[qx].accum[0]}}
+      (change)=questAccumChg($event,qx,0)              
+      autocomplete="off">  &nbsp;
+      
+    <input  size=20
+      class='is-small'
+      value= {{questionsIn2[qx].accum[1]}}
+      (change)=questAccumChg($event,qx,1)             
+      autocomplete="off"> &nbsp; 
+    <input  size=20
+        class=' is-small'
+        value= {{questionsIn2[qx].accum[2]}}
+        (change)=questAccumChg($event,qx,2)             
+        autocomplete="off">  
+  </td>
+  </tr>
+</table>
+
+<!-- <table class=' table has-background-success-light is-narrow'>
+  <tr><td>
+  <label>how many answer choices: </label>
+  <input  
+    class='input is-small '
+    type="number"
+    value= {{answerChoiceCount}}
+    size="1"
+    min="1" 
+    max="9" 
+    maxlength="2"
+    (change)=questAcaCountChg($event,qx)              
+    autocomplete="off"> 
+    </td></tr>
+</table> -->
+
+<table class=' mt-3 table has-background-info-light is-narrow'>
+  <thead>
+      <tr>
+      <td>Answer choice frame:</td>
+      <td><input  
+        class=' is-small '
+        value= {{questionsIn2[qx].acaFrame}}
+        size="45"
+        (change)=acaFrameChg($event,qx)              
+        autocomplete="off"></td> </tr>
+    <tr>
+      <th>Answer Choice</th>
+      <th>Points</th>
+      <td><button 
+        class='button is-info is-small'
+        (click)='addAnswerChoice()'  >
+        add row</button></td>
+        <th><button 
+          class='button is-info is-small'
+          (click)='setAnswerChoice13()'  >
+          set 1-3</button></th>
+        <th><button 
+          class='button is-info is-small'
+          (click)='setAnswerChoice15()'  >
+          set 1-5</button></th>
+        <th><button 
+          class='button is-info is-small'
+          (click)='setAnswerChoice18()'  >
+          set 1-8</button></th>
+    </tr>
+  </thead>
+  <tbody>
+<tr *ngFor="let a of questionsIn2[qx].aca; let ax=index" > 
+
+<td><input  
+  class=' is-small '
+  value= {{questionsIn2[qx].aca[ax]}}
+  size="15"
+  (change)=questAcaChg($event,qx,ax)              
+  autocomplete="off"> 
+</td>  
+  <td>
+  <input   
+  class=' is-small '
+  value= {{questionsIn2[qx].acaPointVals[ax]}}
+  size="2"
+  (change)=questAcaPointValChg($event,qx,ax)              
+  autocomplete="off">   
+</td>
+<td><button 
+  class='button is-info is-small'
+  (click)='delAnswerChoice(ax)'>
+  delete</button></td>
+</tr>
+  
+  </tbody>
+</table>
+</div>
+ 
+<!-- <button class='button is-info is-rounded is-small'>a</button>
+&#9644;&#9644;&#9644;&#9644;
+<button class='button is-info is-rounded is-small'>b</button>
+&#9644;&#9644;&#9644;&#9644;
+<button class='button is-info is-rounded is-small'>c</button>
+&#9620;&#9620;&#9620;&#9596;&#9596;&#9596;
+&#8866;&#8866;&#8866;
+<button class='button is-primary is-rounded is-small'>1</button> -->
+<br><br>
+<span id='htmlIdBottomOfPage'> </span>
+
+<!-- <section>
+  <div class='columns'>
+    <div class='column is-one-fifth'>
+      <div >Question Nbr:</div>
+      <div >Sequence:</div>
+      <div >Pre-Question:</div>
+    </div>
+    <div class='column is-four-fifths'>
+      <input  
+        class='input is-small '
+        value= 'da seq'
+        size="7"
+        (change)=questSeqChg($event,qx)              
+        autocomplete="off">
+        <input  
+          class='input is-small '
+          value= 'coolie2b'
+          size="22"
+          (change)=questSeqChg($event,qx)              
+          autocomplete="off"> 
+           <input  
+            class='input is-small '
+            value= 'coolie2c'
+            size="22"
+            (change)=questSeqChg($event,qx)              
+            autocomplete="off">
+
+    </div>
+  </div>
+</section> -->
+

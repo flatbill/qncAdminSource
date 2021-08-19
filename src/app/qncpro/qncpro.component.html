@@ -1,0 +1,120 @@
+
+<span class='tag is-dark is-small is-vcentered ml-3' 
+    *ngIf='msg1.length > 0'>
+    {{msg1}} 
+</span>
+
+
+ <table class='table  ml-3 mb-3'>
+  <thead> 
+    <th>Select &nbsp;&nbsp;&nbsp;&nbsp;</th>
+    <th>Nbr &nbsp;&nbsp;&nbsp;&nbsp;</th>
+    <th>Survey Name </th>
+    <th>&nbsp;</th>
+    <th>Invitation to Participants </th>
+    <!-- <th>Survey Status</th> -->
+  </thead>
+  <tbody>
+    <tr *ngFor='let i of qidsArray, index as ix'
+      id="qlink-{{ix}}"
+      class='has-background-success-light '
+      (click)='qidChosen(ix)'
+      (mouseover)="qidMouseOver(ix)" 
+      (mouseout)="qidMouseOut(ix)"
+  > 
+    <td *ngIf='i.qid!=qid && i.qidStatus=="active" ' >   &#10063;</td>   <!-- not selected -->
+    <td *ngIf='i.qidStatus=="inactive" ' >   &nbsp; </td>                <!-- not select-able -->
+    <td *ngIf='i.qid==qid' >   &#9989; </td>                             <!-- selected -->
+    <td> {{i.qid}}       </td>
+    <td> {{i.qName}}     </td>
+    <td> &nbsp;&nbsp; &nbsp; &nbsp;  </td> <!-- hack for table col spacing -->
+    <td class='mt-1 mb-1 tag is-info ' (click)='copyTxt(i.qid)'> Copy Invitation Link to Clipboard     </td>
+    <!-- <td> {{i.qidStatus}} </td> -->
+    </tr>
+  </tbody>
+</table>
+
+
+
+<div class='columns ml-3  mr-3 pt-6'>
+  <table class='column box mr-3 mb-3 has-background-info-light'>
+  <tbody>
+    <tr > 
+      <td class='is-pulled-right has-text-weight-semibold'>Subscriber Id: &nbsp;</td>
+      <td class='sss'>{{subscriberUserId}}</td> </tr>
+    <tr>
+        <td class='is-pulled-right has-text-weight-semibold'>Subscriber Name: &nbsp;</td>
+        <td class='sss'>{{subscriberUserName}}</td> 
+    </tr> 
+    <tr>
+      <td class='is-pulled-right has-text-weight-semibold'>Subscription Level: &nbsp;</td>
+      <td class='sss'>{{subscriberPlan}}</td> 
+  </tr> 
+  <tr>
+    <td class='is-pulled-right has-text-weight-semibold'>Good Until: &nbsp;</td>
+    <td class='sss'>{{subscriberPlanExpDateTxt}}</td> 
+</tr> 
+
+  </tbody>
+  </table>
+
+  <table class='column box mr-3 mb-3 has-background-info-light'>
+  <tbody>
+    <tr > 
+      <td class='is-pulled-right has-text-weight-semibold'>Team Member Id: &nbsp;</td>
+      <td class='sss'>{{teamMemberUserId}}</td> </tr>
+    <tr>
+        <td class='is-pulled-right has-text-weight-semibold'>Team Member Name: &nbsp;</td>
+        <td class='sss'>{{teamMemberUserName}}</td> 
+    </tr> 
+    <tr>
+      <td class='is-pulled-right'>  &nbsp;</td>
+      <td class='sss'> </td> 
+  </tr> 
+  <tr>
+    <td class='is-pulled-right'> &nbsp;</td>
+    <td class='sss'> </td> 
+</tr> 
+
+  </tbody>
+  </table>
+</div>
+
+<div *ngIf=showdevNotes class='box mt-3 ml-3 mr-3 has-background-danger-light'>
+  <textarea cols="130" rows="20" 
+  class=' has-background-danger-light'>
+        Hello from Profile component.
+        shows info about this subscriber.
+        shows info about this teamMember.  (the admin) (the user)
+        (for now, only one team member per subscriber)
+
+  subscriber (pays for Qnc, has a team of people)
+  list of surveys for a subscriber
+  list of teamMembers for a subscriber
+   
+  admin  (teamMember whose name is on this page)
+  sets up surveys
+  invites participants to take a specific survey
+  reviews survey results from a participant
+
+
+        show the survey list for this subscriber.
+        let him select a survey from the list.
+         
+        build querystring, based on his selection.
+        gotta block menu options until he selects a survey....
+        
+        part1 view my profile (the team member who works for the subscriber)
+        part2 update my profile (reset info about my profile)
+        part3 update my subscription someday
+        
+
+might need an auto email when he wants to reset password.
+
+for June 2021, maybe two subscribers:  digital Couch and bs 
+manually enter into fauna subscriber table.
+Ed is subscriber 1. 
+bs is subscriber 2.
+   </textarea>
+
+</div>

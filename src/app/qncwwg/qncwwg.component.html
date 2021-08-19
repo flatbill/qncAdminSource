@@ -1,0 +1,27 @@
+
+    <span class='tag is-dark is-small is-vcentered ml-3' 
+      *ngIf='msg1.length > 0'>
+      {{msg1}} 
+    </span>
+
+
+<table class='table is-fullwidth'>
+  <thead> 
+    <th>question count</th>
+    <th>group</th><th>&nbsp;</th>
+  </thead>
+  <tbody>
+    <tr *ngFor='let s of subsetArray, index as sx'
+      class='has-background-success-light'> 
+      <td><span class='tag is-small is-rounded'>&nbsp;{{s.qCount}}&nbsp;</span></td>
+      <td>{{s.subset}}</td>
+
+      <td>        
+       <button class='button is-small is-info' 
+             (click)=detailButClicked(s.subset,sx)> 
+          details 
+       </button> 
+    </td>
+    </tr>
+  </tbody>
+</table>

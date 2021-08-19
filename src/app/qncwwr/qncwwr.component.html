@@ -1,0 +1,33 @@
+    
+    <span class='tag is-dark is-small is-vcentered ml-3' 
+      *ngIf='msg1.length > 0'>
+      {{msg1}} 
+    </span>
+
+ <table class='table is-fullwidth'>
+   <thead> 
+ 
+     <th>questions</th>
+     <th>scoreboard</th>
+     <th>oper</th>
+     <th>thresh</th>
+     <th>will trigger group</th>
+
+   </thead>
+   <tbody>
+   <tr *ngFor='let r of rulesArray, index as rx'
+       class='has-background-success-light'> 
+       <td><span class='tag is-small is-rounded'>{{r.questCount}}</span></td>
+       <td>{{r.accum}}</td>
+       <td>{{r.oper}}</td>
+       <td>{{r.thresh}}</td>
+       <td>{{r.subset}}</td>
+       <td>        
+        <button class='button is-small is-info' 
+              (click)=detailButClicked(r)> 
+           details 
+        </button> 
+     </td>
+   </tr>
+   </tbody>
+ </table>

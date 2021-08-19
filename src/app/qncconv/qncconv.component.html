@@ -1,0 +1,26 @@
+<section >
+  
+    <div>
+       --- cncconv component ---
+       Convert json to quest arrays, upload to db
+       <br><br>
+   </div>
+
+  <input type='file' 
+       (change)= fileWasChosen($event)> 
+
+  <button class='button is-info'
+       (click)='massDeleteQuestAndRulesClicked()'>
+       mass delete questions & Rules
+  </button> &nbsp;
+
+  <button class='button is-info'
+    (click)='convertEd338ToDbLayout()'>
+    convert Ed338
+  </button> &nbsp;
+
+  <button class='button is-info'
+    (click)='writeNewDbTables()'>
+    Write New Questool Arrays to DB
+  </button>
+</section>

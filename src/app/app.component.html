@@ -1,0 +1,136 @@
+  
+<!-- <section *ngIf='showAppComponent'>
+  <div class='has-background-warning-light is-size-6 '>
+    {{title}}  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <span class='is-size-7'>
+      app.component.html &nbsp;&nbsp;&nbsp;&nbsp;
+      contains components: qnc wwg wwq wwqd
+    </span>
+  </div>
+</section> -->
+
+<app-qncmen *ngIf="showQncMen"
+  [authIn]='qncAuthorized'
+  [showMenButsIn]='menuButsAlive'
+  [showSurveyMenButsIn]='surveyMenuButsAlive'
+  [compTitleIn] = 'compTitle'
+  (wwqJumpOut)="showWwqFun($event)"
+  (wwgJumpOut)="showWwgFun($event)"
+  (wwrJumpOut)="showWwrFun($event)"
+  (wwiJumpOut)="showWwiFun($event)"
+  (wwuJumpOut)="showWwuFun($event)"
+  (wwsJumpOut)="showWwsFun($event)"
+  (proJumpOut)="showProFun($event)"
+  (wwsrJumpOut)="showWwsrFun($event)"
+>
+</app-qncmen>
+
+<app-qnc   *ngIf="showQnc" 
+  [subsetsIn]="subsetArray"
+  [questionsIn]="questArray"
+  [showQnc]="showQnc" 
+>
+</app-qnc>
+
+<app-qncpro *ngIf="showQncPro"
+  [subscriberInternalIdIn]='subscriberInternalId'
+  [subscriptionObjIn]='subscriptionObj'
+  [teamMemberObjIn]='teamMemberObj'
+  [custIn]='cust'
+  [qidIn]='qid'
+  [qidsArrayIn]='qidsArray'
+  (qidSelectOut)="qidSelected($event)"
+  (qidsArrayOut)="qidsArrayWasBuilt($event)"
+  (subscriptionObjOut)="subscriptionObjWasBuilt($event)"
+>
+</app-qncpro>
+
+<app-qncwwg   *ngIf="showQncWwg" 
+   [rulesIn]="rulesArray"
+   [questionsIn]="questArray"
+   [subsetsIn]="subsetArray"
+   (qncJumpOut)="showQncFun($event)"
+   (wwqJumpOut) = "showWwqFun($event)"
+   (wwrJumpOut) = "showWwrFun($event)"
+   (wwgdJumpOut) = "showWwgdFun($event)"
+   >
+</app-qncwwg>
+
+<app-qncwwgd *ngIf="showQncWwgd">
+</app-qncwwgd>
+
+<app-qncwwq  *ngIf="showQncWwq" 
+  [custIn]="cust"
+  [qidIn]="qid"
+  [subsetIn]="subset"
+  [subsetsQncWwq]="subsetsQncWwq"
+  [questionsIn]="questArray"
+  [questionsIn2]="questArray2"
+  [rulesIn]="rulesArray"
+  (wwqQuestOut)="setQuestFromWwqFun($event)"
+  (qncJumpOut)="showQncFun($event)"
+  (wwqdJumpOut)="showWwqdFun($event)"
+  (wwsJumpOut)="showWwsFun($event)"
+  (proJumpOut)="showProFun($event)"
+  (wwqQuestArray2Out)="setQuest2FromWwqFun($event)"
+> 
+</app-qncwwq>
+
+<app-qncwwqd   *ngIf="showQncWwqd" 
+  [custIn]="cust"
+  [qidIn]="qid"
+  [questionNbrIn]="daQuestion"
+  [questionsIn]="questArray"
+  [questionsIn2]="questArray2"
+  [rulesIn]="rulesArray"
+  [subsetsIn]="subsetArray"
+  (wwqJumpOut)="showWwqFun($event)"
+>
+</app-qncwwqd>
+
+<app-qncwwr *ngIf="showQncWwr" 
+  [questionsIn]="questArray"
+  [rulesIn]="rulesArray"
+  [subsetsIn]="subsetArray"
+  (qncJumpOut) = "showQncFun($event)"
+  (wwrdJumpOut) = "showWwrdFun($event)"
+>
+</app-qncwwr>
+
+<app-qncwwrd *ngIf="showQncWwrd" 
+  [rulesIn]="rulesArray"
+  (wwrJumpOut) = "showWwrFun($event)"
+>
+</app-qncwwrd>
+
+<app-qncwwi *ngIf="showQncWwi" 
+  [custIn]="cust"
+  [qidIn]="qid"
+  (qncJumpOut) = "showQncFun($event)"
+>
+</app-qncwwi>
+
+<app-qncwwu *ngIf="showQncWwu" 
+  [custIn]="cust"
+  [qidIn]="qid" 
+  (qncJumpOut) = "showQncFun($event)"
+>
+</app-qncwwu>
+
+<app-qncwws   *ngIf="showQncWws" 
+  [firstLoginIn] = 'firstLogin'
+  [authIn]='qncAuthorized'
+  (qncSetAuthOnOut) = "setAuthOnFun($event)"
+  (proJumpOut)="showProFun($event)"
+  (teamMemberObjOut)="teamMemberObjWasBuilt($event)"
+>
+</app-qncwws>
+
+<app-qncconv *ngIf="showQncConv" >
+</app-qncconv>
+
+<app-qncwwsr *ngIf="showQncWwsr"
+  [custIn]="cust"
+  [qidIn]="qid"
+>
+</app-qncwwsr>

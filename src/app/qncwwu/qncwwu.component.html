@@ -1,0 +1,44 @@
+   <span class='tag is-dark is-small is-vcentered ml-3' 
+   *ngIf='msg1.length > 0'>
+   {{msg1}} 
+ </span>
+
+ <table class='table is-fullwidth'>
+   <thead> 
+     <th>id</th>
+     <th>first name</th>
+     <th>last name</th>
+     <th>date time</th>
+     <th>status</th>
+     <th>lastQuestion</th>
+    <!-- blank th over buttons: -->
+    <th> </th>  
+    <th> </th>
+     
+   </thead>
+   <tbody>
+   <tr *ngFor='let u of usersArray, index as ux'
+       class='has-background-success-light'> 
+       <td>{{u.userId}}</td>
+       <td>{{u.firstName}}</td>
+       <td>{{u.lastName}}</td>
+       <td>{{u.localUserDateTime}}</td>
+       <td>{{u.status}}</td>
+       <td>{{u.priorQ}}</td>
+       <td>   
+        <button class='button is-small is-info' 
+        (click)=dnLoadButClicked(ux)> 
+          get csv
+        </button> 
+       </td>
+       <td>   
+        <button class='button is-small is-info' 
+        (click)=reportButClick(ux)> 
+          get report
+        </button> 
+       </td>
+
+   </tr>
+   </tbody>
+ </table>
+

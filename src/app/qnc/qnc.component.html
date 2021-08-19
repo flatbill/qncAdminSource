@@ -1,0 +1,71 @@
+  <div class='is-fullwidth has-background-warning is-size-5'> 
+    &nbsp; Questionnaire Admin qnc component ??alive??
+     <span class='is-size-5 pb-1 pt-1'>
+       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     </span>
+
+     <!-- <span>
+      <span class='tag is-small is-info m-1 is-clickable'(click)=jumpToWws() >my profile</span> 
+      <span class='tag is-small is-info m-1 is-clickable'(click)=jumpToWwq()>questions</span> 
+      <span class='tag is-small is-info m-1 is-clickable'(click)=jumpToWwg()>groups</span>  
+      <span class='tag is-small is-info m-1 is-clickable'(click)=jumpToWwr()>rules</span> 
+      <span class='tag is-small is-info m-1 is-clickable'(click)=jumpToWwi()>invitations</span> 
+      <span class='tag is-small is-info m-1 is-clickable'(click)=jumpToWwu()>users</span> 
+     </span> -->
+
+    <span class='button has-background-warning is-small is-pulled-right mb-6'
+        (click)='showHideHelp()'>
+      <span> help &#10068; </span>
+    </span>
+  </div> 
+
+
+
+<textarea name="" id="" cols="80" rows="20">
+ 
+ 
+todo
+
+6 chg qnc into a something else? screen.
+7 disable menu options until he signs on.
+8 intro/break/finish  ? just questions ? 
+9 wwi icode  
+10 chg wwu to real user list. 
+   gotta fetch users from fauna Db
+11 setup state (how far a user is, when taking test)
+13 sync arrays after user edits on detail screens.
+   when he does crud, 
+     gotta sync up QuestionsIn, RulesIn, SubsetsIn
+     gotta sync up fauna db tables 
+14 questionsIn, rulesIn, SubsetsIn --- same layout as fauna db
+   questArray, RulesArray, SubsetsArray === local shadow copies
+   only pass questionsIn, rulesIn, SubsetsIn when he navigates.
+   create shadow arrays from questionsIn, rulesIn, SubsetsIn 
+      when he navigates.
+15 gotta fix wwqd before cloning it to other detail screens.
+
+16 question setup: where a question can add to multiple scoreboards.
+17 change dev5 qNa to add to multiple scoreboards.
+18 question setup: optional generate random sequence within a round.
+19 test the concepts of dividing questions into rounds on-the-fly,
+   where each round can contain multiple groups.
+   after a round of questions is asked, all rules are evaluated,
+   to see which questions to ask in the next round.
+20 need add capability on wwq when there are not yet any questions.
+ 
+approach to admin:
+all lists show a grid. 
+lists have no rec or field edit-ability.
+a list item can be selected (details button)
+details button jumps to detail screen for this list.
+detail screen: a one-record edit screen, with prev next.
+
+wwqd issues.
+qid 2 has extra fauna questions.
+need to delete them 010 011.
+cant filter native fauna lists.
+need a work around.  ed's 338 questions
+are in the way of using native fauna.
+                           
+</textarea>

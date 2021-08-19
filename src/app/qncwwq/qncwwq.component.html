@@ -1,0 +1,99 @@
+
+<span class='tag is-dark is-small is-vcentered ml-3' 
+   *ngIf='msg1.length > 0'>
+{{msg1}} 
+</span>
+
+  <table class='table is-fullwidth'>
+    <thead >
+
+      <tr>
+      <th class='is-clickable' 
+        (click)="colHeadClicked('nbr')" >
+        <span>Number</span>  
+        <span *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
+          <span class='tag is-link is-light' (click)="colSort('questNbr','des')"> {{symArDn}} </span> 
+          <span class='tag is-link is-light' (click)="colSort('questNbr','asc')"> {{symArUp}} </span> 
+          <span class='tag is-link is-light' (click)="colFilt('questNbr','Nbr')"> {{symFilt}} </span>
+        </span> 
+      </th>
+
+    <th class='is-clickable'
+      (click)="colHeadClicked('seq')" > 
+      Sequence 
+        <div *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
+          <span class='tag is-link is-light' (click)="colSort('questSeq','des')"> {{symArDn}} </span> 
+          <span class='tag is-link is-light' (click)="colSort('questSeq','asc')"> {{symArUp}} </span> 
+          <span class='tag is-link is-light' (click)="colFilt('questSeq','Sequence')"  > {{symFilt}} </span> 
+        </div> 
+    </th>
+
+      <th class='is-clickable'
+        (click)="colHeadClicked('grp')" >
+        Group
+        <div *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
+          <span class='tag is-link is-light' (click)="colSort('subset','des')"> {{symArDn}} </span> 
+          <span class='tag is-link is-light' (click)="colSort('subset','asc')"> {{symArUp}} </span> 
+          <span class='tag is-link is-light' (click)="colFilt('subset','Group')"  > {{symFilt}} </span> 
+        </div> 
+      </th> 
+      
+      <th class='is-clickable'
+        (click)="colHeadClicked('pre')" >
+        Pre Question <br>
+        <div *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
+          <span class='tag is-link is-light' (click)="colSort('preQuest','des')"> {{symArDn}} </span> 
+          <span class='tag is-link is-light' (click)="colSort('preQuest','asc')"> {{symArUp}} </span> 
+          <span class='tag is-link is-light' (click)="colFilt('preQuest','Pre-Quest')" > {{symFilt}} </span> 
+        </div> 
+      </th>
+
+      <th class='is-clickable'
+        (click)="colHeadClicked('qTxt')" >
+                Question
+        <div *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
+          <span class='tag is-link is-light' (click)="colSort('questTxt','des')"> {{symArDn}} </span> 
+          <span class='tag is-link is-light' (click)="colSort('questTxt','asc')"> {{symArUp}} </span> 
+          <span class='tag is-link is-light' (click)="colFilt('questTxt','Question Text')" > {{symFilt}} </span> 
+        </div> 
+      </th>
+
+      <th class='is-clickable' 
+        (click)="colHeadClicked('accum')" >
+         Scoreboard
+        <div *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
+          <span class='tag is-link is-light' (click)="colSort('accum','des')"> {{symArDn}} </span> 
+          <span class='tag is-link is-light' (click)="colSort('accum','asc')"> {{symArUp}} </span> 
+          <span class='tag is-link is-light' (click)="colFilt('accum','Scoreboard')"  > {{symFilt}} </span> 
+        </div> 
+
+      </th>
+      <th>  </th><th>  </th><th> </th> 
+
+    </tr>
+    </thead>
+    <tbody class=none>
+        <tr *ngFor='let q of questArray2, index as qx'
+             class='has-background-success-light' 
+        >        
+        <td class='pl-5 pr-5'  > {{q.questNbr}}  </td> 
+        <td class='pl-5 pr-5'  > {{q.questSeq}}  </td> 
+        <td> {{q.subset}}    </td> 
+        <td> {{q.preQuest}}  </td> 
+        <td> {{q.questTxt}}  </td> 
+        <td> {{q.accum[0]}}  </td> 
+        <td> {{q.accum[1]}}  </td> 
+        <td> {{q.accum[2]}}  </td> 
+        <td>
+        <button class='button is-small is-info' 
+          (click)=detailButClicked(q.questNbr)> 
+          details 
+        </button>
+
+        </td>
+        </tr>
+        <br>
+      
+    </tbody> 
+  </table>
+
