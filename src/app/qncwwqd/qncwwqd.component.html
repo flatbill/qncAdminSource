@@ -32,7 +32,7 @@
     <td><label>Question nbr: </label></td>
     <td><input  disabled
       class='has-background-success-light '
-      value= {{questionsIn2[qx].questNbr}}
+      value= {{questionsIn[qx].questNbr}}
       size="4"
       autocomplete="off"></td>
   </tr>
@@ -42,40 +42,46 @@
     (click)='ranSeqButClick(qx)'>
      randomize</span></td>
  <td><input  
+  #questSeq
   class=' is-small '
-  value= {{questionsIn2[qx].questSeq}}
+  value= {{questionsIn[qx].questSeq}}
   size="7"
-  (change)=questSeqChg($event,qx)              
+  (change)=questSeqChg(questSeq.value,qx)              
   autocomplete="off"></td>
   </tr>
   <tr>
   <td><label>Pre-Question: </label></td>
   <td><input  
+    #preQuest
     class=' is-small '
-  value= {{questionsIn2[qx].preQuest}}
+    value= {{questionsIn[qx].preQuest}}
   size="110"
-  (change)=preQuestChg($event,qx)              
+  (change)=preQuestChg(preQuest.value,qx)              
   autocomplete="off"> </td>
   </tr>
   <tr>
   <td><label>Question: </label></td>
-  <td><input  
-    class=' is-small '
-    value= {{questionsIn2[qx].questTxt}}
-    size="110"
-    (change)=questTxtChg($event,qx)              
-    autocomplete="off"> </td>
+  <td><textarea  
+    #questTxt
+    rows={{rangeTxtRows}}
+    cols={{rangeTxtCols}}
+    class=' textarea has-text-weight-semibold'
+    value= {{questionsIn[qx].questTxt}}
+    (change)=questTxtChg(questTxt.value,qx) 
+    overflow="auto"  
+    autocomplete="off"> </textarea>   </td>
   </tr>
   
   <tr>
     <td><label>Group: </label></td>
     <td><input  
+       #subset
        type='text'
       class=' is-small '
-      value= {{questionsIn2[qx].subset}}
+      value= {{questionsIn[qx].subset}}
        size="20"
-        (change)='subsetChg($event,qx)'            
-    autocomplete='off'> </td>
+       (change)='subsetChg(subset.value,qx)'            
+       autocomplete='off'> </td>
     </tr>
     <tr *ngIf='fullRuleWords.length > 0'>
       <td><label>Rely on Scoreboard: </label></td>
@@ -90,20 +96,23 @@
     <td>Add to ScoreBoards:</td>
     <td>
       <input  size=20
+      #questAccum0
       class=' is-small'
-      value= {{questionsIn2[qx].accum[0]}}
-      (change)=questAccumChg($event,qx,0)              
+      value= {{questionsIn[qx].accum[0]}}
+      (change)=questAccumChg(questAccum0.value,qx,0)              
       autocomplete="off">  &nbsp;
       
     <input  size=20
+      #questAccum1
       class='is-small'
-      value= {{questionsIn2[qx].accum[1]}}
-      (change)=questAccumChg($event,qx,1)             
+      value= {{questionsIn[qx].accum[1]}}
+      (change)=questAccumChg(questAccum1.value,qx,1)             
       autocomplete="off"> &nbsp; 
     <input  size=20
+        #questAccum2
         class=' is-small'
-        value= {{questionsIn2[qx].accum[2]}}
-        (change)=questAccumChg($event,qx,2)             
+        value= {{questionsIn[qx].accum[2]}}
+        (change)=questAccumChg(questAccum2.value,qx,2)             
         autocomplete="off">  
   </td>
   </tr>
@@ -130,10 +139,11 @@
       <tr>
       <td>Answer choice frame:</td>
       <td><input  
+        #acaFrame
         class=' is-small '
-        value= {{questionsIn2[qx].acaFrame}}
+        value= {{questionsIn[qx].acaFrame}}
         size="45"
-        (change)=acaFrameChg($event,qx)              
+        (change)=acaFrameChg(acaFrame.value,qx)              
         autocomplete="off"></td> </tr>
     <tr>
       <th>Answer Choice</th>
@@ -141,7 +151,7 @@
       <td><button 
         class='button is-info is-small'
         (click)='addAnswerChoice()'  >
-        add row</button></td>
+        append choice</button></td>
         <th><button 
           class='button is-info is-small'
           (click)='setAnswerChoice13()'  >
@@ -157,27 +167,29 @@
     </tr>
   </thead>
   <tbody>
-<tr *ngFor="let a of questionsIn2[qx].aca; let ax=index" > 
+<tr *ngFor="let a of questionsIn[qx].aca; let ax=index" > 
 
 <td><input  
+  #aca
   class=' is-small '
-  value= {{questionsIn2[qx].aca[ax]}}
+  value= {{questionsIn[qx].aca[ax]}}
   size="15"
-  (change)=questAcaChg($event,qx,ax)              
+  (change)=questAcaChg(aca.value,qx,ax)              
   autocomplete="off"> 
 </td>  
   <td>
-  <input   
+  <input  
+  #pointVal 
   class=' is-small '
-  value= {{questionsIn2[qx].acaPointVals[ax]}}
+  value= {{questionsIn[qx].acaPointVals[ax]}}
   size="2"
-  (change)=questAcaPointValChg($event,qx,ax)              
+  (change)=questAcaPointValChg(pointVal.value,qx,ax)              
   autocomplete="off">   
 </td>
 <td><button 
   class='button is-info is-small'
   (click)='delAnswerChoice(ax)'>
-  delete</button></td>
+  delete choice</button></td>
 </tr>
   
   </tbody>

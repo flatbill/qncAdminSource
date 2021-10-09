@@ -50,6 +50,7 @@ export class QncproComponent implements OnInit {
   @Input() qidsArrayIn
   @Input() subscriptionObjIn
   @Input() teamMemberObjIn
+  @Input() loadingDataBusyIn
   @Output() qidSelectOut = new EventEmitter()
   @Output() qidsArrayOut = new EventEmitter()
   @Output() subscriptionObjOut = new EventEmitter()
@@ -73,8 +74,8 @@ export class QncproComponent implements OnInit {
   ngOnInit() { 
     console.log('---+++running pro ngOnInit')
     // console.table(this.qidsArray) 
-    //console.log(' pro init subObjIn:')
-    //console.table(this.subscriptionObjIn)
+    console.log(' pro init subObjIn:')
+    console.table(this.subscriptionObjIn)
     //console.log(this.teamMemberSubscriberInternalId)
     this.qid = this.qidIn 
     this.cust = this.custIn
@@ -122,11 +123,13 @@ export class QncproComponent implements OnInit {
   } // end ngOnInit
 
   qidMouseOver(ix) {
+    if(this.loadingDataBusyIn) {return} //no surveys are clickable
     // mouseOver + mouseOut feels like a hack.
     // can we do a better bulma way to make rows selectable?
     let qlink = 'qlink-' + ix
     let el = document.getElementById(qlink)
-    if (this.qidsArray[ix].qidStatus == 'active') {
+    if (this.qidsArray[ix].qidStatus == 'active'
+    && ! this.loadingDataBusyIn) {
       el.classList.remove("has-background-success-light")
       el.classList.add("is-clickable")
       el.classList.add("has-background-link-light")
@@ -146,7 +149,8 @@ export class QncproComponent implements OnInit {
 
   qidChosen(ix){
     console.log('running pro qidChosen')
-
+    //loop all el.classList.remove("is-clickable") ??
+    if ( this.loadingDataBusyIn) {return} //cant select right now cuz we r busy
     if ( this.copyingTxt == true){  // a hack, to prevent qidChosen 
       // when he is just copying text.  (return now!)
       // fix this hack someday, by changing
@@ -156,7 +160,7 @@ export class QncproComponent implements OnInit {
     } 
 
    if (this.qidsArray[ix].qid == this.qid){
-      this.msg1='this survey is already selected.'     
+      this.msg1='this survey is already selected.' 
       return
    }
 
@@ -178,7 +182,7 @@ export class QncproComponent implements OnInit {
       // keep the green check on, until he selects another.
       // control the html green check with this.qid and *ngIf
       this.qid = this.qidsArray[ix].qid
-      this.qidSelectOut.emit() // send Qid Selected Signal to app component.
+      this.qidSelectOut.emit(this.qidsArray[ix].qName) // send Qid Selected Signal to app component.
     } else {
       this.msg1 = 'this survey is inactive, and cannot be selected.'
     } // end if
@@ -227,7 +231,7 @@ export class QncproComponent implements OnInit {
     this.subscriberPlanExpDate =  new Date(myDateString)
     this.subscriberPlanExpDateTxt = qtDbObj[0].data.planExpDate 
     this.subscriberInternalId = qtDbObj[0].data.internalId
-    //console.log('256 subscriber int:', this.subscriberInternalId)
+    console.log('256 subscriber int:', this.subscriberInternalId)
     let d=new Date(Date.now())
     //console.log('+++++++++++++++++++++++++++++++++')
     //console.log(d.getTime())
@@ -239,7 +243,7 @@ export class QncproComponent implements OnInit {
       console.log('pro buildSubscription info, subscription is expired') 
     }
   
-    //console.table(qtDbObj[0].data.qids)
+    console.table(qtDbObj[0].data.qids)
     this.qidsArray = []
     for (let i = 0; i < qtDbObj[0].data.qids.length; i++) {
       this.qidsArray.push(qtDbObj[0].data.qids[i])
@@ -251,7 +255,7 @@ export class QncproComponent implements OnInit {
     this.msg1 = 'showing list of surveys for subscriber: '
     + this.subscriberUserName 
     + '. '  + '\xa0' + '\xa0' + '\xa0' + '\xa0' 
-    + 'Click on a Survey to work with Survey Questions or Participants.'
+    + 'Click on a Survey.'
     this.qidsArrayOut.emit(this.qidsArray)
     this.subscriptionObjOut.emit(qtDbObj[0].data)
     //console.log ('288 pro buildSub internId     :',this.subscriberInternalId)

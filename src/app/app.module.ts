@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
-import { QncComponent } from './qnc/qnc.component';
+//import { QncComponent } from './qnc/qnc.component';
 import { QncwwgComponent } from './qncwwg/qncwwg.component';
 import { QncwwqComponent } from './qncwwq/qncwwq.component';
 import { QncwwqdComponent } from './qncwwqd/qncwwqd.component';
@@ -16,11 +16,11 @@ import { QncwwsComponent } from './qncwws/qncwws.component';
 import { QncmenComponent } from './qncmen/qncmen.component';
 import { QncproComponent } from './qncpro/qncpro.component';
 import { QncwwsrComponent } from './qncwwsr/qncwwsr.component';
+import { QncwwsrdComponent } from './qncwwsrd/qncwwsrd.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    QncComponent,
     QncwwgComponent,
     QncwwqComponent,
     QncwwqdComponent,
@@ -33,7 +33,8 @@ import { QncwwsrComponent } from './qncwwsr/qncwwsr.component';
     QncwwsComponent,
     QncmenComponent,
     QncproComponent,
-    QncwwsrComponent
+    QncwwsrComponent,
+    QncwwsrdComponent
   ],
   imports: [
     BrowserModule

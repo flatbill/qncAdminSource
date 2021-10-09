@@ -1,13 +1,14 @@
 <div class='selz-sticky-top ' >
   <div class=' columns has-background-warning is-marginless is-gapless '>
     <div class='column is-one-fifth'> &nbsp; {{compTitleIn}} </div> 
+    <div *ngIf='loadingDataMsg.length>0' class='column is-one-fifth'> {{loadingDataMsg}} </div> 
     <div class='column is-three-fifths'>
         <span *ngIf='showMenButsIn'>
          <span *ngIf='showSurveyMenButsIn'>
           <span id='questions' class='tag is-small is-info m-1 is-clickable' (click)=jumpToWwq()>questions</span> 
           <span id='groups' class='tag is-small is-info m-1 is-clickable' (click)=jumpToWwg()>groups</span>  
           <span id='rules' class='tag is-small is-info m-1 is-clickable' (click)=jumpToWwr()>rules</span> 
-          <span id='scoreRanges' class='tag is-small is-info m-1 is-clickable' (click)=jumpToWwsr()>scoreRanges</span> 
+          <span id='scoreboards' class='tag is-small is-info m-1 is-clickable' (click)=jumpToWwsr()>scoreboards</span> 
           <!-- <span id='invitations' class='tag is-small is-info m-1 is-clickable' (click)=jumpToWwi() >invitations</span>  -->
           <span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>
           <span id='users' class='tag is-small is-info m-1 is-clickable' (click)=jumpToWwu()>participants</span> 
@@ -25,5 +26,5 @@
       </span>
       <span *ngIf='showMsg1' class='tag is-small is-dark'>{{msg1}}</span> 
     </div> 
-</div>
+  </div>
 </div>

@@ -4,7 +4,8 @@
 /* selzer Feb2021 change .hmtl overflow-y from scroll to auto ln 326 */
 /* selzer mar2021 reduce table padding 2643  */
 /* selzer Jun2021 create class selz-sticky-top 
-
+/* selzer Sep2021 create class selz-pre-line
+/* selzer Oct2021  th vertical-align: bottom
 @-webkit-keyframes spinAround {
     from {
       transform: rotate(0deg);
@@ -446,10 +447,15 @@
   table th {
     vertical-align: top;
   }
-  
-  table td:not([align]),
+
+  /* selzer Oct 2021: */
+  /* th align bottom, but td not align bottom */
+  table td:not([align]) {
+    text-align: inherit;
+  }
   table th:not([align]) {
     text-align: inherit;
+    vertical-align: bottom;
   }
   
   table th {
@@ -11638,5 +11644,10 @@
     position: sticky;
     top: 0px;
   }
+  
+  .selz-pre-line {
+    white-space: pre-line;
+ }
+
 
   /*# sourceMappingURL=bulma.css.map */

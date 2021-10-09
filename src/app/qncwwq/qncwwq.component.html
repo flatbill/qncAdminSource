@@ -1,16 +1,15 @@
 
 <span class='tag is-dark is-small is-vcentered ml-3' 
-   *ngIf='msg1.length > 0'>
-{{msg1}} 
+  *ngIf='msg1.length > 0'>
+  {{msg1}} 
 </span>
 
   <table class='table is-fullwidth'>
-    <thead >
+    <thead class='none'>
 
-      <tr>
       <th class='is-clickable' 
         (click)="colHeadClicked('nbr')" >
-        <span>Number</span>  
+        <span>  Number</span>  
         <span *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
           <span class='tag is-link is-light' (click)="colSort('questNbr','des')"> {{symArDn}} </span> 
           <span class='tag is-link is-light' (click)="colSort('questNbr','asc')"> {{symArUp}} </span> 
@@ -20,7 +19,7 @@
 
     <th class='is-clickable'
       (click)="colHeadClicked('seq')" > 
-      Sequence 
+        Sequence 
         <div *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
           <span class='tag is-link is-light' (click)="colSort('questSeq','des')"> {{symArDn}} </span> 
           <span class='tag is-link is-light' (click)="colSort('questSeq','asc')"> {{symArUp}} </span> 
@@ -40,7 +39,7 @@
       
       <th class='is-clickable'
         (click)="colHeadClicked('pre')" >
-        Pre Question <br>
+        Pre-Question 
         <div *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
           <span class='tag is-link is-light' (click)="colSort('preQuest','des')"> {{symArDn}} </span> 
           <span class='tag is-link is-light' (click)="colSort('preQuest','asc')"> {{symArUp}} </span> 
@@ -50,14 +49,14 @@
 
       <th class='is-clickable'
         (click)="colHeadClicked('qTxt')" >
-                Question
+        &nbsp;  &nbsp;  Question
         <div *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
+          &nbsp;  &nbsp; 
           <span class='tag is-link is-light' (click)="colSort('questTxt','des')"> {{symArDn}} </span> 
           <span class='tag is-link is-light' (click)="colSort('questTxt','asc')"> {{symArUp}} </span> 
           <span class='tag is-link is-light' (click)="colFilt('questTxt','Question Text')" > {{symFilt}} </span> 
         </div> 
       </th>
-
       <th class='is-clickable' 
         (click)="colHeadClicked('accum')" >
          Scoreboard
@@ -68,14 +67,25 @@
         </div> 
 
       </th>
-      <th>  </th><th>  </th><th> </th> 
 
-    </tr>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th *ngIf='addButOn'> 
+        <button 
+          class='button is-small is-info'
+          (click)=addButClicked()
+        >
+          add
+        </button>
+      </th> 
+
     </thead>
     <tbody class=none>
-        <tr *ngFor='let q of questArray2, index as qx'
-             class='has-background-success-light' 
-        >        
+      <tr *ngFor='let q of questionsIn, index as qx'
+          class='has-background-success-light' >    
+      <ng-container *ngIf="q.qFilterInOut=='in'" >
         <td class='pl-5 pr-5'  > {{q.questNbr}}  </td> 
         <td class='pl-5 pr-5'  > {{q.questSeq}}  </td> 
         <td> {{q.subset}}    </td> 
@@ -84,16 +94,16 @@
         <td> {{q.accum[0]}}  </td> 
         <td> {{q.accum[1]}}  </td> 
         <td> {{q.accum[2]}}  </td> 
-        <td>
+        <td class='mr-3y'>
         <button class='button is-small is-info' 
           (click)=detailButClicked(q.questNbr)> 
-          details 
-        </button>
-
+          detail
+        </button>        
         </td>
-        </tr>
-        <br>
-      
+      </ng-container> 
+
+      </tr>
+      <br>
     </tbody> 
   </table>
 

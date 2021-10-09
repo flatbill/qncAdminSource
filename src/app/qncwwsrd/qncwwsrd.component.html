@@ -1,0 +1,137 @@
+
+<span class='mt-1 tag is-dark is-small is-vcentered ml-3' 
+    *ngIf='msg1.length > 0'>
+    {{msg1}} 
+</span>
+
+<div class='mt-3 '>
+  <span class='button is-info'
+        (click)='prevButClick()'
+  >  &#5176; prev</span> &nbsp;
+  <span class='button is-info'
+      (click)='nextButClick()'
+  > next &#5171;  </span> &nbsp;
+  <span class='button is-info'
+     (click)='addButClick()'
+  > add  </span> &nbsp;
+
+  <span class='button is-info'
+    (click)='delButClick()'
+  > delete </span> &nbsp;
+
+  <span class='button is-info'
+    (click)='saveButClick()'
+  > save </span> &nbsp;
+</div>
+
+<div class='mt-3'>  
+    <table class=' table has-background-success-light is-narrow'>
+      <tr>
+        <td><label>Scoreboard nbr: </label></td>
+        <td><input  disabled
+          class='has-background-success-light '
+          value= {{scoreboardsIn[sx].scoreboardNbr}}
+          size="4"
+          autocomplete="off"></td>
+  
+      </tr>
+
+      <tr><td><label>Scoreboard Name: </label></td>
+        <td><input 
+          #scoreboardName
+          value= {{scoreboardsIn[sx].scoreboardName}}
+          size="14"
+          autocomplete="off"
+          (change)=scoreboardNameChg(scoreboardName.value,sx)              
+          ></td> </tr>  
+          <tr><td><label>Scoreboard Seq: </label></td>
+            <td><input 
+              #scoreboardSeq
+              value= {{scoreboardsIn[sx].scoreboardSeq}}
+              size="14"
+              autocomplete="off"
+              (change)=scoreboardSeqChg(scoreboardSeq.value,sx)              
+              ></td> </tr> 
+    </table>
+
+    <table class=' mt-3 table has-background-info-light is-narrow'>
+      <thead>
+        <tr>
+          <th> Range </th>
+          <th> Name </th>
+          <th> Start </th>
+          <th> End </th>
+          <th> Text  &nbsp;&nbsp;&nbsp;
+            <button 
+            class='button is-info is-small'
+            (click)='appendRangeButClick()'>
+            append range</button> </th>
+          <th>&nbsp;</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let r of scoreboardsIn[sx].ranges; let rx=index" > 
+          
+          <td>
+            <input 
+              disabled 
+              class=' is-small '
+              value= {{r.rangeNbr}}
+              size="2"
+              autocomplete="off"> 
+          </td>  
+          <td>
+            <input   
+              #rangeName
+              class=' is-small '
+              value= {{r.rangeName}}
+              size="11"
+              (change)=rangeNameChg(rangeName.value,sx,rx)              
+              autocomplete="off">   
+          </td>
+
+          <td>
+            <input   
+              #rangeStart
+              class=' is-small '
+              value= {{r.rangeStart}}
+              size="3"
+              (change)=rangeStartChg(rangeStart.value,sx,rx)              
+              autocomplete="off">   
+          </td>
+          <td>
+            <input  
+            #rangeEnd 
+            class=' is-small '
+            value= {{r.rangeEnd}}
+            size="3"
+            (change)=rangeEndChg(rangeEnd.value,sx,rx)              
+            autocomplete="off">   
+          </td>
+          <td>
+            <textarea  
+            #rangeTxt
+            rows={{rangeTxtRows}}
+            cols={{rangeTxtCols}}
+            class=' textarea'
+            value= {{r.rangeTxt}}
+            (change)=rangeTxtChg(rangeTxt.value,sx,rx)    
+            overflow="auto"  
+            autocomplete="off"> </textarea>  
+          </td>
+
+
+          <td><button 
+            class='button is-info is-small'
+            (click)='delRangeButClick(rx)'>
+            delete range</button></td>
+        </tr>
+      
+  </tbody>
+    </table>
+    
+</div>
+
+<br><br>
+<span id='htmlIdBottomOfPage'> </span>

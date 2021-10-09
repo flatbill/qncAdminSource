@@ -14,6 +14,7 @@
   [showMenButsIn]='menuButsAlive'
   [showSurveyMenButsIn]='surveyMenuButsAlive'
   [compTitleIn] = 'compTitle'
+  [loadingDataMsg] = 'loadingDataMsg'
   (wwqJumpOut)="showWwqFun($event)"
   (wwgJumpOut)="showWwgFun($event)"
   (wwrJumpOut)="showWwrFun($event)"
@@ -39,6 +40,7 @@
   [custIn]='cust'
   [qidIn]='qid'
   [qidsArrayIn]='qidsArray'
+  [loadingDataBusyIn] = 'loadingDataBusy'
   (qidSelectOut)="qidSelected($event)"
   (qidsArrayOut)="qidsArrayWasBuilt($event)"
   (subscriptionObjOut)="subscriptionObjWasBuilt($event)"
@@ -65,23 +67,19 @@
   [subsetIn]="subset"
   [subsetsQncWwq]="subsetsQncWwq"
   [questionsIn]="questArray"
-  [questionsIn2]="questArray2"
   [rulesIn]="rulesArray"
-  (wwqQuestOut)="setQuestFromWwqFun($event)"
-  (qncJumpOut)="showQncFun($event)"
+  [filterResetIn]='wwqFilterReset'
   (wwqdJumpOut)="showWwqdFun($event)"
-  (wwsJumpOut)="showWwsFun($event)"
-  (proJumpOut)="showProFun($event)"
-  (wwqQuestArray2Out)="setQuest2FromWwqFun($event)"
+  (questionNbrOut)="setQuestionFromWwqFun($event)"
+  (questionsOut)="setQuestionsFromWwqFun($event)"
 > 
 </app-qncwwq>
 
-<app-qncwwqd   *ngIf="showQncWwqd" 
+<app-qncwwqd  *ngIf="showQncWwqd" 
   [custIn]="cust"
   [qidIn]="qid"
   [questionNbrIn]="daQuestion"
   [questionsIn]="questArray"
-  [questionsIn2]="questArray2"
   [rulesIn]="rulesArray"
   [subsetsIn]="subsetArray"
   (wwqJumpOut)="showWwqFun($event)"
@@ -92,12 +90,15 @@
   [questionsIn]="questArray"
   [rulesIn]="rulesArray"
   [subsetsIn]="subsetArray"
-  (qncJumpOut) = "showQncFun($event)"
+  (ruleNbrOut)  = "setRuleNbrFromWwrFun($event)"
   (wwrdJumpOut) = "showWwrdFun($event)"
 >
 </app-qncwwr>
 
 <app-qncwwrd *ngIf="showQncWwrd" 
+  [custIn]="cust"
+  [qidIn]="qid"
+  [ruleNbrIn]="ruleNbr"
   [rulesIn]="rulesArray"
   (wwrJumpOut) = "showWwrFun($event)"
 >
@@ -113,7 +114,8 @@
 <app-qncwwu *ngIf="showQncWwu" 
   [custIn]="cust"
   [qidIn]="qid" 
-  (qncJumpOut) = "showQncFun($event)"
+  [scoreboardsIn]="scoreboardsArray"
+  [surveyNameIn]="surveyName"
 >
 </app-qncwwu>
 
@@ -132,5 +134,22 @@
 <app-qncwwsr *ngIf="showQncWwsr"
   [custIn]="cust"
   [qidIn]="qid"
+  [scoreboardNbrIn]="daScoreboardNbr"
+  [scoreboardsIn]="scoreboardsArray"
+  [filterResetIn]='wwsrFilterReset'
+  (scoreboardNbrOut) =  "setScoreboardNbrFromWwsrFun($event)"
+  (scoreboardsOut)   = "setScoreboardsFromWwsrFun($event)"
+  (wwsrdJumpOut)     =   "showWwsrdFun($event)"
 >
 </app-qncwwsr>
+
+<app-qncwwsrd *ngIf="showQncWwsrd"
+  [custIn]="cust"
+  [qidIn]="qid"
+  [scoreboardNbrIn]="daScoreboardNbr"
+  [scoreboardsIn]="scoreboardsArray"
+  [rulesIn]="rulesArray"
+  [subsetsIn]="subsetArray"
+  (wwsrJumpOut)="showWwsrFun($event)"
+>
+</app-qncwwsrd>

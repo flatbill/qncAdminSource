@@ -1,5 +1,103 @@
+
 <span class='tag is-dark is-small is-vcentered ml-3' 
-*ngIf='msg1.length > 0'>
-{{msg1}} 
+  *ngIf='msg1.length > 0'>
+  {{msg1}} 
 </span>
+
+<table class='table  is-fullwidth ml-3 mr-3 mb-3'>
+   <thead >
+      <th class='is-clickable' (click)="colHeadClicked('scoreboardNbr')" >  Nbr
+        <div *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
+          <span class='tag is-link is-light' (click)="colSort('scoreboardNbr','des')"> {{symArDn}} </span> 
+          <span class='tag is-link is-light' (click)="colSort('scoreboardNbr','asc')"> {{symArUp}} </span> 
+          <span class='tag is-link is-light' (click)="colFilt('scoreboardNbr','scoreboard')"  > {{symFilt}} </span> 
+        </div> 
+      </th>
+      <th class='is-clickable' (click)="colHeadClicked('scoreboard')" >  &nbsp; Scoreboard
+        <div *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> &nbsp;
+          <span class='tag is-link is-light' (click)="colSort('scoreboardName','des')"> {{symArDn}} </span> 
+          <span class='tag is-link is-light' (click)="colSort('scoreboardName','asc')"> {{symArUp}} </span> 
+          <span class='tag is-link is-light' (click)="colFilt('scoreboardName','scoreboardName')"  > {{symFilt}} </span> 
+        </div> 
+      </th>
+      <th class='is-clickable' (click)="colHeadClicked('scoreboardSeq')" >  Seq
+        <div *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
+          <span class='tag is-link is-light' (click)="colSort('scoreboardSeq','des')"> {{symArDn}} </span> 
+          <span class='tag is-link is-light' (click)="colSort('scoreboardSeq','asc')"> {{symArUp}} </span> 
+          <span class='tag is-link is-light' (click)="colFilt('scoreboardSeq','scoreboardSeq')"  > {{symFilt}} </span> 
+        </div> 
+      </th>
+      <th class='is-clickable' (click)="colHeadClicked('rangeTxt')" > &nbsp; Ranges
+        <!-- <div *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
+          <span class='tag is-link is-light' (click)="colSort('rangeTxt','des')"> {{symArDn}} </span> 
+          <span class='tag is-link is-light' (click)="colSort('rangeTxt','asc')"> {{symArUp}} </span> 
+          <span class='tag is-link is-light' (click)="colFilt('rangeTxt','Nbr')"> {{symFilt}} </span>
+        </div>  -->
+      </th>
+      <th *ngIf='addButOn'> 
+        <button 
+          class='button is-small is-info'
+          (click)=addButClicked()
+        >
+          add
+        </button>
+      </th> 
+
+      <!-- <th class='is-clickable' (click)="colHeadClicked('rangeStart')" >  Range Start 
+        <div *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
+         <span class='tag is-link is-light' (click)="colSort('rangeStart','des')"> {{symArDn}} </span> 
+         <span class='tag is-link is-light' (click)="colSort('rangeStart','asc')"> {{symArUp}} </span> 
+         <span class='tag is-link is-light' (click)="colFilt('rangeStart','rangeStart')"  > {{symFilt}} </span> 
+        </div> 
+      </th> -->
+
+      <!-- <th class='is-clickable' (click)="colHeadClicked('rangeEnd')" >   Range End
+        <div *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
+          <span class='tag is-link is-light' (click)="colSort('rangeEnd','des')"> {{symArDn}} </span> 
+          <span class='tag is-link is-light' (click)="colSort('rangeEnd','asc')"> {{symArUp}} </span> 
+          <span class='tag is-link is-light' (click)="colFilt('rangeEnd','rangeEnd')"  > {{symFilt}} </span> 
+        </div> 
+      </th>  -->
+
+      <!-- <th class='is-clickable' (click)="colHeadClicked('rangeTxt')" > Range Text <br>
+        <div *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
+          <span class='tag is-link is-light' (click)="colSort('rangeTxt','des')"> {{symArDn}} </span> 
+          <span class='tag is-link is-light' (click)="colSort('rangeTxt','asc')"> {{symArUp}} </span> 
+          <span class='tag is-link is-light' (click)="colFilt('rangeTxt','rangeTxt')" > {{symFilt}} </span> 
+        </div> 
+      </th> -->
+      <th> &nbsp;</th>
+      <th> &nbsp;</th>
+      <th> &nbsp;</th>
+   </thead>
+   <tbody class='none'>
+     <tr *ngFor='let s of scoreboardsIn, index as sx'
+          class='has-background-success-light' 
+     >      
+     <ng-container *ngIf="s.sbFilterInOut=='in'" >
+       <td class='pl-2'  >      {{s.scoreboardNbr}}  </td> 
+       <td class='pl-3 pr-5y'  > {{s.scoreboardName}}  </td> 
+       <td class='pl-1' > {{s.scoreboardSeq}}  </td> 
+       <td class='pl-1' colSpan=3> 
+         <table>
+          <tr>
+            <td class='pl-5y' *ngFor='let r of s.ranges, index as rx'>
+              <span *ngIf='rx<3' class='has-text-weight-semibold'> {{r.rangeName}}   </span> 
+              <span *ngIf='rx<3'> {{r.rangeStart}}  </span> 
+              <span *ngIf='rx<3'> {{r.rangeEnd}}    </span> 
+              <span *ngIf='rx<3'> {{r.rangeTxt}}    </span> 
+              &nbsp;
+            </td>
+          </tr>
+         </table>
+       </td>
+       <td class='is-pulled-righty mt-5 ml-5y'>
+         <button class='button is-small is-info' (click)=detailButClicked(s.scoreboardNbr)> 
+           detail 
+         </button>
+       </td>
+      </ng-container>
+     </tr>
+   </tbody> 
+</table>
 

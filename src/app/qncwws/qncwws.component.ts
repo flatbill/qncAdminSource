@@ -18,6 +18,7 @@ export class QncwwsComponent implements OnInit {
   passEnc = ''
   passDec = ''
   teamMemberUserId = ''
+  teamMemberUserIdLowerCase = ''
   teamMemberPass   = ''
   teamMemberObj = new Object
   showdevNotes = false
@@ -59,6 +60,7 @@ export class QncwwsComponent implements OnInit {
   teamMemberUserIdChg(ev){ // he entered user id on the login screen.
     console.log('running wws teamMemberUserIdChg')
     this.teamMemberUserId =  ev.target.value
+    this.teamMemberUserIdLowerCase = this.teamMemberUserId.toLocaleLowerCase()
     // he entered user id on the login screen
     //sessionStorage.setItem("ssUserId", ev.target.value) //cursor woes
   } // end teamMemberUserIdChg
@@ -144,7 +146,7 @@ export class QncwwsComponent implements OnInit {
   launchQtReadTeamMember(){
     console.log('running wws launchQtReadTeamMember')
     this.msg1 = 'loading team member info ...'
-    api.qtReadTeamMembers(this.teamMemberUserId)
+    api.qtReadTeamMembers(this.teamMemberUserIdLowerCase)
       .then 
       (   (qtDbRtnObj) => 
         {

@@ -11,6 +11,7 @@ export class QncmenComponent implements OnInit {
   @Input()  showMenButsIn
   @Input()  showSurveyMenButsIn
   @Input()  compTitleIn
+  @Input()  loadingDataMsg
   @Output() wwgJumpOut = new EventEmitter()
   @Output() wwqJumpOut = new EventEmitter()
   @Output() wwrJumpOut = new EventEmitter()
@@ -24,7 +25,6 @@ export class QncmenComponent implements OnInit {
   //  qnc menu component.
   //  shows at the top of every screen.
   //  
-  //  set authIn to false ?
 
 
   //menuOptionTitle = 'Qnc men'  
@@ -75,8 +75,8 @@ export class QncmenComponent implements OnInit {
   } 
 
   jumpToWwsr(){ 
-    this.setMenuHighlight('scoreRanges')
-    this.wwsrJumpOut.emit()
+    this.setMenuHighlight('scoreboards')
+    this.wwsrJumpOut.emit() 
   } 
 
   showHideHelp(){
@@ -145,7 +145,7 @@ export class QncmenComponent implements OnInit {
       el.classList.remove("has-background-primary") 
       el = document.getElementById('rules')
       el.classList.remove("has-background-primary") 
-      el = document.getElementById('scoreRanges')
+      el = document.getElementById('scoreboards')
       el.classList.remove("has-background-primary") 
 
     }

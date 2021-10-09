@@ -1,7 +1,6 @@
 import {  HostListener, Component } from '@angular/core'
 import api from 'src/utils/api'
 import { Title } from '@angular/platform-browser'
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html'
@@ -12,8 +11,9 @@ export class AppComponent {
     if (event.key === "Escape") { this.escKeyWasHit() }
   } // end onKeydownHandler
   public constructor(private titleService: Title) { }
-  //title = 'Qnc Admin'
   compTitle = 'Qnc Login'
+  loadingDataMsg = ''
+  loadingDataBusy = false
   showQnc = false  
   showQncWwq = false
   showQncWwqd = false
@@ -23,24 +23,26 @@ export class AppComponent {
   showQncWwrd = false 
   showQncWwi = false
   showQncWwu = false
-  showQncWws = true // start with a login
-  showQncConv = false  // set this true for ed338 conversion
-  showQncMen = true // jun2021 menu always true
-  showQncPro = false  // profile
-  showQncWwsr = false  // score ranges
+  showQncWws = true         // start with a login
+  showQncConv = false       // set this true for ed338 conversion
+  showQncMen = true         // jun2021 menu always true
+  showQncPro = false        // profile
+  showQncWwsr = false       // scoreboards
+  showQncWwsrd = false      // scoreboards detail
   showAppComponent = false  // set this true for debugging
   subsetArray = []
   rulesArray = []  
   questArray = []     // master list of questions
-  questArray2 = []    // filtered list of questions
   accumArray = []
+  scoreboardsArray = []
+
   daQuestion = 'no Question yet'
   wwqdCaller = 'no wwqdCaller yet'
   qid = '?'  
   cust = '?'
   accumObj = {}
   qncAuthorized = false
-  menuButsAlive = false // show buts on the menu component
+  menuButsAlive = false       // show buts on the menu component
   surveyMenuButsAlive = false // show buts for questions,rules, etc
   firstLogin = true
   teamMemberUserId     = ''      
@@ -49,11 +51,18 @@ export class AppComponent {
   qidsArray   = []
   subscriptionObj = new Object
   teamMemberObj = new Object
+  daScoreboardNbr = ''
+  wwsrdCaller = 'no caller yet.'
+  wwsrFilterReset = true
+  wwqFilterReset = true
+  surveyName = ''
+  ruleNbr = ''
   ngOnInit()  {
     this.titleService.setTitle('Qnc Admin')
   } // end ngInit
 
   setQueryStringParms(){
+      console.log('running setQueryStringParms')
       let locSearchResult = new URLSearchParams(location.search)
       let locSearchResultCust  = locSearchResult.get('cust')
       let locSearchResultQid   = locSearchResult.get('qid')
@@ -67,7 +76,7 @@ export class AppComponent {
       // if (locSearchResultIcode != null) {
       //   this.icode = locSearchResultIcode
       // }
-      // when no querystring, set default  qid 4
+      // when no querystring, set default  qid 4  billyFix
       // not a great idea when we get more.
       if(this.cust == '?'){this.cust = '1'}
       if(this.qid == '?'){this.qid = '4'}
@@ -77,42 +86,6 @@ export class AppComponent {
       //console.log('this.icode is: ',this.icode)
   }
 
-  // initSubsets(){
-  //   this.subsetArray =
-  //   ["main1", 
-  //   "parakeetFollowOn", 
-  //   "main2", 
-  //   "iqFollowOn", 
-  //   "main3"]
-  // } //end InitSubsets
-
-  DeleteMe1(){}
-
-  // initRules(){
-  //   this.rulesArray = 
-  //   [
-  //   {
-  //     cust: "1",
-  //     qid: "2",
-  //     subset: "parakeetFollowOn",
-  //     accum: "pk1",
-  //     oper: ">",
-  //     thresh: 0
-  //   },
-  //   {
-  //     cust: "1",
-  //     qid: "2",
-  //     subset: "iqFollowOn",
-  //     accum: "iqAccum",
-  //     oper: "==",
-  //     thresh: 1
-  //   }
-  //   ]
-  // } //end initRules
-
-  DeleteMe2(){}
-
-
   setAuthOnFun(){
     // get here from login screen
     console.log('running app component setAuthOnFun')
@@ -120,20 +93,31 @@ export class AppComponent {
     this.menuButsAlive = true  //make menu alive
   }
 
-  qidSelected(){
-    console.log('&&& running app qidSelected')
+  qidSelected(surveyNameParm){
+    console.log('app running  qidSelected')
+    console.log(surveyNameParm)
+    this.surveyName = surveyNameParm
     // get here from profile screen. user has selected a qid.
     //  pro already set querystring.
+    // blank out arrays, prior to fetching data
+    this.subsetArray = []
+    this.rulesArray = []  
+    this.questArray = []     // master list of questions
+    // this.questArray2 = []    // filtered list of questions
+    this.accumArray = []
+    this.scoreboardsArray = []
+    // this.scoreboardsArray2 = []
+  
     this.setQueryStringParms()  //set  cust & qid from querystring
-    console.log(this.cust)
-    console.log(this.qid)
-    this.surveyMenuButsAlive = true  //make survey buts alive
+    // console.log(this.cust)
+    // console.log(this.qid)
+    //this.surveyMenuButsAlive = true  //make survey buts alive
     // read lotsa db tables cuz qid is now selected.
     this.readManyDbTables()   
   }
 
   qidsArrayWasBuilt(qidsArrayParm) {
-    console.log('running qidsArrayWasBuilt')
+    console.log('running app qidsArrayWasBuilt')
     // get here from profile screen. 
     // profile screen looks up the subscriber's qids,
     // and has built the qidsArray.
@@ -164,6 +148,13 @@ export class AppComponent {
     //this.questions2QncWwq = this.questArray2
     // this.subsetQncWwq = this.subset 
     this.compTitle = 'Qnc Questions'
+    if (this.showQncWwqd) {
+      // jumping from wwqd to wwq
+      this.wwqFilterReset = false
+    } else {
+      this.wwqFilterReset = true
+    }
+
     this.setAllShowCompFalse() 
     this.showQncWwq = true
   } // end showWwqFun
@@ -202,11 +193,31 @@ export class AppComponent {
     this.setAllShowCompFalse()
     this.showQncWwu = true 
   } // end showWwuFun
-  showWwsFun(ev){
+  showWwsFun(ev){ // jumping to sign on screen.
     console.log('running showWwsFun')
     this.compTitle = 'Qnc Login' 
     this.qncAuthorized = false
     this.menuButsAlive = false
+    this.surveyMenuButsAlive = false  
+    this.subsetArray = []
+    this.rulesArray = []  
+    this.questArray = []     
+    this.accumArray = []
+    this.daQuestion = 'no Question yet'
+    this.wwqdCaller = 'no wwqdCaller yet'
+    this.qid = '?'  
+    this.cust = '?'
+    this.accumObj = {}
+    this.teamMemberUserId     = ''      
+    this.subscriberInternalId = ''
+    this.dbReadCount = 0
+    this.qidsArray   = []
+    this.subscriptionObj = {}
+    this.teamMemberObj = {}
+    this.scoreboardsArray = []
+    // this.scoreboardsArray2 = []
+    this.daScoreboardNbr = ''
+    this.wwsrdCaller = 'no caller yet, sir.'
     this.firstLogin = false
     this.setAllShowCompFalse()
     this.showQncWws = true 
@@ -219,9 +230,22 @@ export class AppComponent {
 
   showWwsrFun(ev){
     console.log('running showWwsrFun')
-    this.compTitle = 'Qnc ScoreRange' 
+    this.compTitle = 'Qnc Scoreboards' 
+    if (this.showQncWwsrd) {
+      // jumping from wwsrd to wwsr
+      this.wwsrFilterReset = false
+    } else {
+      this.wwsrFilterReset = true
+    }
     this.setAllShowCompFalse()
     this.showQncWwsr = true
+  }
+
+  showWwsrdFun(ev){
+    console.log('running showWwsrdFun')
+    this.compTitle = 'Qnc Scoreboard Detail' 
+    this.setAllShowCompFalse()
+    this.showQncWwsrd = true
   }
 
 
@@ -238,11 +262,12 @@ export class AppComponent {
     this.showQncWws = false
     this.showQncPro = false
     this.showQncWwsr = false
+    this.showQncWwsrd = false
     this.showQncConv = false
   } // end setAllShowCompFalse
 
-  setQuestFromWwqFun(ev){
-    console.log('running app setQuestFromWwqFun')
+  setQuestionFromWwqFun(ev){
+    console.log('running app setQuestionFromWwqFun')
     // user selected a question from wwq
     // pass it into daquestion
     // to get ready to call wwqd
@@ -250,9 +275,36 @@ export class AppComponent {
     this.wwqdCaller = 'wwq'
   }
 
-  setQuest2FromWwqFun(ev){ // ev is quest2 from wwq
-    console.log('running app setQuest2FromWwqFun')
-    this.questArray2 = ev
+  setQuestionsFromWwqFun(ev){   // ev is from wwq
+    console.log('running app setQuestionsFromWwqFun')
+    this.questArray = ev
+  }
+
+  // setQuestions2FromWwqFun(ev){ // ev is  from wwq
+  //   console.log('running app setQuestions2FromWwqFun')
+  //   this.questArray2 = ev
+  // }
+
+  setScoreboardNbrFromWwsrFun(ev){
+    console.log('running app setScoreboardNbrFromWwsrFun')
+    // user selected a scoreboard from wwsr
+    // pass it into daScoreboard
+    // to get ready to call wwsrd
+    this.daScoreboardNbr = ev
+    this.wwsrdCaller = 'wwsr'
+  }
+
+  setScoreboardsFromWwsrFun(ev){
+    console.log('running app setScoreboardsFromWwsrFun')
+    // he is jumping from scoreboard list to scoreboard detail
+    this.scoreboardsArray = ev 
+  }
+
+  setRuleNbrFromWwrFun(ev){
+  // he is jumping from rule list to rule detail
+    console.log('running app setRuleNbrFromWwrFun')
+    this.ruleNbr = ev.ruleNbr
+    console.log('rule nbr:', this.ruleNbr)
   }
 
   escKeyWasHit(){ 
@@ -267,15 +319,18 @@ export class AppComponent {
 
   }
   
-  sortQuestArray(){
-    console.log('running sortQuestArray')
-  this.questArray
-  .sort((a, b) => (a.questNbr > b.questNbr) ? 1 : (a.questNbr === b.questNbr) ? ((a.questSeq > b.questSeq) ? 1 : -1) : -1 )
-  console.table(this.questArray)
-  } // end sortQuestArray
+  sortQuestArraybyNbrAndSeq(){
+    console.log('running sortQuestArraybyNbrAndSeq')
+    this.questArray
+    .sort((a, b) => (a.questNbr > b.questNbr) ? 1 : (a.questNbr === b.questNbr) ? ((a.questSeq > b.questSeq) ? 1 : -1) : -1 )
+     console.table(this.questArray)
+  } // end sortQuestArraybyNbrAndSeq
 
-  readManyDbTables(){
+  readManyDbTables() {
     console.log('running app readManyDbTables. read count:',this.dbReadCount)
+    this.surveyMenuButsAlive = false  //go true after table reads
+    this.loadingDataMsg = '... loading survey data ...'
+    this.loadingDataBusy = true
     if (this.dbReadCount >= 13) {   // hit read limit
       // why are we doing this limit?  well,
       // he has chose a different survey 13 times.
@@ -289,16 +344,16 @@ export class AppComponent {
     this.launchReadQuestions() // has chaining to read other tables!
   }
 
-  launchReadQuestions = () => {
+  launchReadQuestions () {
   api.qtReadQuestions(this.cust,this.qid)
       .then 
       (   (qtDbRtnObj) => 
         {
           console.log(' running .then of qtReadQuestions') 
-          console.log('custAndQid:',this.cust,this.qid)
-          console.table(qtDbRtnObj)
+          // console.log('custAndQid:',this.cust,this.qid)
+          // console.table(qtDbRtnObj)
           this.loadQuestionsFromDbToQuestArray(qtDbRtnObj)
-          this.sortQuestArray()  
+          this.sortQuestArraybyNbrAndSeq()  
           this.buildListOfAccumsFromQuestArray()
           this.launchQtReadRules() 
         }
@@ -319,7 +374,7 @@ export class AppComponent {
     }
   }  // end loadQuestionsFromDbToQuestArray
  
-  launchQtReadRules = () => {
+  launchQtReadRules() {
   console.log('running LaunchQtReadRules')
   api.qtReadRules(this.cust,this.qid)
     .then 
@@ -345,7 +400,7 @@ export class AppComponent {
     console.table(this.rulesArray)
   } // end buildListOfRules
 
- launchQtReadSubsets = () => {
+ launchQtReadSubsets() {
   console.log('running launchQtReadSubsets')
   console.log('custAndQid:',this.cust,this.qid)
   api.qtReadSubsets(this.cust,this.qid)
@@ -354,8 +409,8 @@ export class AppComponent {
         {
           console.log(' running .then of api.qtReadSubsets') 
           this.buildListOfSubsets(qtDbRtnObj)
-          // done with survey table reads, so set some menu buts alive.
-          this.surveyMenuButsAlive = true  
+          this.launchQtReadScoreboards() //chaining
+
         }
       )
       .catch(() => {  // api.qtReadSubsets returned an error 
@@ -400,6 +455,50 @@ export class AppComponent {
   }
   console.log('done buiding accumArray:',this.accumArray)
   }  // end buildListOfAccumsFromQuestArray
+
+  launchQtReadScoreboards() {
+    console.log('running launchQtReadScoreboards 449')
+    // alert(this.cust)
+    // alert(this.qid)
+    api.qtReadScoreboards(this.cust,this.qid)
+      .then 
+        (   (qtDbRtnObj) => 
+          {
+            console.log(' running .then of api.qtReadScoreboards') 
+            this.buildListOfScoreboards(qtDbRtnObj)
+            // done with  table reads,  set some menu buts alive.
+            this.surveyMenuButsAlive = true  
+            this.loadingDataMsg = ''
+            this.loadingDataBusy = false
+
+          }
+        )
+        .catch(() => {  // api.qtScoreboards returned an error 
+          console.log('api.qtScoreboards error. cust & qid:' , this.cust, ' ', this.qid)
+        })
+  
+    } //end launchQtReadScoreboards
+
+  buildListOfScoreboards(qtDbObj) {
+    console.log('running buildListOfScoreboards')
+    this.scoreboardsArray = []
+    // this.scoreboardsArray2 = []
+      for (let i = 0; i < qtDbObj.length; i++) {
+          this.scoreboardsArray.push(qtDbObj[i].data)
+          // console.log('app 433 pushed into scoreboardsArray2')
+      } // end for
+      this.sortScoreboardsByNbr()
+      // console.table(this.scoreboardsArray2)
+      console.table(this.scoreboardsArray)
+      console.log('app 462 end of buildListOfScoreboards')
+  }
+
+  sortScoreboardsByNbr(){
+    console.log('running sortScoreboardsByNbr')
+    this.scoreboardsArray
+    .sort((a, b) => (a.scoreboardNbr > b.scoreboardNbr) ? 1 : (a.scoreboardNbr === b.scoreboardNbr) ? ((a.scoreboardName > b.scoreboardName) ? 1 : -1) : -1 )
+  }
+
 
 } // end export AppComponent
 

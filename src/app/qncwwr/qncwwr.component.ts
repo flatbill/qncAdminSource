@@ -14,33 +14,57 @@ export class QncwwrComponent implements OnInit {
   @Input() rulesIn  
   @Input() questionsIn
   @Input() subsetsIn
-  // @Output() wwqJumpOut = new EventEmitter() 
-  @Output() qncJumpOut = new EventEmitter() 
-  // @Output() wwgJumpOut = new EventEmitter() 
+  //@Output() qncJumpOut = new EventEmitter() 
+  @Output() ruleNbrOut = new EventEmitter() 
   @Output() wwrdJumpOut = new EventEmitter() 
-
+  
 
   ngOnInit() {
     //console.table(this.rulesIn)
+
+    // billy temp fixRuleNbr
+    for (let i = 0; i < this.rulesIn.length; i++) {
+      if (!this.rulesIn[i].hasOwnProperty('ruleNbr')) {
+        this.rulesIn[i]['ruleNbr'] = this.fixRuleNbr()
+      } // end if 
+    } // end for
+  
     this.rulesArray = this.rulesIn
     if (this.rulesArray.length == 0){
       this.msg1 = 'No rules exist yet for this survey.'
     } else {
       this.msg1 = 'Rules Shown.'
-
       this.countQuestionsPerRule()
     }
-  }
+    // billy kill:
+    // for (let i = 0; i < this.rulesArray.length; i++) {
+    //   if (!this.rulesIn[i].hasOwnProperty('ruleNbr')) {
+    //     this.rulesArray[i]['ruleNbr'] = '3377'
+    //   } // end if
+    // } // end for
+  } // end ngInit
 
-  jumpToQnc(){ this.qncJumpOut.emit() }
-  // jumpToWwq(){ this.wwqJumpOut.emit() }
-  // jumpToWwg(){ this.wwgJumpOut.emit() }
-  jumpToWwrd(rule,rx){ this.wwrdJumpOut.emit() }
+  fixRuleNbr() { //temp billy when rulearray entries dont yet have a ruleNbr
+    console.log('running wwr fixRuleNbr')
+    let ruleNbrMax = 0
+    for (let i = 0; i<this.rulesIn.length; i++) {
+      if (this.rulesIn[i].hasOwnProperty('ruleNbr')){
+         if ( parseInt(this.rulesIn[i].ruleNbr) > ruleNbrMax)
+           ruleNbrMax =  parseInt(this.rulesIn[i].ruleNbr)
+      }
+    }
+    return (ruleNbrMax + 1).toString().padStart(3, '0')
+  } //end fixRuleNbr 
+
+
   showHideHelp(){}
   doneWwr(){}
 
-  detailButClicked(rule,rx){
-    this.jumpToWwrd(rule,rx)
+  detailButClicked(ruleNbrParmIn){
+    console.log('running wwr detailButClicked:',ruleNbrParmIn)
+    //  jump out of wwsr and tell caller what we were working on
+    this.ruleNbrOut.emit(ruleNbrParmIn) 
+    this.wwrdJumpOut.emit()   
   }
 
   countQuestionsPerRule(){

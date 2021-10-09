@@ -293,12 +293,37 @@ const qtReadTeamMembers = (teamMemberParmIn) => {
     return response.json()
   })
 } 
-const qtReadScoreboardRanges = (custParmIn,qidParmIn) => {
-  let myUrl =  'https://stupefied-elion-621b07.netlify.app/.netlify/functions/qtReadScoreboardRanges'
+const qtReadScoreboards = (custParmIn,qidParmIn) => {
+  let myUrl =  'https://stupefied-elion-621b07.netlify.app/.netlify/functions/qtReadScoreboards'
   + '?cust=' + custParmIn
   + '&qid=' + qidParmIn
   return fetch(myUrl)
    .then((response) => {
+    return response.json()
+  })
+}
+
+const qtUpdateScoreboard = (data) => {
+  return fetch(`https://stupefied-elion-621b07.netlify.app/.netlify/functions/qtUpdateScoreboard`, {
+    body: JSON.stringify(data),
+    method: 'POST'
+  }).then(response => {
+    return response.json()
+  })
+}
+const qtDeleteScoreboard = (data) => {
+  return fetch(`https://stupefied-elion-621b07.netlify.app/.netlify/functions/qtDeleteScoreboard`, {
+    body: JSON.stringify(data),
+    method: 'POST'
+  }).then(response => {
+    return response.json()
+  })
+}
+const qtAddScoreboard = (data) => {
+  return fetch(`https://stupefied-elion-621b07.netlify.app/.netlify/functions/qtAddScoreboard`, {
+    body: JSON.stringify(data),
+    method: 'POST'
+  }).then(response => {
     return response.json()
   })
 }
@@ -335,6 +360,9 @@ export default  {
   qtReadUsers: qtReadUsers,
   qtReadSubscribers: qtReadSubscribers,
   qtReadTeamMembers: qtReadTeamMembers,
-  qtReadScoreboardRanges: qtReadScoreboardRanges
+  qtReadScoreboards: qtReadScoreboards,
+  qtAddScoreboard: qtAddScoreboard,
+  qtUpdateScoreboard: qtUpdateScoreboard,
+  qtDeleteScoreboard: qtDeleteScoreboard
 }
 
