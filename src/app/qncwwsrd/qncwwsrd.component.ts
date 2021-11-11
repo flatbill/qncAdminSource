@@ -13,7 +13,7 @@ export class QncwwsrdComponent implements OnInit {
   @Input() scoreboardsIn
   @Output() wwsrJumpOut = new EventEmitter()
 
-  msg1 = 'edit and save scoreboard details.'
+  msg1 = 'edit scoreboard details.'
   sx = -1
   pendingAddSx = -1
   scoreboardObj = {}  
@@ -21,9 +21,9 @@ export class QncwwsrdComponent implements OnInit {
   rangeTxtCols = 75
   rangeTxtRows = 3
   ngOnInit() {
-    console.log('wwsrd init ===***')
-    console.log(this.scoreboardNbrIn)
-    console.table(this.scoreboardsIn)
+    console.log('runn wwsrd ngOnInit')
+    // console.log(this.scoreboardNbrIn)
+    // console.table(this.scoreboardsIn)
     //console.log(this.scoreboardsIn[0].scoreboardNbr) blank scoreboardsIn?
     // if (this.scoreboardsIn2.length == 0) {
     //   this.scoreboardsIn2 = this.scoreboardsIn 
@@ -76,37 +76,39 @@ export class QncwwsrdComponent implements OnInit {
       //  set new scoreboard nbr to one bigger than max scoreboard nbr
       let scoreboardNbrMax = 
         Math.max.apply(Math, this.scoreboardsIn.map(function(s) { return s.scoreboardNbr }))
-      newScoreboardNbr = (scoreboardNbrMax + 1).toString().padStart(2, '0')
+      newScoreboardNbr = (scoreboardNbrMax + 1).toString().padStart(3, '0')
     } // end if scoreboardsIn.length > 0
-    let newScoreboardName = 'scoreboard' + newScoreboardNbr.substr(1, 1)    
+    let newScoreboardName = 'sb' + newScoreboardNbr //.substr(1, 1) 
+    let newScoreboardSeq  = '0'+ newScoreboardNbr 
+    // what scoreboard sequence is for: reports list scoreboards in sequence.
     this.scoreboardsIn.push(
       {
        cust: this.custIn,
        qid: this.qidIn,
        scoreboardNbr: newScoreboardNbr,
        scoreboardName: newScoreboardName,
-       scoreboardSeq: newScoreboardNbr,
+       scoreboardSeq: newScoreboardSeq,
        ranges: [
         {
          rangeName: 'low',
          rangeNbr: '1',
          rangeStart: '00',
          rangeEnd: '33',
-         rangeTxt: 'text goes here'
+         rangeTxt: 'text for this range goes here'
         },
         {
           rangeName: 'medium',
           rangeNbr: '1',
           rangeStart: '34',
           rangeEnd: '66',
-          rangeTxt: 'text goes here'
+          rangeTxt: 'text for this range goes here'
          },
          {
           rangeName: 'high',
           rangeNbr: '1',
           rangeStart: '67',
           rangeEnd: '99',
-          rangeTxt: 'text goes here'
+          rangeTxt: 'text for this range goes here'
          }
        ]
       //  scoreboardNbr: newscoreboardNbr,
@@ -261,7 +263,7 @@ export class QncwwsrdComponent implements OnInit {
   scoreboardNameChg(newScoreboardName,sx){
     console.log('running scoreboardNameChg')
     this.msg1 = 'scoreboard name changed. '
-    this.scoreboardsIn[sx].scoreboardName = newScoreboardName
+    this.scoreboardsIn[sx].scoreboardName = newScoreboardName.trim()
     this.saveScoreboard()
 
   }
@@ -269,7 +271,7 @@ export class QncwwsrdComponent implements OnInit {
   scoreboardSeqChg(newScoreboardSeq,sx){
     console.log('running scoreboardSeqChg')
     this.msg1 = 'scoreboard seq changed. '
-    this.scoreboardsIn[sx].scoreboardSeq = newScoreboardSeq
+    this.scoreboardsIn[sx].scoreboardSeq = newScoreboardSeq.trim()
     this.saveScoreboard()
   }
 
@@ -277,7 +279,7 @@ export class QncwwsrdComponent implements OnInit {
   rangeNameChg(newRangeName,sx,rx){
     console.log('running rangeNameChg')
     this.msg1 = 'range name changed. '
-    this.scoreboardsIn[sx].ranges[rx].rangeName = newRangeName
+    this.scoreboardsIn[sx].ranges[rx].rangeName = newRangeName.trim()
     this.saveScoreboard()
   }
 
@@ -302,7 +304,7 @@ rangeTxtChg(newRangeTxt,sx,rx){
   // he changed the range txt  
   console.log('running wwsrd rangeTxtChg')
   this.msg1 = 'range text changed. '
-  this.scoreboardsIn[sx].ranges[rx].rangeTxt = newRangeTxt
+  this.scoreboardsIn[sx].ranges[rx].rangeTxt = newRangeTxt.trim()
   this.saveScoreboard()
 }
 

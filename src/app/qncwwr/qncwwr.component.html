@@ -7,18 +7,81 @@
  <table class='table is-fullwidth'>
    <thead> 
  
-     <th>question count</th>
-     <th>rule Nbr</th>
-     <th>scoreboard</th>
-     <th>oper</th>
-     <th>threshhold</th>
-     <th>will trigger Group</th>
+     <th class='is-clickable' 
+     (click)="colHeadClicked('nbr')" >
+     <span>  question count</span>  
+     <span *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
+       <span class='tag is-link is-light' (click)="colSort('questCount','des')"> {{symArDn}} </span> 
+       <span class='tag is-link is-light' (click)="colSort('questCount','asc')"> {{symArUp}} </span> 
+       <span class='tag is-link is-light' (click)="colFilt('questCount','Nbr')"> {{symFilt}} </span>
+     </span> 
+   </th>
+
+     <th class='is-clickable' 
+     (click)="colHeadClicked('nbr')" >
+     <span>  rule Nbr</span>  
+     <span *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
+       <span class='tag is-link is-light' (click)="colSort('ruleNbr','des')"> {{symArDn}} </span> 
+       <span class='tag is-link is-light' (click)="colSort('ruleNbr','asc')"> {{symArUp}} </span> 
+       <span class='tag is-link is-light' (click)="colFilt('ruleNbr','Nbr')"> {{symFilt}} </span>
+     </span> 
+   </th>
+
+     <th class='is-clickable' 
+     (click)="colHeadClicked('nbr')" >
+     <span>scoreboard</span>  
+     <span *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
+       <span class='tag is-link is-light' (click)="colSort('accum','des')"> {{symArDn}} </span> 
+       <span class='tag is-link is-light' (click)="colSort('accum','asc')"> {{symArUp}} </span> 
+       <span class='tag is-link is-light' (click)="colFilt('accum','Nbr')"> {{symFilt}} </span>
+     </span> 
+   </th>
+
+     <th class='is-clickable' 
+     (click)="colHeadClicked('nbr')" >
+     <span>oper</span>  
+     <span *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
+       <span class='tag is-link is-light' (click)="colSort('oper','des')"> {{symArDn}} </span> 
+       <span class='tag is-link is-light' (click)="colSort('oper','asc')"> {{symArUp}} </span> 
+       <span class='tag is-link is-light' (click)="colFilt('oper','Nbr')"> {{symFilt}} </span>
+     </span> 
+   </th>
+
+     <th class='is-clickable' 
+     (click)="colHeadClicked('nbr')" >
+     <span>threshold</span>  
+     <span *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
+       <span class='tag is-link is-light' (click)="colSort('thresh','des')"> {{symArDn}} </span> 
+       <span class='tag is-link is-light' (click)="colSort('thresh','asc')"> {{symArUp}} </span> 
+       <span class='tag is-link is-light' (click)="colFilt('thresh','Nbr')"> {{symFilt}} </span>
+     </span> 
+   </th>
+
+     <th class='is-clickable' 
+     (click)="colHeadClicked('nbr')" >
+     <span>will trigger Group</span>  
+     <span *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
+       <span class='tag is-link is-light' (click)="colSort('subset','des')"> {{symArDn}} </span> 
+       <span class='tag is-link is-light' (click)="colSort('subset','asc')"> {{symArUp}} </span> 
+       <span class='tag is-link is-light' (click)="colFilt('subset','Nbr')"> {{symFilt}} </span>
+     </span> 
+   </th>
+
      <th>&nbsp;</th>
+     <th *ngIf='addButOn'> 
+      <button 
+        class='button is-small is-info'
+        (click)=addButClicked()
+      >
+        add
+      </button>
+    </th> 
 
    </thead>
    <tbody>
    <tr *ngFor='let r of rulesArray, index as rx'
        class='has-background-success-light'> 
+     <ng-container *ngIf="r.rFilterInOut=='in'" >
        <td><span class='tag is-small is-rounded'>{{r.questCount}}</span></td>
        <td>{{r.ruleNbr}}</td>
        <td>{{r.accum}}</td>
@@ -27,10 +90,11 @@
        <td>{{r.subset}}</td>
        <td>        
         <button class='button is-small is-info' 
-              (click)=detailButClicked(r)> 
+              (click)=detailButClicked(r.ruleNbr)> 
            details 
         </button> 
      </td>
+    </ng-container> 
    </tr>
    </tbody>
  </table>

@@ -74,14 +74,19 @@ export class QncwwsrComponent implements OnInit {
         let mySortField = '??'
         for (let i = this.colSortByArray.length-1; i >= 0; i--) {
           retval = 0
-          mySortField = this.colSortByArray[i].sortField
+          mySortField = this.colSortByArray[i].sortField  
           if (this.colSortByArray[i].ascOrDes == 'des' )
             {neg1OrPos1 = -1} else {neg1OrPos1 = +1}   
           // -------------------------------------------- 
           for (let [prop, objVal] of Object.entries(a)) {
             if (prop === mySortField) {
-              if (a[prop] > b[prop]) { retval= -1 * neg1OrPos1}
-              if (a[prop] < b[prop]) { retval= +1 * neg1OrPos1}
+              if (Number(a[prop]) && Number(b[prop]) ){ // comparing nbrs
+                if (Number(a[prop]) > Number(b[prop])) { retval= -1 * neg1OrPos1}
+                if (Number(a[prop]) < Number(b[prop])) { retval= +1 * neg1OrPos1}
+              } else { // comparing a pair where at least one is not number
+                if (a[prop] > b[prop]) { retval= -1 * neg1OrPos1}
+                if (a[prop] < b[prop]) { retval= +1 * neg1OrPos1}
+              } // end if Number
               if (retval !== 0) {break} // exit inner for loop early
             } // end if prop == mySortField
           } // end for loop
@@ -91,6 +96,42 @@ export class QncwwsrComponent implements OnInit {
       return retval // is now 0 or -1 or +1
     }) // end inline function
     } // end colSort
+  
+
+    // colSortOld(fieldName,ascDes){
+    //   this.msg1 = 'scoreboards sorted by' //append list of fields to msg1
+    //   let commaOrPeriod = ','
+    //   this.colSortByArray.push( {sortField: fieldName , ascOrDes: ascDes} )
+    //   if (this.colSortByArray.length>3){ this.colSortByArray.splice(0,1) }
+   
+    //   for (let i = this.colSortByArray.length-1; i >= 0; i--) {
+    //     if(i==0){commaOrPeriod='.'}
+    //     this.msg1 = this.msg1 + ' ' + this.colSortByArray[i].sortField + commaOrPeriod
+    //   }
+      
+    //   this.scoreboardsIn.sort((a, b) => { 
+    //     let retval      = 666  // set retval to 0, -1, +1
+    //     let neg1OrPos1  = 666 // set neg1OrPos1 to -1 or +1
+    //     let mySortField = '??'
+    //     for (let i = this.colSortByArray.length-1; i >= 0; i--) {
+    //       retval = 0
+    //       mySortField = this.colSortByArray[i].sortField
+    //       if (this.colSortByArray[i].ascOrDes == 'des' )
+    //         {neg1OrPos1 = -1} else {neg1OrPos1 = +1}   
+    //       // -------------------------------------------- 
+    //       for (let [prop, objVal] of Object.entries(a)) {
+    //         if (prop === mySortField) {
+    //           if (a[prop].toString().padStart(4,'0') > b[prop].toString().padStart(4,'0')) { retval= -1 * neg1OrPos1}
+    //           if (a[prop].toString().padStart(4,'0') < b[prop].toString().padStart(4,'0')) { retval= +1 * neg1OrPos1}
+    //           if (retval !== 0) {break} // exit inner for loop early
+    //         } // end if prop == mySortField
+    //       } // end for loop
+    //       // --------------------------------------------- 
+    //     if (retval !== 0) {break} // exit outer for loop early
+    //   } // end outer for loop
+    //   return retval // is now 0 or -1 or +1
+    // }) // end inline function
+    // } // end colSort
   
     colFilt(fn,pt){ //parms fieldname and prompt text
       console.log('running colFilt ', fn, pt)

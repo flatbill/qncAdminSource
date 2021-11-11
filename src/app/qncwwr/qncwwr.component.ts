@@ -14,12 +14,19 @@ export class QncwwrComponent implements OnInit {
   @Input() rulesIn  
   @Input() questionsIn
   @Input() subsetsIn
-  //@Output() qncJumpOut = new EventEmitter() 
+  @Input() filterResetIn
   @Output() ruleNbrOut = new EventEmitter() 
   @Output() wwrdJumpOut = new EventEmitter() 
-  
+  symArUp    = '\u{2191}'
+  symArDn    = '\u{2193}'
+  symFilt    = '\u{2207}'  
+  colHeadSf = false
+  rFilterInOut = 'in'
+  colSortByArray = []
+  addButOn = false   // controls add button 
 
   ngOnInit() {
+    console.log('running wwr ngOnInit')
     //console.table(this.rulesIn)
 
     // billy temp fixRuleNbr
@@ -36,12 +43,18 @@ export class QncwwrComponent implements OnInit {
       this.msg1 = 'Rules Shown.'
       this.countQuestionsPerRule()
     }
-    // billy kill:
-    // for (let i = 0; i < this.rulesArray.length; i++) {
-    //   if (!this.rulesIn[i].hasOwnProperty('ruleNbr')) {
-    //     this.rulesArray[i]['ruleNbr'] = '3377'
-    //   } // end if
-    // } // end for
+    console.table(this.rulesIn)
+    
+    if (this.rulesIn.length == 0) {
+      // no rules yet, so show add button
+      this.addButOn = true
+      this.msg1 = 'No rules exist. Click the add button.'
+    }
+
+    if (this.filterResetIn) {
+      this.resetRuleFilter()
+    }
+
   } // end ngInit
 
   fixRuleNbr() { //temp billy when rulearray entries dont yet have a ruleNbr
@@ -56,6 +69,98 @@ export class QncwwrComponent implements OnInit {
     return (ruleNbrMax + 1).toString().padStart(3, '0')
   } //end fixRuleNbr 
 
+  colHeadClicked(c){
+    // hide/show sort & filter icons in the table header (lower part)
+    if (this.colHeadSf == true ) {
+      this.colHeadSf = false
+    } else {
+      this.colHeadSf = true
+      this.msg1 = 'click an icon to sort or filter.'
+    }
+  }// end colHeadClicked
+
+  colSort(fieldName,ascDes){
+    this.msg1 = 'rules sorted by' //append list of fields to msg1
+    let commaOrPeriod = ','
+    this.colSortByArray.push( {sortField: fieldName , ascOrDes: ascDes} )
+    if (this.colSortByArray.length>3){ this.colSortByArray.splice(0,1) }
+ 
+    for (let i = this.colSortByArray.length-1; i >= 0; i--) {
+      if(i==0){commaOrPeriod='.'}
+      this.msg1 = this.msg1 + ' ' + this.colSortByArray[i].sortField + commaOrPeriod
+    }
+    
+    this.rulesIn.sort((a, b) => { 
+      let retval      = 666  // set retval to 0, -1, +1
+      let neg1OrPos1  = 666 // set neg1OrPos1 to -1 or +1
+      let mySortField = '??'
+      for (let i = this.colSortByArray.length-1; i >= 0; i--) {
+        retval = 0
+        mySortField = this.colSortByArray[i].sortField  
+        if (this.colSortByArray[i].ascOrDes == 'des' )
+          {neg1OrPos1 = -1} else {neg1OrPos1 = +1}   
+        // -------------------------------------------- 
+        for (let [prop, objVal] of Object.entries(a)) {
+          if (prop === mySortField) {
+            if (Number(a[prop]) && Number(b[prop]) ){ // comparing nbrs
+              if (Number(a[prop]) > Number(b[prop])) { retval= -1 * neg1OrPos1}
+              if (Number(a[prop]) < Number(b[prop])) { retval= +1 * neg1OrPos1}
+            } else { // comparing a pair where at least one is not number
+              if (a[prop] > b[prop]) { retval= -1 * neg1OrPos1}
+              if (a[prop] < b[prop]) { retval= +1 * neg1OrPos1}
+            } // end if Number
+            if (retval !== 0) {break} // exit inner for loop early
+          } // end if prop == mySortField
+        } // end for loop
+        // --------------------------------------------- 
+      if (retval !== 0) {break} // exit outer for loop early
+    } // end outer for loop
+    return retval // is now 0 or -1 or +1
+  }) // end inline function
+  } // end colSort
+
+  colFilt(fn,pt){ //parms fieldname and prompt text
+    console.log('running colFilt ', fn, pt)
+    let filtWord = prompt('Filter ' + pt)
+    if (filtWord == null || filtWord == "") {
+      // User cancelled the prompt.
+      this.msg1 = 'filter reset. '
+      this.resetRuleFilter()
+    } else {
+      // this.colFiltPartB(fn, filtWord)  
+      this.colFiltPartBB(fn, filtWord)  
+      // this.questArray = this.questArray3 // billy temp.  need array strategy.
+      this.msg1 = 'rule list filtered.'
+    }
+  } // end colFilt 
+
+colFiltPartBB(fn,fw){ // field name, filter word
+  console.log('running colFiltPartBB',fn,fw)
+  for (let i = 0; i < this.rulesIn.length; i++) {
+    this.rulesIn[i]['rFilterInOut'] = 'out' //default out
+    if (typeof(this.rulesIn[i][fn]) == 'string') {
+      if (this.rulesIn[i][fn].includes(fw)) {
+        this.rulesIn[i]['rFilterInOut'] = 'in'
+      } else {
+        if (typeof(this.rulesIn[i][fn]) == 'object') { 
+          for (let j = 0; j < this.rulesIn[i][fn].length; j++) {
+            if(this.rulesIn[i][fn][j].includes(fw) ) { // partial match OK
+              this.rulesIn[i]['rFilterInOut'] = 'in'
+            } 
+          }
+        }  
+      }  // end if  
+    } // end if typeof
+  } // end for
+  console.table(this.rulesIn)
+} // end colFiltPartBB
+
+addButClicked(){
+  console.log('running wwr addButClicked')
+  this.ruleNbrOut.emit(-1) //-1  no rules yet
+  this.wwrdJumpOut.emit()
+}
+
 
   showHideHelp(){}
   doneWwr(){}
@@ -68,11 +173,35 @@ export class QncwwrComponent implements OnInit {
   }
 
   countQuestionsPerRule(){
+    console.log('running countQuestionsPerRule')
     let qCnt = 0
     for (let i = 0; i<this.rulesArray.length; i++){
-      this.rulesArray[i].questCount = i * 11
-      qCnt = this.questionsIn.filter(x => x.subset==this.rulesArray[i].subset).length
-      this.rulesArray[i].questCount = qCnt
-    } 
+      qCnt = 0
+      //this.rulesArray[i].questCount = i * 11
+      // billy fix loop thru q.accum , dont just rely on accum[0]
+      // qCnt = this.questionsIn
+      // .filter(q => q.accum[0].toLowerCase().trim()==this.rulesArray[i].accum.toLowerCase().trim()).length
+      // this.rulesArray[i].questCount = qCnt.toString().padStart(3,'0') 
+      //===
+      for (let j = 0; j<this.questionsIn.length; j++) {
+        for(let k = 0; k<this.questionsIn[j].accum.length; k++) {
+          if (this.questionsIn[j].accum[k] == this.rulesArray[i].accum) {
+            console.log('207 hit match')
+            qCnt = qCnt + 1
+          } // end if
+        } //end inner for
+      } // end middle for
+      //===
+      this.rulesArray[i].questCount = qCnt.toString().padStart(3,'0') 
+    }  // end outer for
   } // end countQuestionsPerRule
+
+  resetRuleFilter(){  
+    console.log('running resetRuleFilter')    
+    for (let i = 0; i < this.rulesIn.length; i++) {
+      this.rulesIn[i]['rFilterInOut'] = 'in'  
+    }
+    // this.colSortByArray = []
+  }
+
 } // end of export component

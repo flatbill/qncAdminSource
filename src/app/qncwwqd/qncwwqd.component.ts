@@ -52,13 +52,6 @@ export class QncwwqdComponent implements OnInit {
     console.table(this.questionsIn)
   } // end ngOnInit
 
-  // prevButClick(){
-  //   this.msg1 = 'first question shown.'
-  //   if(this.qx == 0) { return} 
-  //   this.qx = this.qx - 1 
-  //   this.msg1 = 'previous question shown.'
-  //   this.chkSubsetAccumMatch(this.questionsIn[this.qx].subset)
-  // }
 
   prevButClick(){
     // console.log('running prevButClick')
@@ -75,13 +68,6 @@ export class QncwwqdComponent implements OnInit {
     } // end while
   } // end prevButClick
 
-  // nextButClick(){
-  //   this.msg1 = 'last question shown.'
-  //   if(this.qx == this.questionsIn.length-1) { return} //no more next
-  //   this.qx = this.qx + 1 
-  //   this.msg1 = 'next question shown.'
-  //   this.chkSubsetAccumMatch(this.questionsIn[this.qx].subset)
-  // }
 
   nextButClick(){
     this.msg1 = 'last question shown.'
@@ -107,21 +93,22 @@ export class QncwwqdComponent implements OnInit {
       newQuestNbr = (questNbrMax + 1).toString().padStart(3, '0')
     } // end if questionsIn.length > 0
 
-    let ranSeq = 
-      (Math.floor(Math.random() * Math.floor(9999))).toString()
+    let newSeq = '0' + newQuestNbr
+    // let ranSeq = 
+    //   (Math.floor(Math.random() * Math.floor(9999))).toString()
 
     this.questionsIn.push(
       {
        cust: this.custIn,
        qid: this.qidIn,
        questNbr: newQuestNbr,
-       questSeq: ranSeq,
+       questSeq: newSeq,
        questTxt: "new question text",
        preQuest: "new pre-question text",
        aca: ["answer choice text"],
        acaPointVals: [0],
-       accum: ["scoreboard1"],
-       subset: 'group1'
+       accum: ["sb001"],
+       subset: 'main'
       }
     )
     console.log('wwqd 95 questionIn:')
@@ -216,7 +203,7 @@ export class QncwwqdComponent implements OnInit {
 
   questSeqChg(newQuestSeq,qx){
     this.msg1 = 'question sequence changed. '
-    this.questionsIn[qx].questSeq = newQuestSeq
+    this.questionsIn[qx].questSeq = newQuestSeq.trim()
     this.saveQuestion()
   } // end questSeqChg
 
@@ -234,18 +221,18 @@ export class QncwwqdComponent implements OnInit {
     //this.setSubsetForRules(this.questionsIn[qx].subset,ev.target.value)
 
     // add new subset to subsetsIn if its not there already:
-    this.setSubsetForSubsets(newSubset)
+    //this.setSubsetForSubsets(newSubset)
 
     // delete old subset from subsetsIn if no questions any more:
-    this.chkDelSubsetForSubsets(this.questionsIn[qx].subset)
-    this.questionsIn[qx].subset = newSubset
+    //this.chkDelSubsetForSubsets(this.questionsIn[qx].subset)
+    this.questionsIn[qx].subset = newSubset.trim()
     this.saveQuestion()
     this.chkSubsetAccumMatch(this.questionsIn[qx].subset)
   } // end subsetChg
 
   preQuestChg(newPreQuest,qx){
     this.msg1 = 'pre-question changed. '
-    this.questionsIn[qx].preQuest = newPreQuest
+    this.questionsIn[qx].preQuest = newPreQuest.trim()
     this.saveQuestion()
   } // end preQuestChg
   
@@ -291,37 +278,37 @@ export class QncwwqdComponent implements OnInit {
     this.saveQuestion()
   }
 
-  setSubsetForRules(subsetOld,subsetNew){
-    console.log('running setSubsetForRules')
-    // console.log(subsetOld,subsetNew)
-    // find rules with the old subset, change subset to new subset.
-    // this works, but isnt wanted, 
-    // cuz it impliies he is changing the old subset into the new subset.
-    for (let i = 0; i < this.rulesIn.length; i++) { 
-      if(this.rulesIn[i].subset == subsetOld) {        
-        this.rulesIn[i].subset = subsetNew
-      } // end if
-    } // end for
-  } // end setSubsetForRules
-
-  setSubsetForSubsets(subsetNew){
-    console.log('running setSubsetForSubsets:', subsetNew)
-    // look for the new subset in subsetsIn,
-    // if not found, push new subset to subsetsIn.
-    let subsetFoundYn = 'n'
-    for (let i = 0; i < this.subsetsIn.length; i++) { 
-      if(this.subsetsIn[i] == subsetNew) {   
-        // console.log(' we found a subset match for: ', subsetNew)     
-        subsetFoundYn = 'y'
-        break
-      } // end if
-    } // end for 
-    if (subsetFoundYn == 'n'){
-      // console.log('213 pushing into subsetsIn: ', subsetNew)
-      this.subsetsIn.push(subsetNew)
-    }  // end if
-    // billy, maybe add the new subset to the db.
-  } // end setSubsetForSubsets
+  // setSubsetForRules(subsetOld,subsetNew){
+  //   console.log('running setSubsetForRules')
+  //   // console.log(subsetOld,subsetNew)
+  //   // find rules with the old subset, change subset to new subset.
+  //   // this works, but isnt wanted, 
+  //   // cuz it impliies he is changing the old subset into the new subset.
+  //   for (let i = 0; i < this.rulesIn.length; i++) { 
+  //     if(this.rulesIn[i].subset == subsetOld) {        
+  //       this.rulesIn[i].subset = subsetNew
+  //     } // end if
+  //   } // end for
+  // } // end setSubsetForRules
+  moo(){}
+  // setSubsetForSubsets(subsetNew){
+  //   console.log('running setSubsetForSubsets:', subsetNew)
+  //   // look for the new subset in subsetsIn,
+  //   // if not found, push new subset to subsetsIn.
+  //   let subsetFoundYn = 'n'
+  //   for (let i = 0; i < this.subsetsIn.length; i++) { 
+  //     if(this.subsetsIn[i] == subsetNew) {   
+  //       // console.log(' we found a subset match for: ', subsetNew)     
+  //       subsetFoundYn = 'y'
+  //       break
+  //     } // end if
+  //   } // end for 
+  //   if (subsetFoundYn == 'n'){
+  //     // console.log('213 pushing into subsetsIn: ', subsetNew)
+  //     this.subsetsIn.push(subsetNew)
+  //   }  // end if
+  //   // billy, maybe add the new subset to the db.
+  // } // end setSubsetForSubsets
 
   chkDelSubsetForSubsets(subsetOld){
     // console.log('running chkDelSubsetForSubsets',subsetOld)

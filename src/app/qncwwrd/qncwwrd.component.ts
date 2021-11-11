@@ -12,14 +12,14 @@ export class QncwwrdComponent implements OnInit {
   @Input() qidIn
   @Input() ruleNbrIn
   @Input() rulesIn  
-  @Input() subsetsIn  
-  //@Input() questionsIn   
   @Output() wwrJumpOut = new EventEmitter()
   msg1 = 'edit rule details.'
   rx = -1
   ruleObj = {}
   qtDbDataObj = {} 
   pendingAddRx = -1
+  symDropDown    = '\u{25BC}'  
+
 
   ngOnInit() {
     // // billy temp:
@@ -38,9 +38,10 @@ export class QncwwrdComponent implements OnInit {
     console.log(this.custIn,this.qidIn)
     console.log(this.ruleNbrIn)
     console.table(this.rulesIn)
-    console.table(this.subsetsIn)
+    console.log('42 ready to check ruleNbr')
     if (this.ruleNbrIn==-1){
       // no rule rec exists. add a starter rule.
+      console.log('45 ready to run addButClick')
       this.addButClick()
       this.rx = 0
       this.msg1 ='New starter rule created. Ready for your changes.'
@@ -127,6 +128,7 @@ export class QncwwrdComponent implements OnInit {
   }
 
   addButClick(){
+    console.log('running wwrd addButClick')
     this.msg1 = 'edit this new rule.'
     let newRuleNbr = '001'
     if (this.rulesIn.length > 0) {
@@ -136,19 +138,20 @@ export class QncwwrdComponent implements OnInit {
         newRuleNbr = (ruleNbrMax + 1).toString().padStart(3, '0')
       //alert('new rule nbr: '+ newRuleNbr)
     } //end if
-  
+    let newRuleScoreboardName = 'sb001'
+    let newRuleGroupName = 'grp001'
     this.rulesIn.push(
       {
         cust: this.custIn,
         qid: this.qidIn,
         ruleNbr: newRuleNbr,
-        accum: "scoreboard1",
+        accum:   newRuleScoreboardName,
         oper: '>',
         thresh: 0,
-        subset: '???'
+        subset: newRuleGroupName
       }
       ) // end push
-      console.log('wwqd 133 rulesIn:')
+      console.log('wwrd 151 rulesIn:')
       console.table(this.rulesIn)
       this.rx = this.rulesIn.length - 1
       this.pendingAddRx = this.rx // when he hits save, we use this.
@@ -156,7 +159,7 @@ export class QncwwrdComponent implements OnInit {
       this.saveRule() //auto save
       this.msg1 ='New starter rule created. Ready for your changes.'
       this.rulesIn[this.rx].rFilterInOut = 'in'
-      console.log('141 end of addButClick')
+      console.log('159 end of addButClick')
   } // end addButClick
 
   delButClick(){
@@ -185,27 +188,32 @@ export class QncwwrdComponent implements OnInit {
      }
    } // end delButClick
  
-  ruleScoreboardChg(ruleScoreboard,rx)  {
-    alert('189 change scoreboard')
-  }
+  ruleScoreboardChg(newScoreboard,rx)  {
+    console.log('running ruleScoreboardChg to ',newScoreboard)
+    this.msg1 = 'scoreboard changed. '
+    this.rulesIn[rx].accum = newScoreboard.trim()
+    this.saveRule()
+  } // end ruleScoreboardChg
 
   ruleOperChg(newOper,rx) {
     console.log('running ruleOperChg to ', newOper)
     this.msg1 = 'oper changed. '
-    this.rulesIn[rx].oper = newOper
+    this.rulesIn[rx].oper = newOper.trim()
     this.saveRule()
   }
 
   ruleThreshChg(newThresh,rx) {
     console.log('running ruleThreshChg to ', newThresh)
     this.msg1 = 'threshold changed. '
-    this.rulesIn[rx].thresh = newThresh
+    this.rulesIn[rx].thresh = newThresh.trim()
     this.saveRule()
-
   }
 
-  ruleGroupChg(ruleGroup,rx) {
-    alert('206 change group')
+  ruleGroupChg(newGroup,rx) {
+    console.log('running ruleGroupChg to ',newGroup)
+    this.msg1 = 'group changed. '
+    this.rulesIn[rx].subset = newGroup.trim()
+    this.saveRule()
   }
 
   launchQtAddRule(){

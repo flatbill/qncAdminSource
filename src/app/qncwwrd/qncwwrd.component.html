@@ -41,7 +41,7 @@
       #ruleScoreboard
       class=' is-small '
       value= {{rulesIn[rx].accum}}
-      size="7"
+      size="20"
       (change)=ruleScoreboardChg(ruleScoreboard.value,rx)              
       autocomplete="off"></td>
   </tr>
@@ -57,6 +57,16 @@
     (change)=ruleOperChg(ruleOper.value,rx) 
     overflow="auto"  
     autocomplete="off">    </td>
+    <!-- <td>
+      try dropdown {{symDropDown}}
+      <select>
+        <option value="z">  &lt;         </option>
+        <option value="z="> &lt; &#61; </option>
+        <option value=">">  &gt;         </option>
+        <option value=">="> &gt; &#61; </option>
+        <option value="=">  &#61; </option>
+      </select>
+    </td> -->
   </tr>
   <tr>
     <td><label>Threshold: </label></td>
@@ -83,5 +93,5 @@
     
 </table>
 
-<span id='htmlIdBottomOfPage'>bottom </span>
+<span id='htmlIdBottomOfPage'> </span>
 </div>

@@ -7,21 +7,72 @@
 
 <table class='table is-fullwidth'>
   <thead> 
-    <th>question count</th>
-    <th>group</th><th>&nbsp;</th>
+    <th class='is-clickable' 
+      (click)="colHeadClicked('nbr')" >
+      <span>  question count</span>  
+      <span *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
+        <span class='tag is-link is-light' (click)="colSort('qCount','des')"> {{symArDn}} </span> 
+        <span class='tag is-link is-light' (click)="colSort('qCount','asc')"> {{symArUp}} </span> 
+        <span class='tag is-link is-light' (click)="colFilt('qCount','qCount')"> {{symFilt}} </span>
+      </span> 
+    </th>
+
+    <th class='is-clickable' 
+      (click)="colHeadClicked('nbr')" >
+      <span>  group Nbr</span>  
+      <span *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
+        <span class='tag is-link is-light' (click)="colSort('groupNbr','des')"> {{symArDn}} </span> 
+        <span class='tag is-link is-light' (click)="colSort('groupNbr','asc')"> {{symArUp}} </span> 
+        <span class='tag is-link is-light' (click)="colFilt('groupNbr','groupNbr')"> {{symFilt}} </span>
+      </span> 
+    </th>
+
+    <th class='is-clickable' 
+      (click)="colHeadClicked('nbr')" >
+      <span>   Name </span>  
+      <span *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
+        <span class='tag is-link is-light' (click)="colSort('groupName','des')"> {{symArDn}} </span> 
+        <span class='tag is-link is-light' (click)="colSort('groupName','asc')"> {{symArUp}} </span> 
+        <span class='tag is-link is-light' (click)="colFilt('groupName','groupName')"> {{symFilt}} </span>
+      </span> 
+    </th>
+    <th class='is-clickable' 
+      (click)="colHeadClicked('nbr')" >
+      <span>   Sequence </span>  
+      <span *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
+        <span class='tag is-link is-light' (click)="colSort('seq','des')"> {{symArDn}} </span> 
+        <span class='tag is-link is-light' (click)="colSort('seq','asc')"> {{symArUp}} </span> 
+        <span class='tag is-link is-light' (click)="colFilt('seq','sequence')"> {{symFilt}} </span>
+      </span> 
+    </th>
+
+    
+    <th>&nbsp;</th>
+    <th *ngIf='addButOn'> 
+      <button 
+        class='button is-small is-info'
+        (click)=addButClicked()
+      >
+        add
+      </button>
+    </th> 
+
   </thead>
   <tbody>
-    <tr *ngFor='let s of subsetArray, index as sx'
+    <tr *ngFor='let g of groupsIn, index as gx'
       class='has-background-success-light'> 
-      <td><span class='tag is-small is-rounded'>&nbsp;{{s.qCount}}&nbsp;</span></td>
-      <td>{{s.subset}}</td>
-
+      <ng-container *ngIf="g.gFilterInOut=='in'" >
+        <td><span class='tag is-small is-rounded'>&nbsp;{{g.qCount}}&nbsp;</span></td>
+        <td>{{g.groupNbr}}</td>
+        <td>{{g.groupName}}</td>
+        <td>{{g.seq}}</td>
       <td>        
        <button class='button is-small is-info' 
-             (click)=detailButClicked(s.subset,sx)> 
+             (click)=detailButClicked(g.groupNbr,gx)> 
           details 
        </button> 
-    </td>
+      </td>
+    </ng-container>
     </tr>
   </tbody>
 </table>

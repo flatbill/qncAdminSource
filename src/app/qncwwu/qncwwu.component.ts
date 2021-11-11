@@ -146,6 +146,7 @@ buildListOfScores(qtDbObj){
     for (let i = 0; i < qtDbObj.length; i++) {
       this.scoresArray.push(qtDbObj[i].data)
     }
+    // console.log('149 scoresArray: ')
     // console.table(this.scoresArray)
     if (this.scoresArray.length == 0) {this.msg1 = 'no scores found.'}
     if (this.scoresArray.length > 0) {
@@ -263,7 +264,7 @@ buildRpt(){
     doc.text(5,  this.row, this.scoreboardsArray[i].scoreboardName) 
     // lookup his score that matches current scoreboard:
     scoresIx = this.scoresArray
-      .findIndex(s => s.accum == this.scoreboardsArray[i].scoreboardName)
+      .findIndex(s => s.accum.toLowerCase() == this.scoreboardsArray[i].scoreboardName.toLowerCase())
     if(scoresIx>-1){
       this.hisScore    = this.scoresArray[scoresIx].wscore 
       this.hisScoreStr = this.scoresArray[scoresIx].wscore.toString()

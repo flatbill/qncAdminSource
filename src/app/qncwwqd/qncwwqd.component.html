@@ -38,16 +38,19 @@
   </tr>
   <tr>
 <td><label>Sequence: </label>  &nbsp;
-    <span class='tag is-info is-clickable' 
+    </td>
+ <td>
+   <input  
+      #questSeq
+      class=' is-small '
+      value= {{questionsIn[qx].questSeq}}
+      size="7"
+      (change)=questSeqChg(questSeq.value,qx)              
+      autocomplete="off">
+   <span class='tag is-info is-clickable ml-3' 
     (click)='ranSeqButClick(qx)'>
-     randomize</span></td>
- <td><input  
-  #questSeq
-  class=' is-small '
-  value= {{questionsIn[qx].questSeq}}
-  size="7"
-  (change)=questSeqChg(questSeq.value,qx)              
-  autocomplete="off"></td>
+     randomize</span>
+    </td>
   </tr>
   <tr>
   <td><label>Pre-Question: </label></td>

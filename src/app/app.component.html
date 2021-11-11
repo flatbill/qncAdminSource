@@ -48,17 +48,22 @@
 </app-qncpro>
 
 <app-qncwwg   *ngIf="showQncWwg" 
-   [rulesIn]="rulesArray"
    [questionsIn]="questArray"
-   [subsetsIn]="subsetArray"
-   (qncJumpOut)="showQncFun($event)"
-   (wwqJumpOut) = "showWwqFun($event)"
-   (wwrJumpOut) = "showWwrFun($event)"
+   [groupsIn]="groupArray"
+   [filterResetIn]='wwgFilterReset'
    (wwgdJumpOut) = "showWwgdFun($event)"
+   (groupsOut)   = "setGroupsFromWwgFun($event)"
+   (groupNbrOut) = "setGroupNbrFromWwgFun($event)"
    >
 </app-qncwwg>
 
-<app-qncwwgd *ngIf="showQncWwgd">
+<app-qncwwgd *ngIf="showQncWwgd"
+  [custIn]="cust"
+  [qidIn]="qid"
+  [groupNbrIn]="daGroupNbr"
+  [groupsIn]='groupArray'
+  (wwgJumpOut)="showWwgFun($event)"
+>
 </app-qncwwgd>
 
 <app-qncwwq  *ngIf="showQncWwq" 
@@ -90,6 +95,8 @@
   [questionsIn]="questArray"
   [rulesIn]="rulesArray"
   [subsetsIn]="subsetArray"
+  [filterResetIn]='wwrFilterReset'
+  (rulesOut)    =" setRulesFromWwrFun($event)"
   (ruleNbrOut)  = "setRuleNbrFromWwrFun($event)"
   (wwrdJumpOut) = "showWwrdFun($event)"
 >
@@ -98,7 +105,7 @@
 <app-qncwwrd *ngIf="showQncWwrd" 
   [custIn]="cust"
   [qidIn]="qid"
-  [ruleNbrIn]="ruleNbr"
+  [ruleNbrIn]="daRuleNbr"
   [rulesIn]="rulesArray"
   (wwrJumpOut) = "showWwrFun($event)"
 >

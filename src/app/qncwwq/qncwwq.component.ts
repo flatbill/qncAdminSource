@@ -71,14 +71,13 @@ export class QncwwqComponent implements OnInit {
         // -------------------------------------------- 
         for (let [prop, objVal] of Object.entries(a)) {
           if (prop === mySortField) {
-            // console.log(a[prop].toString().padStart(4,'0'))
-            // console.log(b[prop].toString().padStart(4,'0'))
-            if (a[prop].toString().padStart(4,'0') 
-               > b[prop].toString().padStart(4,'0')) { retval= -1 * neg1OrPos1}
-            if (a[prop].toString().padStart(4,'0') 
-               < b[prop].toString().padStart(4,'0')) { retval= +1 * neg1OrPos1}
-            // if (a[prop] > b[prop]) { retval= -1 * neg1OrPos1}
-            // if (a[prop] < b[prop]) { retval= +1 * neg1OrPos1}
+            if (Number(a[prop]) && Number(b[prop]) ){ // comparing nbrs
+              if (Number(a[prop]) > Number(b[prop])) { retval= -1 * neg1OrPos1}
+              if (Number(a[prop]) < Number(b[prop])) { retval= +1 * neg1OrPos1}
+            } else { // comparing a pair where at least one is not number
+              if (a[prop] > b[prop]) { retval= -1 * neg1OrPos1}
+              if (a[prop] < b[prop]) { retval= +1 * neg1OrPos1}
+            } // end if Number
             if (retval !== 0) {break} // exit inner for loop early
           } // end if prop == mySortField
         } // end for loop
@@ -94,7 +93,7 @@ export class QncwwqComponent implements OnInit {
     let filtWord = prompt('Filter ' + pt)
     if (filtWord == null || filtWord == "") {
       // User cancelled the prompt.
-      this.msg1 = 'filter cancelled. '
+      this.msg1 = 'filter reset. '
       this.resetQuestionFilter()
     } else {
       // this.colFiltPartB(fn, filtWord)  
@@ -103,24 +102,6 @@ export class QncwwqComponent implements OnInit {
       this.msg1 = 'question list filtered.'
     }
   } // end colFilt 
-
-  // colFiltPartB(fn,fw){ // field name, filter word
-  // console.log('running colFiltPartB',fn,fw)
-  // this.questArray3 = this.questionsIn.filter(function(q){
-  //   if (typeof(q[fn]) == 'string') {
-  //     //return q[fn] == fw       // compare exact value not wanted
-  //     return q[fn].includes(fw)  // compare partial value OK
-  //   } // end if typeof string
-  //   if (typeof(q[fn]) == 'object') { //  q-field is an object
-  //     for (let i = 0; i < q[fn].length; i++) {
-  //         if(q[fn][i].includes(fw) ) { // partial match OK
-  //           return true
-  //         }
-  //     }
-  //     return false // got here after comparing everything. 
-  //   }  
-  // }) // end .filter 
-  // } // end colFiltPartB
  
 colFiltPartBB(fn,fw){ // field name, filter word
   console.log('running colFiltPartBB',fn,fw)
@@ -144,7 +125,7 @@ colFiltPartBB(fn,fw){ // field name, filter word
 } // end colFiltPartBB
  
   addButClicked(){
-    console.log('running addButClicked')
+    console.log('running wwq addButClicked')
     this.questionNbrOut.emit(-1) //-1  no questions yet
     this.wwqdJumpOut.emit()
   }
@@ -158,19 +139,7 @@ colFiltPartBB(fn,fw){ // field name, filter word
     this.wwqdJumpOut.emit()
   }
 
-  // jumpToQnc(){
-  //   console.table(this.questArray2)
-  //   console.log('running jumpToQnc')
-  //   this.wwqQuestArray2Out.emit(this.questArray2)
-  //   this.qncJumpOut.emit()
-  // }
-
   resetQuestionFilter(){  
-    // console.log('running resetQuestionFilter')    
-    // this.questArray2  = this.questionsIn  
-    // this.questArray3  = this.questionsIn  
-    // this.questionsIn2 = this.questionsIn
-    //this.msg1 = 'Filter is reset.'
     for (let i = 0; i < this.questionsIn.length; i++) {
       this.questionsIn[i]['qFilterInOut'] = 'in'  
     }

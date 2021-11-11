@@ -30,7 +30,7 @@ export class AppComponent {
   showQncWwsr = false       // scoreboards
   showQncWwsrd = false      // scoreboards detail
   showAppComponent = false  // set this true for debugging
-  subsetArray = []
+  groupArray = []
   rulesArray = []  
   questArray = []     // master list of questions
   accumArray = []
@@ -50,13 +50,16 @@ export class AppComponent {
   dbReadCount = 0
   qidsArray   = []
   subscriptionObj = new Object
-  teamMemberObj = new Object
+  teamMemberObj   = new Object
   daScoreboardNbr = ''
   wwsrdCaller = 'no caller yet.'
   wwsrFilterReset = true
   wwqFilterReset = true
+  wwrFilterReset = true
+  wwgFilterReset = true
   surveyName = ''
-  ruleNbr = ''
+  daRuleNbr = ''
+  daGroupNbr = ''
   ngOnInit()  {
     this.titleService.setTitle('Qnc Admin')
   } // end ngInit
@@ -100,7 +103,7 @@ export class AppComponent {
     // get here from profile screen. user has selected a qid.
     //  pro already set querystring.
     // blank out arrays, prior to fetching data
-    this.subsetArray = []
+    this.groupArray = []
     this.rulesArray = []  
     this.questArray = []     // master list of questions
     // this.questArray2 = []    // filtered list of questions
@@ -144,9 +147,6 @@ export class AppComponent {
     this.showQnc = true
   } //end showQncFun
   showWwqFun(ev){
-    // this.questionsQncWwq = this.questArray 
-    //this.questions2QncWwq = this.questArray2
-    // this.subsetQncWwq = this.subset 
     this.compTitle = 'Qnc Questions'
     if (this.showQncWwqd) {
       // jumping from wwqd to wwq
@@ -154,7 +154,6 @@ export class AppComponent {
     } else {
       this.wwqFilterReset = true
     }
-
     this.setAllShowCompFalse() 
     this.showQncWwq = true
   } // end showWwqFun
@@ -165,6 +164,13 @@ export class AppComponent {
   } // end showWwqdFun
   showWwgFun(ev){
     this.compTitle = 'Qnc Groups' 
+    if (this.showQncWwgd) {
+      // jumping from wwgd to wwg
+      this.wwgFilterReset = false
+    } else {
+      this.wwgFilterReset = true
+    }
+
     this.setAllShowCompFalse()
     this.showQncWwg = true
   } // end showWwgFun
@@ -175,6 +181,12 @@ export class AppComponent {
   } // end showWwgdFun
   showWwrFun(ev){
     this.compTitle = 'Qnc Rules' 
+    if (this.showQncWwrd) {
+      // jumping from wwrd to wwr
+      this.wwrFilterReset = false
+    } else {
+      this.wwrFilterReset = true
+    }
     this.setAllShowCompFalse()
     this.showQncWwr = true
   } // end showWwrFun
@@ -199,7 +211,7 @@ export class AppComponent {
     this.qncAuthorized = false
     this.menuButsAlive = false
     this.surveyMenuButsAlive = false  
-    this.subsetArray = []
+    this.groupArray = []
     this.rulesArray = []  
     this.questArray = []     
     this.accumArray = []
@@ -280,10 +292,6 @@ export class AppComponent {
     this.questArray = ev
   }
 
-  // setQuestions2FromWwqFun(ev){ // ev is  from wwq
-  //   console.log('running app setQuestions2FromWwqFun')
-  //   this.questArray2 = ev
-  // }
 
   setScoreboardNbrFromWwsrFun(ev){
     console.log('running app setScoreboardNbrFromWwsrFun')
@@ -303,11 +311,30 @@ export class AppComponent {
   setRuleNbrFromWwrFun(ev){
   // he is jumping from rule list to rule detail
     console.log('running app setRuleNbrFromWwrFun')
-    this.ruleNbr = ev.ruleNbr
-    console.log('rule nbr:', this.ruleNbr)
+    this.daRuleNbr = ev 
+    console.log('app 309 rule nbr:', this.daRuleNbr)
+  }
+  
+  setRulesFromWwrFun(ev){
+    console.log('running app setRulesFromWwrFun')
+    // he is jumping from rule list to rule detail
+    this.rulesArray = ev 
   }
 
-  escKeyWasHit(){ 
+  setGroupNbrFromWwgFun(ev){
+    // he is jumping from rule list to rule detail
+      console.log('running app setGroupNbrFromWwgFun')
+      this.daGroupNbr = ev 
+      console.log('app 319 group nbr:', this.daGroupNbr)
+    }
+    
+    setGroupsFromWwgFun(ev){
+      console.log('running app setRulesFromWwrFun')
+      // he is jumping from group list to group detail
+      this.groupArray = ev 
+    }
+
+    escKeyWasHit(){ 
     console.log('runninng app escKeyWasHit') 
     this.setAllShowCompFalse()
     this.showQnc = true
@@ -321,9 +348,12 @@ export class AppComponent {
   
   sortQuestArraybyNbrAndSeq(){
     console.log('running sortQuestArraybyNbrAndSeq')
+    //console.log(a[prop].toString().padStart(4,'0'))
     this.questArray
-    .sort((a, b) => (a.questNbr > b.questNbr) ? 1 : (a.questNbr === b.questNbr) ? ((a.questSeq > b.questSeq) ? 1 : -1) : -1 )
-     console.table(this.questArray)
+    .sort((a, b) => (Number(a.questNbr)  > Number(b.questNbr) ) 
+    ? 1 : (a.questNbr  == b.questNbr ) 
+    ? ((a.questSeq > b.questSeq) ? 1 : -1) : -1 )
+     //console.table(this.questArray)
   } // end sortQuestArraybyNbrAndSeq
 
   readManyDbTables() {
@@ -382,7 +412,7 @@ export class AppComponent {
         {
           console.log(' running .then of api.qtReadRules') 
           this.buildListOfRules(qtDbRtnObj)
-          this.launchQtReadSubsets()
+          this.launchQtReadGroups()
         }
       )
       .catch(() => {  // api.qtReadRules returned an error 
@@ -400,37 +430,32 @@ export class AppComponent {
     console.table(this.rulesArray)
   } // end buildListOfRules
 
- launchQtReadSubsets() {
-  console.log('running launchQtReadSubsets')
+ launchQtReadGroups() {
+  console.log('running launchQtReadGroups')
   console.log('custAndQid:',this.cust,this.qid)
-  api.qtReadSubsets(this.cust,this.qid)
+  api.qtReadGroups(this.cust,this.qid)
     .then 
       (   (qtDbRtnObj) => 
         {
-          console.log(' running .then of api.qtReadSubsets') 
-          this.buildListOfSubsets(qtDbRtnObj)
+          console.log(' running .then of api.qtReadGroups') 
+          this.buildListOfGroups(qtDbRtnObj)
           this.launchQtReadScoreboards() //chaining
 
         }
       )
-      .catch(() => {  // api.qtReadSubsets returned an error 
-        console.log('api.qtReadSubsets error. cust & qid:' , this.cust, ' ', this.qid)
+      .catch(() => {  // api.qtReadGroups returned an error 
+        console.log('api.qtReadGroups error. cust & qid:' , this.cust, ' ', this.qid)
       })
-  } //end launchQtReadSubsets
+  } //end launchQtReadGroups
 
-  buildListOfSubsets(qtDbObj){
-    console.log('running app buildListOfSubsets')
-    this.subsetArray = []
-    // console.log(qtDbObj.length)
-    // console.table(qtDbObj)
-    // console.log(qtDbObj[0].data.subsets.length)
+  buildListOfGroups(qtDbObj){
+    console.log('running app buildListOfGroups')
+    this.groupArray = []
     for (let i = 0; i < qtDbObj.length; i++) {
-      for (let j = 0; j < qtDbObj[i].data.subsets.length; j++) {
-        this.subsetArray.push(qtDbObj[i].data.subsets[j])
-      } // end for
+          this.groupArray.push(qtDbObj[i].data)
     } // end for
-    //console.table(this.subsetArray)
-}  // end buildListOfSubsets
+    this.sortGroupsByNbr()  
+}  // end buildListOfGroups
 
   buildListOfAccumsFromQuestArray(){
   console.log('running app buildListOfAccumsFromQuestArray')
@@ -493,10 +518,19 @@ export class AppComponent {
       console.log('app 462 end of buildListOfScoreboards')
   }
 
+  sortGroupsByNbr(){
+    this.groupArray
+    .sort((a, b) => (Number(a.groupNbr)  > Number(b.groupNbr) ) 
+    ? 1 : (a.groupNbr == b.groupNbr ) 
+    ? ((a.groupName > b.groupName) ? 1 : -1) : -1 )
+  }
+
   sortScoreboardsByNbr(){
-    console.log('running sortScoreboardsByNbr')
+    //console.log('522 running sortScoreboardsByNbr')
     this.scoreboardsArray
-    .sort((a, b) => (a.scoreboardNbr > b.scoreboardNbr) ? 1 : (a.scoreboardNbr === b.scoreboardNbr) ? ((a.scoreboardName > b.scoreboardName) ? 1 : -1) : -1 )
+    .sort((a, b) => (Number(a.scoreboardNbr)  > Number(b.scoreboardNbr) ) 
+    ? 1 : (a.scoreboardNbr == b.scoreboardNbr ) 
+    ? ((a.scoreboardName > b.scoreboardName) ? 1 : -1) : -1 )
   }
 
 
