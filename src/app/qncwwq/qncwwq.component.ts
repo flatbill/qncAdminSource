@@ -21,21 +21,20 @@ export class QncwwqComponent implements OnInit {
   colHeadSf = false
   msg1 = '?.'
   colSortByArray = []
-  addButOn = false   // controls add button 
+  addButOn = true  
   ngOnInit() {
     console.log('running wwq ngOnInit============')
     this.msg1 = 'question list '
     console.table(this.questionsIn)
     
-    if (this.questionsIn.length == 0) {
-      // no questions yet, so show add button
-      this.addButOn = true
+    if (this.questionsIn.length == 0) {      
       this.msg1 = 'No questions exist. Click the add button.'
     }
 
     if (this.filterResetIn) {
       this.resetQuestionFilter()
     }
+
   }  //end ngOnInit
 
   colHeadClicked(c){
@@ -48,17 +47,23 @@ export class QncwwqComponent implements OnInit {
     }
   }// end colHeadClicked
 
-  colSort(fieldName,ascDes){
+  colSort(fieldName,ascDes,fieldMsg){
     this.msg1 = 'questions sorted by' //append list of fields to msg1
     let commaOrPeriod = ','
-    this.colSortByArray.push( {sortField: fieldName , ascOrDes: ascDes} )
+    this.colSortByArray.push({sortField: fieldName , ascOrDes: ascDes, fieldMsg: fieldMsg})
+    if ( this.colSortByArray.length == 2  && this.colSortByArray[1].sortField == this.colSortByArray[0].sortField ) {this.colSortByArray.splice(0,1)}
+    if ( this.colSortByArray.length == 3  && this.colSortByArray[2].sortField == this.colSortByArray[0].sortField ) {this.colSortByArray.splice(0,1)}
+    if ( this.colSortByArray.length == 3  && this.colSortByArray[2].sortField == this.colSortByArray[1].sortField ) {this.colSortByArray.splice(1,1)}
+    if ( this.colSortByArray.length == 4  && this.colSortByArray[3].sortField == this.colSortByArray[2].sortField ) {this.colSortByArray.splice(2,1)}
+    if ( this.colSortByArray.length == 4  && this.colSortByArray[3].sortField == this.colSortByArray[1].sortField ) {this.colSortByArray.splice(1,1)}
     if (this.colSortByArray.length>3){ this.colSortByArray.splice(0,1) }
- 
+
     for (let i = this.colSortByArray.length-1; i >= 0; i--) {
       if(i==0){commaOrPeriod='.'}
-      this.msg1 = this.msg1 + ' ' + this.colSortByArray[i].sortField + commaOrPeriod
-    }
-    
+      this.msg1 = this.msg1 + ' ' + this.colSortByArray[i].fieldMsg + commaOrPeriod
+    } // end for
+    console.table(this.colSortByArray)
+
     this.questionsIn.sort((a, b) => { 
       let retval      = 666  // set retval to 0, -1, +1
       let neg1OrPos1  = 666 // set neg1OrPos1 to -1 or +1
@@ -126,7 +131,7 @@ colFiltPartBB(fn,fw){ // field name, filter word
  
   addButClicked(){
     console.log('running wwq addButClicked')
-    this.questionNbrOut.emit(-1) //-1  no questions yet
+    this.questionNbrOut.emit(-1) //tell detail to add row
     this.wwqdJumpOut.emit()
   }
 

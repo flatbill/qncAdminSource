@@ -24,19 +24,21 @@ export class QncwwgdComponent implements OnInit {
   groupObj = {}
   qtDbDataObj = {} 
   pendingAddGx = -1
+  verifyDelete = false
+  fieldsDisabled = false
 
   ngOnInit() {
     console.log('running wwgd ngOnInit')
-    console.table(this.groupsIn)
-    console.log('groupNbrIn:',this.groupNbrIn)
+    //console.table(this.groupsIn)
+    //console.log('groupNbrIn:',this.groupNbrIn)
     if (this.groupNbrIn==-1){
-      // no group rec exists. add a starter group.
+      // he clicked add on the list screen.
       this.addButClick()
       this.gx = 0
       this.msg1 ='New starter group created. Ready for your changes.'
-    } else {
-      this.findGroupIx()
-    }  
+    }  // end if
+    this.findGroupIx() 
+
   } // end ngOnInit
 
   findGroupIx(){
@@ -82,13 +84,16 @@ export class QncwwgdComponent implements OnInit {
       let groupNbrMax = 
         Math.max.apply(Math, this.groupsIn.map(function(g) { return g.groupNbr }))
         newGroupNbr = (groupNbrMax + 1).toString().padStart(3, '0')
+        console.log('new group nbr:',newGroupNbr)
     } //end if
-
+    let newSeq = '1'
     let newGroupName = 'main'
     if ( this.groupsIn.findIndex(g => g.groupName == 'main') > -1 ){
       // group name: main already exists.
       newGroupName ="grp" + newGroupNbr
-    }
+      newSeq = '2'
+    } // end if
+
 
     this.groupsIn.push(
       {
@@ -96,7 +101,7 @@ export class QncwwgdComponent implements OnInit {
         qid: this.qidIn,
         groupNbr: newGroupNbr,
         groupName: newGroupName,
-        seq: '0001' 
+        seq: newSeq
       }
       ) // end push
       this.gx = this.groupsIn.length - 1
@@ -105,14 +110,24 @@ export class QncwwgdComponent implements OnInit {
       this.saveGroup() //auto save
       this.msg1 ='New starter group created. Ready for your changes.'
       this.groupsIn[this.gx].gFilterInOut = 'in'
-      //console.log('100 end of addButClick')
+      this.groupNbrIn = newGroupNbr  
   } // end addButClick
 
   delButClick(){
+    this.msg1=''
+    this.verifyDelete=true
+    this.fieldsDisabled = true
+  } // end delButClick
+
+  proceedWithDelete(){
+    console.log('running proceedWithDelete')
+    this.msg1 = 'deleting...'
     // delete group from group array.
     // call database api
     // figure out gx of the on-screen group, 
     // and delete-splice it from array:
+    this.verifyDelete=false
+    this.fieldsDisabled = false
     let groupNbrWork = this.groupsIn[this.gx].groupNbr  
     this.gx = this.groupsIn
       .findIndex(q => q.groupNbr == groupNbrWork)
@@ -132,7 +147,12 @@ export class QncwwgdComponent implements OnInit {
        alert('no groups left. Leaving this screen.')
        this.wwgJumpOut.emit()
      }
-   } // end delButClick
+  } // end proceedWithDelete
+
+  cancelDelete(){
+     this.verifyDelete = false
+     this.fieldsDisabled = false
+  } // end cancelDelete
 
   saveButClick(){
     console.log('running saveButClick')

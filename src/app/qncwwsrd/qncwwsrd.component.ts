@@ -20,6 +20,9 @@ export class QncwwsrdComponent implements OnInit {
   qtDbDataObj = {} 
   rangeTxtCols = 75
   rangeTxtRows = 3
+  verifyDelete = false
+  fieldsDisabled = false
+
   ngOnInit() {
     console.log('runn wwsrd ngOnInit')
     // console.log(this.scoreboardNbrIn)
@@ -33,10 +36,11 @@ export class QncwwsrdComponent implements OnInit {
       this.addButClick()
       this.sx = 0
       this.msg1 ='New starter scoreboard created. Ready for your changes.'
-    } else {
-      this.sx = this.scoreboardsIn
-      .findIndex(s => s.scoreboardNbr == this.scoreboardNbrIn)
+    // } else {
     }  
+    this.sx = this.scoreboardsIn
+    .findIndex(s => s.scoreboardNbr == this.scoreboardNbrIn)
+
   } // end ngOnInit
 
   prevButClick(){
@@ -121,10 +125,20 @@ export class QncwwsrdComponent implements OnInit {
     this.saveScoreboard()
     this.msg1 ='New starter scoreboard created. Ready for your changes.'
     this.scoreboardsIn[this.sx].sbFilterInOut = 'in'
+    this.scoreboardNbrIn = newScoreboardNbr
     console.log('121 added new scoreboard to scoreboardsIn')
   } // end addButClick
 
   delButClick(){
+    this.msg1=''
+    this.verifyDelete=true
+    this.fieldsDisabled = true
+  } // end delButClick
+
+  proceedWithDelete(){
+    this.msg1 = 'deleting...'
+    this.verifyDelete=false
+    this.fieldsDisabled = false
     // delete scoreboard from scoreboard array.
     // call database api
     // figure out sx of the on-screen scoreboard, 
@@ -149,9 +163,13 @@ export class QncwwsrdComponent implements OnInit {
       alert('no scoreboards left. Leaving this screen.')
       this.wwsrJumpOut.emit()
     }
+   } // end proceedWithDelete
 
-   } // end delButClick
- 
+  cancelDelete(){
+    this.verifyDelete = false
+    this.fieldsDisabled = false
+  } // end cancelDelete
+
   saveButClick(){
     // console.log('running saveButClick')
     // call the database api

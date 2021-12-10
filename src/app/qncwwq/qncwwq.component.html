@@ -4,15 +4,15 @@
   {{msg1}} 
 </span>
 
-  <table class='table is-fullwidth'>
+<table class='table is-fullwidth ml-3 mr-3 mb-3'>
     <thead class='none'>
 
       <th class='is-clickable' 
         (click)="colHeadClicked('nbr')" >
         <span>  Number</span>  
         <span *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
-          <span class='tag is-link is-light' (click)="colSort('questNbr','des')"> {{symArDn}} </span> 
-          <span class='tag is-link is-light' (click)="colSort('questNbr','asc')"> {{symArUp}} </span> 
+          <span class='tag is-link is-light' (click)="colSort('questNbr','des', 'question nbr')"> {{symArDn}} </span> 
+          <span class='tag is-link is-light' (click)="colSort('questNbr','asc', 'question nbr')"> {{symArUp}} </span> 
           <span class='tag is-link is-light' (click)="colFilt('questNbr','question nbr')"> {{symFilt}} </span>
         </span> 
       </th>
@@ -21,8 +21,8 @@
       (click)="colHeadClicked('seq')" > 
         Sequence 
         <div *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
-          <span class='tag is-link is-light' (click)="colSort('questSeq','des')"> {{symArDn}} </span> 
-          <span class='tag is-link is-light' (click)="colSort('questSeq','asc')"> {{symArUp}} </span> 
+          <span class='tag is-link is-light' (click)="colSort('questSeq','des','Sequence')"> {{symArDn}} </span> 
+          <span class='tag is-link is-light' (click)="colSort('questSeq','asc','Sequence')"> {{symArUp}} </span> 
           <span class='tag is-link is-light' (click)="colFilt('questSeq','Sequence')"  > {{symFilt}} </span> 
         </div> 
     </th>
@@ -31,8 +31,8 @@
         (click)="colHeadClicked('grp')" >
         Group
         <div *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
-          <span class='tag is-link is-light' (click)="colSort('subset','des')"> {{symArDn}} </span> 
-          <span class='tag is-link is-light' (click)="colSort('subset','asc')"> {{symArUp}} </span> 
+          <span class='tag is-link is-light' (click)="colSort('subset','des','Group')"> {{symArDn}} </span> 
+          <span class='tag is-link is-light' (click)="colSort('subset','asc','Group')"> {{symArUp}} </span> 
           <span class='tag is-link is-light' (click)="colFilt('subset','Group')"  > {{symFilt}} </span> 
         </div> 
       </th> 
@@ -41,8 +41,8 @@
         (click)="colHeadClicked('pre')" >
         Pre-Question 
         <div *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
-          <span class='tag is-link is-light' (click)="colSort('preQuest','des')"> {{symArDn}} </span> 
-          <span class='tag is-link is-light' (click)="colSort('preQuest','asc')"> {{symArUp}} </span> 
+          <span class='tag is-link is-light' (click)="colSort('preQuest','des','pre-Question')"> {{symArDn}} </span> 
+          <span class='tag is-link is-light' (click)="colSort('preQuest','asc','pre-Question')"> {{symArUp}} </span> 
           <span class='tag is-link is-light' (click)="colFilt('preQuest','Pre-Quest')" > {{symFilt}} </span> 
         </div> 
       </th>
@@ -52,8 +52,8 @@
         &nbsp;  &nbsp;  Question
         <div *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
           &nbsp;  &nbsp; 
-          <span class='tag is-link is-light' (click)="colSort('questTxt','des')"> {{symArDn}} </span> 
-          <span class='tag is-link is-light' (click)="colSort('questTxt','asc')"> {{symArUp}} </span> 
+          <span class='tag is-link is-light' (click)="colSort('questTxt','des','Question Text')"> {{symArDn}} </span> 
+          <span class='tag is-link is-light' (click)="colSort('questTxt','asc','Question Text')"> {{symArUp}} </span> 
           <span class='tag is-link is-light' (click)="colFilt('questTxt','Question Text')" > {{symFilt}} </span> 
         </div> 
       </th>
@@ -61,8 +61,8 @@
         (click)="colHeadClicked('accum')" >
          Scoreboard
         <div *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
-          <span class='tag is-link is-light' (click)="colSort('accum','des')"> {{symArDn}} </span> 
-          <span class='tag is-link is-light' (click)="colSort('accum','asc')"> {{symArUp}} </span> 
+          <span class='tag is-link is-light' (click)="colSort('accum','des','Scoreboard')"> {{symArDn}} </span> 
+          <span class='tag is-link is-light' (click)="colSort('accum','asc','Scoreboard')"> {{symArUp}} </span> 
           <span class='tag is-link is-light' (click)="colFilt('accum','Scoreboard')"  > {{symFilt}} </span> 
         </div> 
 
@@ -70,14 +70,14 @@
 
       <th></th>
       <th></th>
-      <th></th>
-      <th></th>
+      <!-- <th></th> -->
+      <!-- <th></th> -->
       <th *ngIf='addButOn'> 
         <button 
           class='button is-small is-info'
           (click)=addButClicked()
         >
-          add
+          add new
         </button>
       </th> 
 
@@ -105,5 +105,4 @@
       </tr>
       <br>
     </tbody> 
-  </table>
-
+</table>

@@ -19,7 +19,8 @@ export class QncwwrdComponent implements OnInit {
   qtDbDataObj = {} 
   pendingAddRx = -1
   symDropDown    = '\u{25BC}'  
-
+  verifyDelete = false
+  fieldsDisabled = false
 
   ngOnInit() {
     // // billy temp:
@@ -40,15 +41,13 @@ export class QncwwrdComponent implements OnInit {
     console.table(this.rulesIn)
     console.log('42 ready to check ruleNbr')
     if (this.ruleNbrIn==-1){
-      // no rule rec exists. add a starter rule.
-      console.log('45 ready to run addButClick')
+      // he clicked add new on list screen.
       this.addButClick()
       this.rx = 0
       this.msg1 ='New starter rule created. Ready for your changes.'
-    } else {
-      this.findRuleIx()
+    // } else {
     }  
-
+    this.findRuleIx()
   } // end ngOnInit
 
   // fixRuleNbr() { //temp billy
@@ -159,14 +158,25 @@ export class QncwwrdComponent implements OnInit {
       this.saveRule() //auto save
       this.msg1 ='New starter rule created. Ready for your changes.'
       this.rulesIn[this.rx].rFilterInOut = 'in'
+      this.ruleNbrIn = newRuleNbr
       console.log('159 end of addButClick')
   } // end addButClick
 
   delButClick(){
+    this.msg1=''
+    this.verifyDelete=true
+    this.fieldsDisabled = true
+  } // end delButClick
+
+
+  proceedWithDelete(){
     // delete rule from rule array.
     // call database api
     // figure out rx of the on-screen rule, 
     // and delete-splice it from array:
+    this.msg1 = 'deleting...'
+    this.verifyDelete=false
+    this.fieldsDisabled = false
     let ruleNbrWork = this.rulesIn[this.rx].ruleNbr  
     this.rx = this.rulesIn
       .findIndex(q => q.ruleNbr == ruleNbrWork)
@@ -186,8 +196,13 @@ export class QncwwrdComponent implements OnInit {
        alert('no rules left. Leaving this screen.')
        this.wwrJumpOut.emit()
      }
-   } // end delButClick
- 
+   } // end proceedWithDelete
+
+   cancelDelete(){
+    this.verifyDelete = false
+    this.fieldsDisabled = false
+   } // end cancelDelete
+
   ruleScoreboardChg(newScoreboard,rx)  {
     console.log('running ruleScoreboardChg to ',newScoreboard)
     this.msg1 = 'scoreboard changed. '

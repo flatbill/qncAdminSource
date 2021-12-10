@@ -16,7 +16,7 @@ export class QncwwgComponent implements OnInit {
   @Output() groupNbrOut = new EventEmitter() 
   @Output() wwgdJumpOut = new EventEmitter() 
   msg1 = ''
-  addButOn = false   // controls add button 
+  addButOn = true   // jump to detail when add but hit
   symArUp    = '\u{2191}'
   symArDn    = '\u{2193}'
   symFilt    = '\u{2207}'  
@@ -24,12 +24,10 @@ export class QncwwgComponent implements OnInit {
   colSortByArray = []
 
   ngOnInit() {
-    this.msg1 = 'Groups shown.'
+    this.msg1 = 'group list'
     //this.buildGroupArrayFromGroupsIn()
     this.countQuestionsPerGroup()
     if (this.groupsIn.length == 0) {
-      // no groups yet, so show add button
-      this.addButOn = true
       this.msg1 = 'No groups exist. Click the add button.'
     }
 
@@ -37,18 +35,6 @@ export class QncwwgComponent implements OnInit {
       this.resetGroupsFilter()  
     }
   } // end ngOnInit
-
-  // buildGroupArrayFromGroupsIn(){
-  //   for( let i=0;i<this.groupsIn.length;i++){
-  //     this.groupArray.push(
-  //       { "group" : this.groupsIn[i]
-  //        ,"qCount" :  0
-  //       }
-  //     )
-  
-  //   }
-  // }
-
 
   colHeadClicked(c){
     // hide/show sort & filter icons in the table header (lower part)
@@ -60,15 +46,21 @@ export class QncwwgComponent implements OnInit {
     }
   }// end colHeadClicked
 
-  colSort(fieldName,ascDes){
+  colSort(fieldName,ascDes,fieldMsg){
+    console.log(fieldMsg)
     this.msg1 = 'groups sorted by' //append list of fields to msg1
     let commaOrPeriod = ','
-    this.colSortByArray.push( {sortField: fieldName , ascOrDes: ascDes} )
+    this.colSortByArray.push({sortField: fieldName , ascOrDes: ascDes, fieldMsg: fieldMsg})
+    if ( this.colSortByArray.length == 2  && this.colSortByArray[1].sortField == this.colSortByArray[0].sortField ) {this.colSortByArray.splice(0,1)}
+    if ( this.colSortByArray.length == 3  && this.colSortByArray[2].sortField == this.colSortByArray[0].sortField ) {this.colSortByArray.splice(0,1)}
+    if ( this.colSortByArray.length == 3  && this.colSortByArray[2].sortField == this.colSortByArray[1].sortField ) {this.colSortByArray.splice(1,1)}
+    if ( this.colSortByArray.length == 4  && this.colSortByArray[3].sortField == this.colSortByArray[2].sortField ) {this.colSortByArray.splice(2,1)}
+    if ( this.colSortByArray.length == 4  && this.colSortByArray[3].sortField == this.colSortByArray[1].sortField ) {this.colSortByArray.splice(1,1)}
     if (this.colSortByArray.length>3){ this.colSortByArray.splice(0,1) }
- 
+
     for (let i = this.colSortByArray.length-1; i >= 0; i--) {
       if(i==0){commaOrPeriod='.'}
-      this.msg1 = this.msg1 + ' ' + this.colSortByArray[i].sortField + commaOrPeriod
+      this.msg1 = this.msg1 + ' ' + this.colSortByArray[i].fieldMsg + commaOrPeriod
     }
     
     this.groupsIn.sort((a, b) => { 
@@ -99,49 +91,6 @@ export class QncwwgComponent implements OnInit {
     return retval // is now 0 or -1 or +1
   }) // end inline function
   } // end colSort
-
-
-  // colSort(fieldName,ascDes){
-  //   this.msg1 = 'groups sorted by' //append list of fields to msg1
-  //   let commaOrPeriod = ','
-  //   this.colSortByArray.push( {sortField: fieldName , ascOrDes: ascDes} )
-  //   if (this.colSortByArray.length>3){ this.colSortByArray.splice(0,1) }
- 
-  //   for (let i = this.colSortByArray.length-1; i >= 0; i--) {
-  //     if(i==0){commaOrPeriod='.'}
-  //     this.msg1 = this.msg1 + ' ' + this.colSortByArray[i].sortField + commaOrPeriod
-  //   }
-    
-  //   this.groupsIn.sort((a, b) => { 
-  //     let retval      = 666  // set retval to 0, -1, +1
-  //     let neg1OrPos1  = 666 // set neg1OrPos1 to -1 or +1
-  //     let mySortField = '??'
-  //     for (let i = this.colSortByArray.length-1; i >= 0; i--) {
-  //       retval = 0
-  //       mySortField = this.colSortByArray[i].sortField  
-  //       if (this.colSortByArray[i].ascOrDes == 'des' )
-  //         {neg1OrPos1 = -1} else {neg1OrPos1 = +1}   
-  //       // -------------------------------------------- 
-  //       for (let [prop, objVal] of Object.entries(a)) {
-  //         if (prop === mySortField) {
-  //           if (Number(a[prop]) && Number(b[prop]) ){ // comparing nbrs
-  //             if (a[prop].toString().padStart(4,'0') 
-  //             > b[prop].toString().padStart(4,'0')) { retval= -1 * neg1OrPos1}
-  //             if (a[prop].toString().padStart(4,'0') 
-  //             < b[prop].toString().padStart(4,'0')) { retval= +1 * neg1OrPos1}
-  //           } else { // comparing a pair where at least one is not number
-  //               if (a[prop] > b[prop]) { retval= -1 * neg1OrPos1}
-  //               if (a[prop] < b[prop]) { retval= +1 * neg1OrPos1}
-  //           } // end if Number
-  //           if (retval !== 0) {break} // exit inner for loop early
-  //         } // end if prop == mySortField
-  //       } // end for loop
-  //       // --------------------------------------------- 
-  //     if (retval !== 0) {break} // exit outer for loop early
-  //   } // end outer for loop
-  //   return retval // is now 0 or -1 or +1
-  // }) // end inline function
-  // } // end colSort
 
   colFilt(fn,pt){ //parms fieldname and prompt text
     console.log('running colFilt ', fn, pt)
@@ -176,14 +125,13 @@ export class QncwwgComponent implements OnInit {
         }  // end if  
       } // end if typeof
     } // end for
-    console.table(this.groupsIn)
+    //console.table(this.groupsIn)
   } // end colFiltPartBB
 
-
-  addButClicked(){
+  addButClicked(){ // jump to detail and add a new rec
     console.log('running wwg addButClicked')
-    this.groupNbrOut.emit(-1) //-1  no groups yet
-    this.wwgdJumpOut.emit()
+    this.groupNbrOut.emit(-1) //  -1 means add new rec
+    this.wwgdJumpOut.emit() // jump to wwgd
   } // end addButClicked
   
   detailButClicked(groupNbrParmIn,gx){
@@ -192,19 +140,18 @@ export class QncwwgComponent implements OnInit {
     this.groupNbrOut.emit(groupNbrParmIn) 
   }
 
-  setPopState(){
-    console.log('running wwg setPopState')
-    window.onpopstate = function (ev) {  
-      console.log('running window.onpopstate')
-      //this.doneWwg() // ??billy?
-    }
-  } // end setPopState
-
+  // setPopState(){
+  //   console.log('running wwg setPopState')
+  //   window.onpopstate = function (ev) {  
+  //     console.log('running window.onpopstate')
+  //     //this.doneWwg() // ??billy?
+  //   }
+  // } // end setPopState
 
   countQuestionsPerGroup(){
     console.log('running wwg countQuestionsPerGroup')
-    console.table(this.questionsIn)
-    console.table(this.groupsIn)
+    //console.table(this.questionsIn)
+    //console.table(this.groupsIn)
     let qCnt = 0
     for (let i = 0; i<this.groupsIn.length; i++){
       qCnt = this.questionsIn

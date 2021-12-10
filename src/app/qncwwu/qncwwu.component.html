@@ -1,12 +1,12 @@
-   <span class='tag is-dark is-small is-vcentered ml-3' 
+<span class='tag is-dark is-small is-vcentered ml-3' 
    *ngIf='msg1.length > 0'>
    {{msg1}} 
    <!-- &#9675;
    &#9682;
    &#9679; -->
- </span>
+</span>
 
- <table class='table is-fullwidth'>
+<table class='table is-fullwidth ml-3 mr-3 mb-3'>
    <thead> 
      <th>id</th>
      <th>first name</th>
@@ -30,18 +30,24 @@
        <td>{{u.priorQ}}</td>
        <td>   
         <button class='button is-small is-info' 
-        (click)=dnLoadButClicked(ux)> 
-          get csv
+        (click)=scoresCsvButClicked(ux)> 
+          get scores csv
         </button> 
        </td>
        <td>   
         <button class='button is-small is-info' 
-        (click)=reportButClick(ux)> 
-          get report
+        (click)=AssRptButClick(ux)> 
+          get assessment csv
         </button> 
+      </td>
+      <td>
+        <button class='button is-small is-info' 
+        (click)=delButClick(ux)> 
+          delete
+        </button> 
+
        </td>
 
    </tr>
    </tbody>
- </table>
-
+</table>

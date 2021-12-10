@@ -23,14 +23,12 @@ export class QncwwsrComponent implements OnInit {
     symArUp    = '\u{2191}'
     symArDn    = '\u{2193}'
     symFilt    = '\u{2207}'  
-    addButOn = false
+    addButOn = true
   
     ngOnInit() {
       console.log('running wwsr ngOnInit')
       this.msg1 = 'scoreboard list '
       if (this.scoreboardsIn.length == 0) {
-        // no scoreboards yet, so show add button
-        this.addButOn = true
         this.msg1 = 'No scoreboards exist. Click the add button.'
       }
   
@@ -57,12 +55,18 @@ export class QncwwsrComponent implements OnInit {
       } // end if
     } // end colHeadClicked
 
-    colSort(fieldName,ascDes){
+    colSort(fieldName,ascDes,fieldMsg){
       this.msg1 = 'scoreboards sorted by' //append list of fields to msg1
       let commaOrPeriod = ','
-      this.colSortByArray.push( {sortField: fieldName , ascOrDes: ascDes} )
+      this.colSortByArray.push( {sortField: fieldName , ascOrDes: ascDes, fieldMsg: fieldMsg} )
+      if ( this.colSortByArray.length == 2  && this.colSortByArray[1].sortField == this.colSortByArray[0].sortField ) {this.colSortByArray.splice(0,1)}
+      if ( this.colSortByArray.length == 3  && this.colSortByArray[2].sortField == this.colSortByArray[0].sortField ) {this.colSortByArray.splice(0,1)}
+      if ( this.colSortByArray.length == 3  && this.colSortByArray[2].sortField == this.colSortByArray[1].sortField ) {this.colSortByArray.splice(1,1)}
+      if ( this.colSortByArray.length == 4  && this.colSortByArray[3].sortField == this.colSortByArray[2].sortField ) {this.colSortByArray.splice(2,1)}
+      if ( this.colSortByArray.length == 4  && this.colSortByArray[3].sortField == this.colSortByArray[1].sortField ) {this.colSortByArray.splice(1,1)}
+      // if ( this.colSortByArray.length == 4  && this.colSortByArray[3].sortField == this.colSortByArray[0].sortField ) {this.colSortByArray.splice(0,1)}
       if (this.colSortByArray.length>3){ this.colSortByArray.splice(0,1) }
-   
+  
       for (let i = this.colSortByArray.length-1; i >= 0; i--) {
         if(i==0){commaOrPeriod='.'}
         this.msg1 = this.msg1 + ' ' + this.colSortByArray[i].sortField + commaOrPeriod

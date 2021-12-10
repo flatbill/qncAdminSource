@@ -8,7 +8,7 @@
 import { Component, OnInit, Input, 
   EventEmitter, Output } from '@angular/core' 
 import api   from 'src/utils/api'
-import jsPDF from 'jspdf'
+//import jsPDF from 'jspdf'
 @Component({
   selector: 'app-qncwwu',
   templateUrl: './qncwwu.component.html'
@@ -24,19 +24,16 @@ export class QncwwuComponent implements OnInit {
   firstName = ''
   lastName = ''
   userDateTime = ''
-  row=5
-  c=5
-  rowsUsed = 1
-  assMaxxWidthPx= 95 // how many ?pixels? will assTxt take?
-  downloadCsvPending = false
-  downloadRptPending = false
+  downloadScoresCsvPending = false
+  downloadAssRptPending = false
   lowScoreThresh = 0
   hiScoreThresh = 0
   scoreboardsArray = []
   assTxt = ''
   hisScore=0
   hisScoreStr=''
-
+  assRptFileTxt = ''
+  cellBrk =  "\n"+"\"" + "\n"
   //utcOffset = new Date().getTimezoneOffset()  // in minutes
   constructor() {}
   @Input() custIn  
@@ -79,12 +76,12 @@ export class QncwwuComponent implements OnInit {
 
     this.usersArray
     .sort((a, b) => (a.accum > b.accum) ? 1 : -1 )
-    this.msg1 = 'Participants shown.'
+    this.msg1 = 'participant list'
   }  //end buildListOfUsers
 
-  dnLoadButClicked(ux){
-    this.msg1 = 'building a file to download...'
-    this.downloadCsvPending = true
+  scoresCsvButClicked(ux){
+    this.msg1 = 'building scores csv to download...'
+    this.downloadScoresCsvPending = true
     this.buildAndDownload(ux)
   } // end dnLoadButClicked
 
@@ -95,6 +92,7 @@ export class QncwwuComponent implements OnInit {
     this.firstName = this.usersArray[ux].firstName
     this.lastName = this.usersArray[ux].lastName
     this.userDateTime =  this.usersArray[ux].userDateTime
+    this.localUserDateTime = this.usersArray[ux].localUserDateTime
     this.scoreFileName = this.userId + '.csv'
     this.launchQtReadScores()
     // launchQtReadScores has async processing that does the download.
@@ -102,16 +100,18 @@ export class QncwwuComponent implements OnInit {
     // following  launchQtReadScores.
   }
 
- dnLoadScoreFile(dnScoreFileName, txt) {
+ dnLoadTheFile(myFileName, txt) {
+  // hacky way to  download, but it's common.
+  // create an invisible screen element,
+  // give it attributes, and fake click it.
   var elem = document.createElement('a')
   elem.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(txt))
-  elem.setAttribute('download', dnScoreFileName)
+  elem.setAttribute('download', myFileName)
   elem.style.display = 'none'
   document.body.appendChild(elem)
   elem.click()
   document.body.removeChild(elem) 
   this.msg1 = 'file downloaded.'
-  this.downloadCsvPending = false
 }
  
 launchQtReadScores()  {
@@ -122,10 +122,10 @@ launchQtReadScores()  {
         {
           console.log(' running .then of api.qtReadScores') 
           this.buildListOfScores(qtDbRtnObj)
-          if (this.downloadRptPending) {
-            this.buildRpt()
+          if (this.downloadAssRptPending) {
+            this.buildRpt2()
           }
-          if (this.downloadCsvPending) {
+          if (this.downloadScoresCsvPending) {
             this.buildScoresCsv()
             this.launchQtReadAnswers() 
           }
@@ -157,17 +157,31 @@ buildListOfScores(qtDbObj){
 
 buildScoresCsv(){
   console.log('running buildScoresCsv')
-  this.scoresTxt = this.firstName + ' ' + this.lastName
-    + ',,, Participant: '
-    + this.scoresArray[0].quserId + "\r\n"
+  this.scoresTxt = 
+    this.firstName + ' ' + this.lastName
+    + ',,, phone ext: '
+    + this.scoresArray[0].quserId
+      .substring(this.scoresArray[0].quserId.length - 4)
+      //+ ', survey date/time: '
+    + ',, ' + this.localUserDateTime
+    + ',,,'
+    + this.surveyNameIn
+    +',,,'
+    + 'Scores and Answers'
+        //+ ',,,promo code?'
+    + "\r\n"
+    + "\r\n"
+
   this.scoresTxt = this.scoresTxt +
-  'Scoreboard,Score,Wscore,Quest Cnt,Time Gap' + "\r\n"
+  // 'Scoreboard,Score,Wscore,Quest Cnt,Time Gap' + "\r\n"
+  'Scoreboard,,Score,Quest Cnt,Time Gap' + "\r\n"
 //let csvContent = "data:text/csv;charset=utf-8,"
+
 let rowX = ''
 for (let i = 0; i < this.scoresArray.length; i++) {
   rowX = 
-     this.scoresArray[i].accum + ',' 
-   + this.scoresArray[i].score + ',' 
+     this.scoresArray[i].accum + ',,' 
+// + this.scoresArray[i].score + ',' 
    + this.scoresArray[i].wscore + ',' 
    + this.scoresArray[i].questCnt + ',' 
    + this.scoresArray[i].timeGap
@@ -200,10 +214,12 @@ launchQtReadAnswers() {
       this.answersArray.push(qtDbObj[i].data)
     }
     this.answersArray
-    .sort((a, b) => (a.questNbr > b.questNbr) ? 1 : -1 )
+    .sort((a, b) => (Number(a.questNbr) > Number(b.questNbr)) ? 1 : -1 )
     this.buildAnswersCsv()  
-    if (this.downloadCsvPending){
-      this.dnLoadScoreFile(this.scoreFileName,this.scoresTxt)
+    if (this.downloadScoresCsvPending){
+      this.dnLoadTheFile(this.scoreFileName,this.scoresTxt)
+      this.downloadScoresCsvPending = false
+
     } // end if
   } // end buildListOfAnswers
 
@@ -220,9 +236,9 @@ launchQtReadAnswers() {
     } // end for
   } // end buildAnswersCsv
 
-  reportButClick(ux) {
-    console.log('wwu running reportButClick')
-    this.downloadRptPending = true
+  AssRptButClick(ux) {
+    console.log('wwu running AssRptButClick')
+    this.downloadAssRptPending = true
     this.userId = this.usersArray[ux].userId
     this.firstName = this.usersArray[ux].firstName
     this.lastName = this.usersArray[ux].lastName
@@ -233,35 +249,32 @@ launchQtReadAnswers() {
       this.launchQtReadScores() // has chaining, sets scoresArray
   }  // end reportButClick
 
-  rowInc(){ // increment row for jsPdf
-    console.log('running rowInc. rowsUsed:', this.rowsUsed)
-    this.row = this.row + (5 * this.rowsUsed )
-   } // end rowInc
- 
+  delButClick(ux){
+    console.log('running delButClick')
+    this.deleteOneUsersScores(this.usersArray[ux].userId)
+    this.deleteOneUsersAnswers(this.usersArray[ux].userId)
+  }
 
-buildRpt(){
-  console.log('running buildRpt')
-  let doc = new jsPDF('p', 'mm', 'a4')
-  this.row = 5
-  this.c = 5
-  doc.setFontSize(10) // doc.text(col,row,myText)
-  doc.text(  5 , this.row, this.surveyNameIn)  
-  doc.text( 60 , this.row, this.firstName + ' ' + this.lastName)  
-  //doc.line(x-from,y-from,x-to,y-to)
-  doc.line(5,7,161,7)
-  this.row = 13
-  doc.setFont("helvetica")
-  doc.text(5,  this.row, 'Scoreboard') 
-  doc.text(50, this.row,   'Score')  
-  this.row = 19 // start report detail line
-  doc.setFont("courier")
-
+buildRpt2(){
+  console.log('292 running buildRpt2')
+  console.table(this.scoresArray)
+  this.assRptFileTxt = 'Assessment Report ' +',,,'  
+  + this.surveyNameIn + "\r\n"
+  + this.firstName + ' ' + this.lastName
+  + ',,,Participant: '
+  + this.scoresArray[0].quserId + "\r\n" + "\r\n"
+  + 'Scoreboard   ' 
+  + ',,,'   
+  + 'Score   ' + ','   
+  + 'Range Text   ' + "\r\n"
   let scoresIx = 0
   for (let i=0;i<this.scoreboardsArray.length;i++){
     this.hisScore = 0
     this.hisScoreStr = ''
     this.assTxt = 'no score' // maybe overRidden below
-    doc.text(5,  this.row, this.scoreboardsArray[i].scoreboardName) 
+    this.assRptFileTxt =  this.assRptFileTxt  
+    + this.scoreboardsArray[i].scoreboardName + ',' 
+    // doc.text(5,  this.row, this.scoreboardsArray[i].scoreboardName) 
     // lookup his score that matches current scoreboard:
     scoresIx = this.scoresArray
       .findIndex(s => s.accum.toLowerCase() == this.scoreboardsArray[i].scoreboardName.toLowerCase())
@@ -270,23 +283,17 @@ buildRpt(){
       this.hisScoreStr = this.scoresArray[scoresIx].wscore.toString()
       this.setScoresArrayAssTxt(i,this.hisScore) 
     }
-    doc.text(50, this.row, this.hisScoreStr)
-
-    doc.text  (60, 
-      this.row,  
-      this.assTxt,
-      { maxWidth: this.assMaxxWidthPx }) 
-
-    this.rowInc() // increment row for next row.
+    this.assRptFileTxt =  this.assRptFileTxt  
+    + ',,' + this.hisScoreStr + ','
+    + this.assTxt + "\r\n"
   } // end for
-
-  let rptName = this.userId + '.pdf'
-  doc.save(rptName) 
-  this.downloadRptPending = false
+  let rptName = 'Assessment Report ' + this.userId + '.csv'
+  this.dnLoadTheFile(rptName,this.assRptFileTxt)
+  this.downloadAssRptPending = false
   this.msg1 = 'built an assessment report for ' 
   + this.firstName + ' ' + this.lastName + '.'
-
-} // end buildRpt
+  console.log('349 end buildRpt2')
+} // end buildRpt2
 
 
 setScoresArrayAssTxt(scoreboardIx,hisScore){
@@ -298,14 +305,31 @@ setScoresArrayAssTxt(scoreboardIx,hisScore){
     if  (hisScore >= this.scoreboardsArray[scoreboardIx].ranges[j].rangeStart 
     &&   hisScore <= this.scoreboardsArray[scoreboardIx].ranges[j].rangeEnd  ) {
       //console.log('hitter 434')
+      this.assTxt += '"'
+      this.assTxt += 'weef'
       this.assTxt = this.scoreboardsArray[scoreboardIx].ranges[j].rangeTxt
-      // billy, figure out rowsUsed.  duznt work right all the time.
-      this.rowsUsed = Math.ceil(this.assTxt.length / this.assMaxxWidthPx * 2) + 1
+      this.assTxt += '"'
 
       j = 9999  // we have a hit.  exit the range check loop
 
     }  // end if
   }  // end for
 } // end setScoresArrayAssTxt
+
+deleteOneUsersScores(userIdParmIn){
+  console.log('running deleteOneUsersScores. user id:')
+  console.log(userIdParmIn)
+  // write new api for deleteScoresOneUser.
+  // kinda like mass delete, but limit to just one user.
+  // qtScoresX2 is cust + qid + quserId
+} // end deleteOneUsersScores
+
+deleteOneUsersAnswers(userIdParmIn){
+  console.log('running deleteOneUsersAnswers. user id:')
+  console.log(userIdParmIn)
+  // write new api for deleteAnswersOneUser.
+  // kinda like mass delete, but limit to just one user.
+  // qtAnswersX2 is cust + qid + quserId
+}
 
 } // end export qncwwu

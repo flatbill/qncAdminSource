@@ -4,27 +4,33 @@
     {{msg1}} 
 </span>
 
-<div class='mt-3 '>
-  <span class='button is-info'
+<span *ngIf='verifyDelete' class=''>
+  <span class='ml-3'> are you sure you want to delete? </span>
+  <span class='tag is-small is-info m-1 is-clickable' (click)='proceedWithDelete()'
+>       delete now </span> 
+  <span class='tag is-small is-info m-1 is-clickable'(click)='cancelDelete()'
+>       cancel </span>
+</span>
+
+<fieldset [disabled]="fieldsDisabled" class='mt-3 '>
+  <button class='button is-info'
         (click)='prevButClick()'
-  >  &#5176; prev</span> &nbsp;
-  <span class='button is-info'
+  >  &#5176; prev</button> &nbsp;
+  <button class='button is-info'
       (click)='nextButClick()'
-  > next &#5171;  </span> &nbsp;
-  <span class='button is-info'
+  > next &#5171;  </button> &nbsp;
+  <button class='button is-info'
      (click)='addButClick()'
-  > add  </span> &nbsp;
-
-  <span class='button is-info'
+  > add  </button> &nbsp;
+  <button class='button is-info'
     (click)='delButClick()'
-  > delete </span> &nbsp;
-
-  <span class='button is-info'
+  > delete </button> &nbsp;
+  <button class='button is-info'
     (click)='saveButClick()'
-  > save </span> &nbsp;
-</div>
+  > save </button> &nbsp;
+</fieldset>
 
-<div class='mt-3'>  
+<fieldset [disabled]="fieldsDisabled" class='mt-3 '>
     <table class=' table has-background-success-light is-narrow'>
       <tr>
         <td><label>Scoreboard nbr: </label></td>
@@ -131,7 +137,7 @@
   </tbody>
     </table>
     
-</div>
+</fieldset>
 
 <br><br>
 <span id='htmlIdBottomOfPage'> </span>

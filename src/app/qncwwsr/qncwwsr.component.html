@@ -8,22 +8,22 @@
    <thead >
       <th class='is-clickable' (click)="colHeadClicked('scoreboardNbr')" >  Nbr
         <div *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
-          <span class='tag is-link is-light' (click)="colSort('scoreboardNbr','des')"> {{symArDn}} </span> 
-          <span class='tag is-link is-light' (click)="colSort('scoreboardNbr','asc')"> {{symArUp}} </span> 
+          <span class='tag is-link is-light' (click)="colSort('scoreboardNbr','des','Scoreboard Nbr')"> {{symArDn}} </span> 
+          <span class='tag is-link is-light' (click)="colSort('scoreboardNbr','asc','Scoreboard Nbr')"> {{symArUp}} </span> 
           <span class='tag is-link is-light' (click)="colFilt('scoreboardNbr','scoreboard')"  > {{symFilt}} </span> 
         </div> 
       </th>
       <th class='is-clickable' (click)="colHeadClicked('scoreboard')" >  &nbsp; Scoreboard
         <div *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> &nbsp;
-          <span class='tag is-link is-light' (click)="colSort('scoreboardName','des')"> {{symArDn}} </span> 
-          <span class='tag is-link is-light' (click)="colSort('scoreboardName','asc')"> {{symArUp}} </span> 
+          <span class='tag is-link is-light' (click)="colSort('scoreboardName','des','Scoreboard Name')"> {{symArDn}} </span> 
+          <span class='tag is-link is-light' (click)="colSort('scoreboardName','asc','Scoreboard Name')"> {{symArUp}} </span> 
           <span class='tag is-link is-light' (click)="colFilt('scoreboardName','scoreboardName')"  > {{symFilt}} </span> 
         </div> 
       </th>
       <th class='is-clickable' (click)="colHeadClicked('scoreboardSeq')" >  Seq
         <div *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
-          <span class='tag is-link is-light' (click)="colSort('scoreboardSeq','des')"> {{symArDn}} </span> 
-          <span class='tag is-link is-light' (click)="colSort('scoreboardSeq','asc')"> {{symArUp}} </span> 
+          <span class='tag is-link is-light' (click)="colSort('scoreboardSeq','des','Sequence')"> {{symArDn}} </span> 
+          <span class='tag is-link is-light' (click)="colSort('scoreboardSeq','asc','Sequence')"> {{symArUp}} </span> 
           <span class='tag is-link is-light' (click)="colFilt('scoreboardSeq','scoreboardSeq')"  > {{symFilt}} </span> 
         </div> 
       </th>
@@ -34,12 +34,14 @@
           <span class='tag is-link is-light' (click)="colFilt('rangeTxt','Nbr')"> {{symFilt}} </span>
         </div>  -->
       </th>
+      <th></th>
+      <th></th>
       <th *ngIf='addButOn'> 
         <button 
           class='button is-small is-info'
           (click)=addButClicked()
         >
-          add
+          add new 
         </button>
       </th> 
 

@@ -11,7 +11,9 @@ export class QncmenComponent implements OnInit {
   @Input()  showMenButsIn
   @Input()  showSurveyMenButsIn
   @Input()  compTitleIn
+  @Input()  surveyNameIn
   @Input()  loadingDataMsg
+  // @Input()  whichMenuOptionToHighlightIn
   @Output() wwgJumpOut = new EventEmitter()
   @Output() wwqJumpOut = new EventEmitter()
   @Output() wwrJumpOut = new EventEmitter()
@@ -33,6 +35,9 @@ export class QncmenComponent implements OnInit {
   //showMenButs = false
   ngOnInit() {
     console.log('running men ngOnInit===')
+    // if (this.whichMenuOptionToHighlightIn  > ''){
+    //   this.setMenuHighlight(this.whichMenuOptionToHighlightIn)
+    // }
     //console.log('authIn:',this.authIn)
     // if (this.authIn){
     //   this.showMenButs = true
@@ -70,6 +75,7 @@ export class QncmenComponent implements OnInit {
     this.wwsJumpOut.emit()
   } 
   jumpToPro(){ 
+    console.log('74 men jump to pro')
     this.setMenuHighlight('profile')
     this.proJumpOut.emit()
   } 
@@ -127,7 +133,7 @@ export class QncmenComponent implements OnInit {
 
 
   setMenuHighlight(mel){
-    console.log('running men setMenuHighlight')
+    console.log('running men  132 setMenuHighlight')
     // first make all menu options not-selected
     let el = document.getElementById('profile')
     el.classList.remove("has-background-primary")  

@@ -32,6 +32,8 @@ export class QncwwqdComponent implements OnInit {
   pendingAddQx = -1
   rangeTxtCols = 72
   rangeTxtRows = 4
+  verifyDelete = false
+  fieldsDisabled = false
 
   ngOnInit() {
     //this.chkSubsetAccumMatch(this.questionsIn[this.qx].subset)
@@ -44,9 +46,11 @@ export class QncwwqdComponent implements OnInit {
       this.addButClick()
       this.qx = 0
       this.msg1 ='New starter question created. Ready for your changes.'
-    } else {
-      this.findQuestIx()
+    // } else {
     }  
+    this.findQuestIx()
+    this.chkSubsetAccumMatch(this.questionsIn[this.qx].subset)
+
     console.log('wwqd 42 this.qx:')
     console.log(this.qx)
     console.table(this.questionsIn)
@@ -63,6 +67,7 @@ export class QncwwqdComponent implements OnInit {
         this.qx = loopQx
         this.msg1 = 'previous question shown.'
         // this is a rec we want to show. qx is set.
+        this.chkSubsetAccumMatch(this.questionsIn[this.qx].subset)
         loopQx = 0 // lets exit the while loop
       }
     } // end while
@@ -78,12 +83,14 @@ export class QncwwqdComponent implements OnInit {
         this.qx = loopQx
         this.msg1 = 'next question shown.'
         // this is a rec we want to show. qx is set.
+        this.chkSubsetAccumMatch(this.questionsIn[this.qx].subset)
         loopQx = 9999 // lets exit the while loop
       }
     } // end while
   } // end nextButClick
 
   addButClick(){
+    console.log('running addButClick')
     this.msg1 = 'edit this new question.'
     let newQuestNbr = '001'
     if (this.questionsIn.length > 0) {
@@ -114,6 +121,8 @@ export class QncwwqdComponent implements OnInit {
     console.log('wwqd 95 questionIn:')
     console.table(this.questionsIn)
     this.qx = this.questionsIn.length - 1
+    this.chkSubsetAccumMatch(this.questionsIn[this.qx].subset)
+
     // questionsIn has one more question than the db.
     this.pendingAddQx = this.qx // when he hits save, we use this.
     this.msg1 = 'adding question nbr: ' + this.questionsIn[this.qx].questNbr
@@ -125,6 +134,7 @@ export class QncwwqdComponent implements OnInit {
     this.questionsIn[this.qx].qFilterInOut = 'in'
     // billy also add subset to subSetsIn if needed
     //alert('added new question to questionsIn with subset: group1')
+    this.questionNbrIn =  newQuestNbr
   } // end addButClick
 
   saveButClick(){
@@ -155,6 +165,15 @@ export class QncwwqdComponent implements OnInit {
   }
 
   delButClick(){
+    this.msg1=''
+    this.verifyDelete=true
+    this.fieldsDisabled = true
+  } // end delButClick
+
+  proceedWithDelete(){
+    this.msg1 = 'deleting...'
+    this.verifyDelete=false
+    this.fieldsDisabled = false
    // delete question from question array.
    // call database api
    // figure out qx of the on-screen question, 
@@ -166,7 +185,7 @@ export class QncwwqdComponent implements OnInit {
    // is it weird though, what if we just left the old subset hanging?
    // i mean, he has a hanging subset when he 'adds a new group'
    // on the other screen.
-   this.chkDelSubsetForSubsets(this.questionsIn[this.qx].subset) 
+   //this.chkDelSubsetForSubsets(this.questionsIn[this.qx].subset) 
    //  delete the db question
    this.buildQuestionObj()
    this.launchQtDeleteQuestion()
@@ -183,7 +202,12 @@ export class QncwwqdComponent implements OnInit {
       alert('no questions left. Leaving this screen.')
       this.jumpToWwq()
     }
-  } // end delButClick
+  } // end proceedWithDelete
+
+  cancelDelete(){
+    this.verifyDelete = false
+    this.fieldsDisabled = false
+  } // end cancelDelete
 
   ranSeqButClick(qx){
    this.msg1 = 'question sequence randomized. '
@@ -290,7 +314,7 @@ export class QncwwqdComponent implements OnInit {
   //     } // end if
   //   } // end for
   // } // end setSubsetForRules
-  moo(){}
+  killme1(){}
   // setSubsetForSubsets(subsetNew){
   //   console.log('running setSubsetForSubsets:', subsetNew)
   //   // look for the new subset in subsetsIn,
@@ -309,29 +333,30 @@ export class QncwwqdComponent implements OnInit {
   //   }  // end if
   //   // billy, maybe add the new subset to the db.
   // } // end setSubsetForSubsets
+  killme2(){}
 
-  chkDelSubsetForSubsets(subsetOld){
-    // console.log('running chkDelSubsetForSubsets',subsetOld)
-    // check if we have deleted all questions for a subset.
-    // if so, delete the subset.
-    let countQuestForOldSubset = 0
-    for (let i = 0; i < this.questionsIn.length; i++) { 
-      if (this.questionsIn[i].subset == subsetOld) {        
-        countQuestForOldSubset = countQuestForOldSubset + 1
-      } // end if
-    } // end for
-    if (countQuestForOldSubset == 1) {
-      // we deleted the last question in the old subset
-      // console.log('hey, lets splice out from subsetsIn')
-      // console.table(this.subsetsIn)
-      for (let i = 0; i < this.subsetsIn.length; i++) { 
-        if (this.subsetsIn[i] == subsetOld ) {
-          this.subsetsIn.splice(i,1) } //delete old subset
-          // console.log('delete old subset from subsetsIn: ',subsetOld)
-          break
-      } // end for
-    } // end if count
-  } // end chkDelSubsetForSubsets
+  // chkDelSubsetForSubsets(subsetOld){
+  //   // console.log('running chkDelSubsetForSubsets',subsetOld)
+  //   // check if we have deleted all questions for a subset.
+  //   // if so, delete the subset.
+  //   let countQuestForOldSubset = 0
+  //   for (let i = 0; i < this.questionsIn.length; i++) { 
+  //     if (this.questionsIn[i].subset == subsetOld) {        
+  //       countQuestForOldSubset = countQuestForOldSubset + 1
+  //     } // end if
+  //   } // end for
+  //   if (countQuestForOldSubset == 1) {
+  //     // we deleted the last question in the old subset
+  //     // console.log('hey, lets splice out from subsetsIn')
+  //     // console.table(this.subsetsIn)
+  //     for (let i = 0; i < this.subsetsIn.length; i++) { 
+  //       if (this.subsetsIn[i] == subsetOld ) {
+  //         this.subsetsIn.splice(i,1) } //delete old subset
+  //         // console.log('delete old subset from subsetsIn: ',subsetOld)
+  //         break
+  //     } // end for
+  //   } // end if count
+  // } // end chkDelSubsetForSubsets
 
   findQuestIx(){
     this.qx = this.questionsIn
@@ -339,6 +364,9 @@ export class QncwwqdComponent implements OnInit {
   } // end findQuestIx
 
   chkSubsetAccumMatch(subsetParmIn){ 
+    console.log('running chkSubsetAccumMatch')
+    console.log('rulesIn: ')
+    console.table(this.rulesIn)
     //set fullRuleWords like 'accum1 > 13'
     // console.log('running chkSubsetAccumMatch',  subsetParmIn)
     let subsetTempVarr = subsetParmIn, //clever way to pass into .filter

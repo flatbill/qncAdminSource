@@ -10,13 +10,13 @@ import api from 'src/utils/api'
 // eventually set read limit to something bigger than 13.
 // see app component readManyDbTables.
 
-// billy, maybe rethink invite code.
+// billy, maybe rethink invite code to promo.
 // invitation model A is wedding invitation set.
 // invitation model B is gift certificate.
 // do ya really need an invitation screen?
 // hey, how about used-up gift certificates?
 // should the participants screen show which
-// invite code he used?
+// invite code he used?  
 
 //===========================================================
 // - this profile page is about a subscriber & teamMember.
@@ -186,6 +186,10 @@ export class QncproComponent implements OnInit {
     } else {
       this.msg1 = 'this survey is inactive, and cannot be selected.'
     } // end if
+
+    // dec 2021 temp. hard code promo:
+    if (this.qidsArray[ix].qName == 'Digital Couch Survey'){}
+    if (this.qidsArray[ix].qName == 'forest city Survey'){}
   }  // end qidChosen
 
   setQueryString(ix){
@@ -268,14 +272,9 @@ export class QncproComponent implements OnInit {
     let myUrl = 'https://stupefied-elion-621b07.netlify.app/'
     + '?cust=' + this.cust   // we already loaded cust
     + '&qid=' + qidParm      // he is selecting this qid
+    + '&promo=' + '90210'      // billy temp promo
     //console.log('pro copyTxt, qid:', qidParm )
     //console.log('pro copyTxt, cust:', this.cust )
-    // billy, stick icode into the link url
-    // ?? where should I store/retrive icode?
-    // maybe the subscriber list of qids
-    // where each qid has an icode.
-    // think of wedding invitation sets,
-    // dont do gift certificates yet?
     try {
       await navigator.clipboard.writeText(myUrl)
     } catch (err) {

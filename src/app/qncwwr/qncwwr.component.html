@@ -1,19 +1,19 @@
     
-    <span class='tag is-dark is-small is-vcentered ml-3' 
+<span class='tag is-dark is-small is-vcentered ml-3' 
       *ngIf='msg1.length > 0'>
       {{msg1}} 
-    </span>
+</span>
 
- <table class='table is-fullwidth'>
+ <table class='table is-fullwidth ml-3 mr-3 mb-3'>
    <thead> 
  
      <th class='is-clickable' 
      (click)="colHeadClicked('nbr')" >
      <span>  question count</span>  
      <span *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
-       <span class='tag is-link is-light' (click)="colSort('questCount','des')"> {{symArDn}} </span> 
-       <span class='tag is-link is-light' (click)="colSort('questCount','asc')"> {{symArUp}} </span> 
-       <span class='tag is-link is-light' (click)="colFilt('questCount','Nbr')"> {{symFilt}} </span>
+       <span class='tag is-link is-light' (click)="colSort('questCount','des','Count')"> {{symArDn}} </span> 
+       <span class='tag is-link is-light' (click)="colSort('questCount','asc','Count')"> {{symArUp}} </span> 
+       <span class='tag is-link is-light' (click)="colFilt('questCount','Count')"> {{symFilt}} </span>
      </span> 
    </th>
 
@@ -21,9 +21,9 @@
      (click)="colHeadClicked('nbr')" >
      <span>  rule Nbr</span>  
      <span *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
-       <span class='tag is-link is-light' (click)="colSort('ruleNbr','des')"> {{symArDn}} </span> 
-       <span class='tag is-link is-light' (click)="colSort('ruleNbr','asc')"> {{symArUp}} </span> 
-       <span class='tag is-link is-light' (click)="colFilt('ruleNbr','Nbr')"> {{symFilt}} </span>
+       <span class='tag is-link is-light' (click)="colSort('ruleNbr','des','Rule Nbr')"> {{symArDn}} </span> 
+       <span class='tag is-link is-light' (click)="colSort('ruleNbr','asc','Rule Nbr')"> {{symArUp}} </span> 
+       <span class='tag is-link is-light' (click)="colFilt('ruleNbr','Rule Nbr')"> {{symFilt}} </span>
      </span> 
    </th>
 
@@ -31,9 +31,9 @@
      (click)="colHeadClicked('nbr')" >
      <span>scoreboard</span>  
      <span *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
-       <span class='tag is-link is-light' (click)="colSort('accum','des')"> {{symArDn}} </span> 
-       <span class='tag is-link is-light' (click)="colSort('accum','asc')"> {{symArUp}} </span> 
-       <span class='tag is-link is-light' (click)="colFilt('accum','Nbr')"> {{symFilt}} </span>
+       <span class='tag is-link is-light' (click)="colSort('accum','des','Scoreboard Name')"> {{symArDn}} </span> 
+       <span class='tag is-link is-light' (click)="colSort('accum','asc','Scoreboard Name')"> {{symArUp}} </span> 
+       <span class='tag is-link is-light' (click)="colFilt('accum','Scoreboard')"> {{symFilt}} </span>
      </span> 
    </th>
 
@@ -41,9 +41,9 @@
      (click)="colHeadClicked('nbr')" >
      <span>oper</span>  
      <span *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
-       <span class='tag is-link is-light' (click)="colSort('oper','des')"> {{symArDn}} </span> 
-       <span class='tag is-link is-light' (click)="colSort('oper','asc')"> {{symArUp}} </span> 
-       <span class='tag is-link is-light' (click)="colFilt('oper','Nbr')"> {{symFilt}} </span>
+       <span class='tag is-link is-light' (click)="colSort('oper','des','Oper')"> {{symArDn}} </span> 
+       <span class='tag is-link is-light' (click)="colSort('oper','asc','Oper')"> {{symArUp}} </span> 
+       <span class='tag is-link is-light' (click)="colFilt('oper','Oper')"> {{symFilt}} </span>
      </span> 
    </th>
 
@@ -51,9 +51,9 @@
      (click)="colHeadClicked('nbr')" >
      <span>threshold</span>  
      <span *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
-       <span class='tag is-link is-light' (click)="colSort('thresh','des')"> {{symArDn}} </span> 
-       <span class='tag is-link is-light' (click)="colSort('thresh','asc')"> {{symArUp}} </span> 
-       <span class='tag is-link is-light' (click)="colFilt('thresh','Nbr')"> {{symFilt}} </span>
+       <span class='tag is-link is-light' (click)="colSort('thresh','des','Threshold')"> {{symArDn}} </span> 
+       <span class='tag is-link is-light' (click)="colSort('thresh','asc','Threshold')"> {{symArUp}} </span> 
+       <span class='tag is-link is-light' (click)="colFilt('thresh','Threshold')"> {{symFilt}} </span>
      </span> 
    </th>
 
@@ -61,19 +61,19 @@
      (click)="colHeadClicked('nbr')" >
      <span>will trigger Group</span>  
      <span *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
-       <span class='tag is-link is-light' (click)="colSort('subset','des')"> {{symArDn}} </span> 
-       <span class='tag is-link is-light' (click)="colSort('subset','asc')"> {{symArUp}} </span> 
-       <span class='tag is-link is-light' (click)="colFilt('subset','Nbr')"> {{symFilt}} </span>
+       <span class='tag is-link is-light' (click)="colSort('subset','des','Group Name')"> {{symArDn}} </span> 
+       <span class='tag is-link is-light' (click)="colSort('subset','asc','Group Name')"> {{symArUp}} </span> 
+       <span class='tag is-link is-light' (click)="colFilt('subset','Group Name')"> {{symFilt}} </span>
      </span> 
    </th>
 
-     <th>&nbsp;</th>
+     <!-- <th>&nbsp;</th> -->
      <th *ngIf='addButOn'> 
       <button 
         class='button is-small is-info'
         (click)=addButClicked()
       >
-        add
+        add new
       </button>
     </th> 
 

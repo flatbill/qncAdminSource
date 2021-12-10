@@ -23,7 +23,7 @@ export class QncwwrComponent implements OnInit {
   colHeadSf = false
   rFilterInOut = 'in'
   colSortByArray = []
-  addButOn = false   // controls add button 
+  addButOn = true   // controls jump to det screen
 
   ngOnInit() {
     console.log('running wwr ngOnInit')
@@ -40,14 +40,12 @@ export class QncwwrComponent implements OnInit {
     if (this.rulesArray.length == 0){
       this.msg1 = 'No rules exist yet for this survey.'
     } else {
-      this.msg1 = 'Rules Shown.'
+      this.msg1 = 'rule list'
       this.countQuestionsPerRule()
     }
     console.table(this.rulesIn)
     
     if (this.rulesIn.length == 0) {
-      // no rules yet, so show add button
-      this.addButOn = true
       this.msg1 = 'No rules exist. Click the add button.'
     }
 
@@ -79,15 +77,21 @@ export class QncwwrComponent implements OnInit {
     }
   }// end colHeadClicked
 
-  colSort(fieldName,ascDes){
+  colSort(fieldName,ascDes,fieldMsg){
     this.msg1 = 'rules sorted by' //append list of fields to msg1
     let commaOrPeriod = ','
-    this.colSortByArray.push( {sortField: fieldName , ascOrDes: ascDes} )
+    this.colSortByArray.push( {sortField: fieldName , ascOrDes: ascDes, fieldMsg: fieldMsg} )
+    if ( this.colSortByArray.length == 2  && this.colSortByArray[1].sortField == this.colSortByArray[0].sortField ) {this.colSortByArray.splice(0,1)}
+    if ( this.colSortByArray.length == 3  && this.colSortByArray[2].sortField == this.colSortByArray[0].sortField ) {this.colSortByArray.splice(0,1)}
+    if ( this.colSortByArray.length == 3  && this.colSortByArray[2].sortField == this.colSortByArray[1].sortField ) {this.colSortByArray.splice(1,1)}
+    if ( this.colSortByArray.length == 4  && this.colSortByArray[3].sortField == this.colSortByArray[2].sortField ) {this.colSortByArray.splice(2,1)}
+    if ( this.colSortByArray.length == 4  && this.colSortByArray[3].sortField == this.colSortByArray[1].sortField ) {this.colSortByArray.splice(1,1)}
+    // if ( this.colSortByArray.length == 4  && this.colSortByArray[3].sortField == this.colSortByArray[0].sortField ) {this.colSortByArray.splice(0,1)}
     if (this.colSortByArray.length>3){ this.colSortByArray.splice(0,1) }
- 
+
     for (let i = this.colSortByArray.length-1; i >= 0; i--) {
       if(i==0){commaOrPeriod='.'}
-      this.msg1 = this.msg1 + ' ' + this.colSortByArray[i].sortField + commaOrPeriod
+      this.msg1 = this.msg1 + ' ' + this.colSortByArray[i].fieldMsg + commaOrPeriod
     }
     
     this.rulesIn.sort((a, b) => { 
@@ -177,16 +181,10 @@ addButClicked(){
     let qCnt = 0
     for (let i = 0; i<this.rulesArray.length; i++){
       qCnt = 0
-      //this.rulesArray[i].questCount = i * 11
-      // billy fix loop thru q.accum , dont just rely on accum[0]
-      // qCnt = this.questionsIn
-      // .filter(q => q.accum[0].toLowerCase().trim()==this.rulesArray[i].accum.toLowerCase().trim()).length
-      // this.rulesArray[i].questCount = qCnt.toString().padStart(3,'0') 
-      //===
+      //=== mostly works, duznt catch case misMatch
       for (let j = 0; j<this.questionsIn.length; j++) {
         for(let k = 0; k<this.questionsIn[j].accum.length; k++) {
           if (this.questionsIn[j].accum[k] == this.rulesArray[i].accum) {
-            console.log('207 hit match')
             qCnt = qCnt + 1
           } // end if
         } //end inner for

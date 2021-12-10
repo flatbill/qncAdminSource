@@ -390,26 +390,6 @@ const qtDeleteGroup = (data) => {
   })
 }
 
-const qtUpdateScore = (data) => {
-  return fetch(`https://stupefied-elion-621b07.netlify.app/.netlify/functions/qtUpdateScore`, {
-    body: JSON.stringify(data),
-    method: 'POST'
-  }).then(response => {
-    return response.json()
-  })
-}
-const qtReadScore = (custParmIn,qidParmIn,userParmIn,scoreboardNameParmIn) => {
-  let myUrl =  'https://stupefied-elion-621b07.netlify.app/.netlify/functions/qtReadScore'
-  + '?cust=' + custParmIn
-  + '&qid=' + qidParmIn
-  + '&user=' + userParmIn
-  + '&user=' + scoreboardNameParmIn
-  return fetch(myUrl)
-   .then((response) => {
-    return response.json()
-  })
-}
-
 export default  {
   create: create,
   readAll: readAll,
@@ -452,9 +432,8 @@ export default  {
   qtReadGroups: qtReadGroups,
   qtAddGroup: qtAddGroup,
   qtUpdateGroup: qtUpdateGroup,
-  qtDeleteGroup: qtDeleteGroup,
-  qtUpdateScore: qtUpdateScore,
-  qtReadScore: qtReadScore
+  qtDeleteGroup: qtDeleteGroup
+
 
 }
 

@@ -60,6 +60,7 @@ export class AppComponent {
   surveyName = ''
   daRuleNbr = ''
   daGroupNbr = ''
+  //whichMenuOptionToHighlight = ''
   ngOnInit()  {
     this.titleService.setTitle('Qnc Admin')
   } // end ngInit
@@ -146,7 +147,7 @@ export class AppComponent {
     this.setAllShowCompFalse()
     this.showQnc = true
   } //end showQncFun
-  showWwqFun(ev){
+  showWwqFun(){
     this.compTitle = 'Qnc Questions'
     if (this.showQncWwqd) {
       // jumping from wwqd to wwq
@@ -162,7 +163,7 @@ export class AppComponent {
     this.setAllShowCompFalse()
     this.showQncWwqd = true 
   } // end showWwqdFun
-  showWwgFun(ev){
+  showWwgFun(){
     this.compTitle = 'Qnc Groups' 
     if (this.showQncWwgd) {
       // jumping from wwgd to wwg
@@ -179,7 +180,7 @@ export class AppComponent {
     this.setAllShowCompFalse()
     this.showQncWwgd = true 
   } // end showWwgdFun
-  showWwrFun(ev){
+  showWwrFun(){
     this.compTitle = 'Qnc Rules' 
     if (this.showQncWwrd) {
       // jumping from wwrd to wwr
@@ -234,13 +235,15 @@ export class AppComponent {
     this.setAllShowCompFalse()
     this.showQncWws = true 
   } // end showWwsFun
-  showProFun(ev){
+  showProFun(){
+    //alert('239 showProFun')
     this.compTitle = 'Qnc Profile' 
+    //this.whichMenuOptionToHighlight = 'profile'
     this.setAllShowCompFalse()
     this.showQncPro = true 
   } // end showProFun
 
-  showWwsrFun(ev){
+  showWwsrFun(){
     console.log('running showWwsrFun')
     this.compTitle = 'Qnc Scoreboards' 
     if (this.showQncWwsrd) {
@@ -326,25 +329,38 @@ export class AppComponent {
       console.log('running app setGroupNbrFromWwgFun')
       this.daGroupNbr = ev 
       console.log('app 319 group nbr:', this.daGroupNbr)
-    }
+  }
     
-    setGroupsFromWwgFun(ev){
+  setGroupsFromWwgFun(ev){
       console.log('running app setRulesFromWwrFun')
       // he is jumping from group list to group detail
       this.groupArray = ev 
-    }
-
-    escKeyWasHit(){ 
-    console.log('runninng app escKeyWasHit') 
-    this.setAllShowCompFalse()
-    this.showQnc = true
-    // billy, if he hits esc when inside wwqd
-    // then jump to wwq (not qnc)
-    // maybe something like this:
-    //  if(this.wwqdCaller=='qnc') { this.showQncFun() }
-    //  if(this.wwqdCaller=='wwq') { this.showWwqFun() }
-
   }
+
+  escKeyWasHit(){ 
+      console.log('running app escKeyWasHit') 
+      if (this.showQncWwqd) {  // he was in wwqd
+        this.showWwqFun()
+        return
+      }
+      if (this.showQncWwgd) { // he was in wwgd
+        this.showWwgFun()
+        return
+      }
+      if (this.showQncWwrd) { // he was in wwrd
+        this.showWwrFun()
+        return
+      }
+      if (this.showQncWwsrd) { // he was in wwsrd
+        this.showWwsrFun()
+        return
+      }
+      if (this.showQncWws) {return}
+
+      // default jump to pro
+      this.showProFun()
+     // alert('i wanna turn menu pro green, man.')
+  } // end escKeyWasHit
   
   sortQuestArraybyNbrAndSeq(){
     console.log('running sortQuestArraybyNbrAndSeq')
@@ -427,7 +443,7 @@ export class AppComponent {
     for (let i = 0; i < qtDbObj.length; i++) {
       this.rulesArray.push(qtDbObj[i].data)
     } // end for
-    console.table(this.rulesArray)
+    //console.table(this.rulesArray)
   } // end buildListOfRules
 
  launchQtReadGroups() {
@@ -514,8 +530,8 @@ export class AppComponent {
       } // end for
       this.sortScoreboardsByNbr()
       // console.table(this.scoreboardsArray2)
-      console.table(this.scoreboardsArray)
-      console.log('app 462 end of buildListOfScoreboards')
+      //console.table(this.scoreboardsArray)
+      //console.log('app 462 end of buildListOfScoreboards')
   }
 
   sortGroupsByNbr(){
@@ -532,7 +548,6 @@ export class AppComponent {
     ? 1 : (a.scoreboardNbr == b.scoreboardNbr ) 
     ? ((a.scoreboardName > b.scoreboardName) ? 1 : -1) : -1 )
   }
-
 
 } // end export AppComponent
 
