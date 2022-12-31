@@ -6,16 +6,16 @@
 
 <table class='table is-fullwidth ml-3 mr-3 mb-3'>
     <thead class='none'>
+      <th class='is-clickable'
+      (click)="colHeadClicked('grp')" >
+      Round
+      <div *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
+        <span class='tag is-link is-light' (click)="colSort('groupRound','des','Round')"> {{symArDn}} </span> 
+        <span class='tag is-link is-light' (click)="colSort('groupRound','asc','Round')"> {{symArUp}} </span> 
+        <span class='tag is-link is-light' (click)="colFilt('groupRound','Round')"  > {{symFilt}} </span> 
+      </div> 
+    </th> 
 
-      <th class='is-clickable' 
-        (click)="colHeadClicked('nbr')" >
-        <span>  Number</span>  
-        <span *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
-          <span class='tag is-link is-light' (click)="colSort('questNbr','des', 'question nbr')"> {{symArDn}} </span> 
-          <span class='tag is-link is-light' (click)="colSort('questNbr','asc', 'question nbr')"> {{symArUp}} </span> 
-          <span class='tag is-link is-light' (click)="colFilt('questNbr','question nbr')"> {{symFilt}} </span>
-        </span> 
-      </th>
 
     <th class='is-clickable'
       (click)="colHeadClicked('seq')" > 
@@ -37,6 +37,7 @@
         </div> 
       </th> 
       
+
       <th class='is-clickable'
         (click)="colHeadClicked('pre')" >
         Pre-Question 
@@ -57,6 +58,7 @@
           <span class='tag is-link is-light' (click)="colFilt('questTxt','Question Text')" > {{symFilt}} </span> 
         </div> 
       </th>
+
       <th class='is-clickable' 
         (click)="colHeadClicked('accum')" >
          Scoreboard
@@ -65,11 +67,22 @@
           <span class='tag is-link is-light' (click)="colSort('accum','asc','Scoreboard')"> {{symArUp}} </span> 
           <span class='tag is-link is-light' (click)="colFilt('accum','Scoreboard')"  > {{symFilt}} </span> 
         </div> 
-
       </th>
+      
+      <th></th>
+      <th></th>
 
-      <th></th>
-      <th></th>
+      <th class='is-clickable' 
+      (click)="colHeadClicked('nbr')" >
+      <span>  Number</span>  
+      <span *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
+        <span class='tag is-link is-light' (click)="colSort('questNbr','des', 'question nbr')"> {{symArDn}} </span> 
+        <span class='tag is-link is-light' (click)="colSort('questNbr','asc', 'question nbr')"> {{symArUp}} </span> 
+        <span class='tag is-link is-light' (click)="colFilt('questNbr','question nbr')"> {{symFilt}} </span>
+      </span> 
+    </th>
+
+
       <!-- <th></th> -->
       <!-- <th></th> -->
       <th *ngIf='addButOn'> 
@@ -78,7 +91,7 @@
           (click)=addButClicked()
         >
           add new
-        </button>
+        </button> 
       </th> 
 
     </thead>
@@ -86,15 +99,16 @@
       <tr *ngFor='let q of questionsIn, index as qx'
           class='has-background-success-light' >    
       <ng-container *ngIf="q.qFilterInOut=='in'" >
-        <td class='pl-5 pr-5'  > {{q.questNbr}}  </td> 
-        <td class='pl-5 pr-5'  > {{q.questSeq}}  </td> 
+        <td> {{q.groupRound}}  </td> 
+        <td> {{q.questSeq}}  </td> 
         <td> {{q.subset}}    </td> 
         <td> {{q.preQuest}}  </td> 
         <td> {{q.questTxt}}  </td> 
         <td> {{q.accum[0]}}  </td> 
         <td> {{q.accum[1]}}  </td> 
         <td> {{q.accum[2]}}  </td> 
-        <td class='mr-3y'>
+        <td class='pl-3 pr-3'  > {{q.questNbr}}  </td> 
+        <td class='mr-2'> 
         <button class='button is-small is-info' 
           (click)=detailButClicked(q.questNbr)> 
           detail

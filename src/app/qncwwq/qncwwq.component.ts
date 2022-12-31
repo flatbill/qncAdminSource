@@ -1,6 +1,6 @@
 import { Component, OnInit, Input,  
          EventEmitter, Output } from '@angular/core'
-import api from 'src/utils/api'
+import apiFauna from 'src/utils/apiFauna'
 @Component({
   selector: 'app-qncwwq',
   templateUrl: './qncwwq.component.html'
@@ -12,6 +12,7 @@ export class QncwwqComponent implements OnInit {
   @Input() questionsIn
   @Input() filterResetIn
   @Input() rulesIn
+  @Input() groupsIn
   @Output() wwqdJumpOut = new EventEmitter()
   @Output() questionNbrOut = new EventEmitter()
   @Output() questionsOut = new EventEmitter()
@@ -25,6 +26,7 @@ export class QncwwqComponent implements OnInit {
   ngOnInit() {
     console.log('running wwq ngOnInit============')
     this.msg1 = 'question list '
+    console.log('questionsIn:')
     console.table(this.questionsIn)
     
     if (this.questionsIn.length == 0) {      
@@ -34,8 +36,38 @@ export class QncwwqComponent implements OnInit {
     if (this.filterResetIn) {
       this.resetQuestionFilter()
     }
-
+    this.setQuestionsGroupInfo()
+    this.sortQuestionsIn()
   }  //end ngOnInit
+
+  setQuestionsGroupInfo(){
+    console.log('running setQuestionsGroupInfo')
+    let gx = -1
+    for (let i = 0; i < this.questionsIn.length; i++) {
+      console.log(this.questionsIn[i].subset)
+      gx = this.groupsIn //which round is this question's group in?
+      .findIndex(g => g.groupName 
+                 == this.questionsIn[i].subset)
+      if (gx > -1){
+        this.questionsIn[i].groupRound = this.groupsIn[gx].seq
+      }
+    } //end for      
+  } // end setQuestionsGroupInfo
+
+  sortQuestionsIn(){
+    console.log('running wwq sortQuestionsIn')
+    this.questionsIn.sort( function sorter (a,b) {
+      if (Number(a.groupRound) > Number(b.groupRound))  { return 1  }
+      if (Number(a.groupRound) < Number(b.groupRound))  { return -1 }
+      if (a.groupRound    > b.groupRound )              { return 1  }
+      if (a.groupRound    < b.groupRound )              { return -1 }
+      if (Number(a.questSeq) > Number(b.questSeq))      { return 1  }
+      if (Number(a.questSeq) < Number(b.questSeq))      { return -1 }
+      if (a.questSeq > b.questSeq)                      { return 1  }
+      if (a.questSeq < b.questSeq)                      { return -1 }
+      return 0 //a & b are equal.
+    })  //end sort
+  } // end sortQuestionsIn
 
   colHeadClicked(c){
     // hide/show sort & filter icons in the table header (lower part)
@@ -103,7 +135,6 @@ export class QncwwqComponent implements OnInit {
     } else {
       // this.colFiltPartB(fn, filtWord)  
       this.colFiltPartBB(fn, filtWord)  
-      // this.questArray = this.questArray3 // billy temp.  need array strategy.
       this.msg1 = 'question list filtered.'
     }
   } // end colFilt 
