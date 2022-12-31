@@ -1,0 +1,5 @@
+Paginate(Collections())
+Get(Ref(Collection('qtQuestions'), '290776046743060998'))
+Paginate(Indexes())
+
+Paginate(Match(Index('qtQuestionsX1'),('2','2')))

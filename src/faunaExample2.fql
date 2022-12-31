@@ -1,0 +1,11 @@
+
+Map(
+  Paginate(Match(Index("qtQuestionsX1"),["2","2"])),
+  Lambda(
+    [  "questRec"],
+    Let(
+      {        questRec: Get(Var("questRec")),      },
+      {        questRec: Var("questRec")      }
+    )
+  )
+)
