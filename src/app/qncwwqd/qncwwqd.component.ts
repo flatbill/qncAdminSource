@@ -1,13 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core'
 import { EventEmitter, Output     } from '@angular/core'
-import api from 'src/utils/api'
+import apiFauna from 'src/utils/apiFauna'
 // questionsIn came from parent.
 // lets work on this screen with questionsIn.
-//  
-// add & delete hit both questionsIn and the database.
-// changes hit questionsIn, but wont hit database until he saves.
-// billy , should we auto save when he changes aca?
-// i mean, it looks like an add/delete to the user, not a change.
+// add chg delete hit both questionsIn and the autosave to database.
 
 @Component({
   selector: 'app-qncwwqd',
@@ -34,26 +30,18 @@ export class QncwwqdComponent implements OnInit {
   rangeTxtRows = 4
   verifyDelete = false
   fieldsDisabled = false
-
+  someFieldWasChanged = false
   ngOnInit() {
-    //this.chkSubsetAccumMatch(this.questionsIn[this.qx].subset)
-    // if (this.questionsIn.length == 0){
-    //   // first time he has jumped into this screen.
-    //   this.questionsIn = this.questionsIn }
 
     if (this.questionNbrIn==-1){
       // no questions exist. add a starter question.
       this.addButClick()
       this.qx = 0
       this.msg1 ='New starter question created. Ready for your changes.'
-    // } else {
     }  
     this.findQuestIx()
     this.chkSubsetAccumMatch(this.questionsIn[this.qx].subset)
 
-    console.log('wwqd 42 this.qx:')
-    console.log(this.qx)
-    console.table(this.questionsIn)
   } // end ngOnInit
 
 
@@ -92,15 +80,15 @@ export class QncwwqdComponent implements OnInit {
   addButClick(){
     console.log('running addButClick')
     this.msg1 = 'edit this new question.'
-    let newQuestNbr = '001'
+    let newQuestNbr = '1'
     if (this.questionsIn.length > 0) {
       //  set new quest nbr to one bigger than max quest nbr
       let questNbrMax = 
         Math.max.apply(Math, this.questionsIn.map(function(q) { return q.questNbr }))
-      newQuestNbr = (questNbrMax + 1).toString().padStart(3, '0')
+      newQuestNbr = (questNbrMax + 1).toString() //.padStart(3, '0')
     } // end if questionsIn.length > 0
 
-    let newSeq = '0' + newQuestNbr
+    let newSeq = '' + newQuestNbr
     // let ranSeq = 
     //   (Math.floor(Math.random() * Math.floor(9999))).toString()
 
@@ -114,8 +102,8 @@ export class QncwwqdComponent implements OnInit {
        preQuest: "new pre-question text",
        aca: ["answer choice text"],
        acaPointVals: [0],
-       accum: ["sb001"],
-       subset: 'main'
+       accum: ["scoreboard1"],
+       subset: 'Main'
       }
     )
     console.log('wwqd 95 questionIn:')
@@ -127,9 +115,6 @@ export class QncwwqdComponent implements OnInit {
     this.pendingAddQx = this.qx // when he hits save, we use this.
     this.msg1 = 'adding question nbr: ' + this.questionsIn[this.qx].questNbr
     this.saveQuestion() //auto save
-    // this.msg1 = 'added question nbr: ' 
-    //   + this.questionsIn[this.qx].questNbr
-    //   + ' Edit and save this question. '
     this.msg1 ='New starter question created. Ready for your changes.'
     this.questionsIn[this.qx].qFilterInOut = 'in'
     // billy also add subset to subSetsIn if needed
@@ -152,8 +137,9 @@ export class QncwwqdComponent implements OnInit {
   } // end saveButClick
 
   saveQuestion(){
-    this.msg1 = this.msg1 + ' question saved.'
-    // console.log('running wwqd saveQuestion')
+    console.log('running wwqd saveQuestion')
+    this.someFieldWasChanged = true  
+    this.msg1 = this.msg1 + ' question autosaved.'
     this.buildQuestionObj() // uses current qx
     if (this.pendingAddQx >= 0) {
       this.launchQtAddQuestion()
@@ -314,49 +300,6 @@ export class QncwwqdComponent implements OnInit {
   //     } // end if
   //   } // end for
   // } // end setSubsetForRules
-  killme1(){}
-  // setSubsetForSubsets(subsetNew){
-  //   console.log('running setSubsetForSubsets:', subsetNew)
-  //   // look for the new subset in subsetsIn,
-  //   // if not found, push new subset to subsetsIn.
-  //   let subsetFoundYn = 'n'
-  //   for (let i = 0; i < this.subsetsIn.length; i++) { 
-  //     if(this.subsetsIn[i] == subsetNew) {   
-  //       // console.log(' we found a subset match for: ', subsetNew)     
-  //       subsetFoundYn = 'y'
-  //       break
-  //     } // end if
-  //   } // end for 
-  //   if (subsetFoundYn == 'n'){
-  //     // console.log('213 pushing into subsetsIn: ', subsetNew)
-  //     this.subsetsIn.push(subsetNew)
-  //   }  // end if
-  //   // billy, maybe add the new subset to the db.
-  // } // end setSubsetForSubsets
-  killme2(){}
-
-  // chkDelSubsetForSubsets(subsetOld){
-  //   // console.log('running chkDelSubsetForSubsets',subsetOld)
-  //   // check if we have deleted all questions for a subset.
-  //   // if so, delete the subset.
-  //   let countQuestForOldSubset = 0
-  //   for (let i = 0; i < this.questionsIn.length; i++) { 
-  //     if (this.questionsIn[i].subset == subsetOld) {        
-  //       countQuestForOldSubset = countQuestForOldSubset + 1
-  //     } // end if
-  //   } // end for
-  //   if (countQuestForOldSubset == 1) {
-  //     // we deleted the last question in the old subset
-  //     // console.log('hey, lets splice out from subsetsIn')
-  //     // console.table(this.subsetsIn)
-  //     for (let i = 0; i < this.subsetsIn.length; i++) { 
-  //       if (this.subsetsIn[i] == subsetOld ) {
-  //         this.subsetsIn.splice(i,1) } //delete old subset
-  //         // console.log('delete old subset from subsetsIn: ',subsetOld)
-  //         break
-  //     } // end for
-  //   } // end if count
-  // } // end chkDelSubsetForSubsets
 
   findQuestIx(){
     this.qx = this.questionsIn
@@ -500,7 +443,7 @@ export class QncwwqdComponent implements OnInit {
 
   launchQtAddQuestion() {
     console.log('running  wwqd launchQtAddQuestion')
-    api.qtWriteQuestion(this.questObj)
+    apiFauna.qtWriteQuestion(this.questObj)
     .then ((qtDbRtnObj) => { this.qtDbDataObj = qtDbRtnObj.data})
     // return from this on-the-fly function is implied  
     .catch(() => {
@@ -510,7 +453,7 @@ export class QncwwqdComponent implements OnInit {
    
   launchQtDeleteQuestion() {
     console.log('running  wwqd launchQtDeleteQuestion')
-    api.qtDeleteQuestion(this.questObj)
+    apiFauna.qtDeleteQuestion(this.questObj)
     .then ((qtDbRtnObj) => {this.qtDbDataObj = qtDbRtnObj.data})
     // return from this on-the-fly function is implied  
     .catch(() => {
@@ -520,12 +463,24 @@ export class QncwwqdComponent implements OnInit {
  
   launchQtUpdateQuestion() {
   console.log('running  wwqd launchQtUpdateQuestion')
-  api.qtUpdateQuestion(this.questObj)
+  apiFauna.qtUpdateQuestion(this.questObj)
   .then ((qtDbRtnObj) => {this.qtDbDataObj = qtDbRtnObj.data})
   // return from  on-the-fly function is implied. 
   .catch(() => {
     console.log('launchQtUpdateQuestion error. questObj:', this.questObj )
   })
   } //end launchQtUpdateQuestion
- 
+
+  handleBlur(inputFieldNameParmIn){
+    console.log('running handleBlur')
+    // lotsa work just to reset msg1 when he exits a field (blur)
+    if (this.someFieldWasChanged) {
+      this.someFieldWasChanged = false
+      return // dont run any blur logic, cuz he changed an input field.
+    } else {
+      this.msg1 = 'edit question details.' //this.msg1 + ' and blur occurred'
+    }
+    this.someFieldWasChanged = false
+  } // end handleBlur
+
 } // end class QncwwqdComponent

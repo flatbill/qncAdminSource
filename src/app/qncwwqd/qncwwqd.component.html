@@ -11,7 +11,7 @@
 >       cancel </span>
 </span>
 
-<fieldset [disabled]="fieldsDisabled" class='mt-3 '>
+<fieldset [disabled]="fieldsDisabled" class='mt-3 ml-3 '>
   <button class='button is-info'
         (click)='prevButClick()'
   >  &#5176; prev</button> &nbsp;
@@ -27,12 +27,12 @@
   <button class='button is-info'
     (click)='delButClick()'
   > delete </button> &nbsp;
-  <button class='button is-info'
+  <!-- <button class='button is-info'
     (click)='saveButClick()'
-  > save </button> &nbsp;
+  > save </button> &nbsp; -->
 </fieldset>
 
-<fieldset [disabled]="fieldsDisabled" class='mt-3 '>
+<fieldset [disabled]="fieldsDisabled" class='mt-3 ml-3 '>
 <table class=' table has-background-success-light is-narrow'>
   <tr>
     <td><label>Question nbr: </label></td>
@@ -51,11 +51,12 @@
       class=' is-small '
       value= {{questionsIn[qx].questSeq}}
       size="7"
-      (change)=questSeqChg(questSeq.value,qx)              
+      (change)=questSeqChg(questSeq.value,qx) 
+      (blur)="handleBlur('questSeq')"          
       autocomplete="off">
-   <button class='button is-small is-info is-clickable ml-3' 
+   <span class='tag is-clickable is-small is-info is-clickable ml-3' 
     (click)='ranSeqButClick(qx)'>
-     randomize</button>
+     randomize</span>
     </td>
   </tr>
   <tr>
@@ -64,9 +65,10 @@
     #preQuest
     class=' is-small '
     value= {{questionsIn[qx].preQuest}}
-  size="110"
-  (change)=preQuestChg(preQuest.value,qx)              
-  autocomplete="off"> </td>
+   size="110"
+   (change)=preQuestChg(preQuest.value,qx) 
+   (blur)="handleBlur('preQuest')"          
+   autocomplete="off"> </td>
   </tr>
   <tr>
   <td><label>Question: </label></td>
@@ -76,7 +78,8 @@
     cols={{rangeTxtCols}}
     class=' textarea has-text-weight-semibold'
     value= {{questionsIn[qx].questTxt}}
-    (change)=questTxtChg(questTxt.value,qx) 
+    (change)=questTxtChg(questTxt.value,qx)
+    (blur)="handleBlur('questTxt')"          
     overflow="auto"  
     autocomplete="off"> </textarea>   </td>
   </tr>
@@ -89,7 +92,8 @@
       class=' is-small '
       value= {{questionsIn[qx].subset}}
        size="20"
-       (change)='subsetChg(subset.value,qx)'            
+       (change)='subsetChg(subset.value,qx)'
+       (blur)="handleBlur('subset')"          
        autocomplete='off'> </td>
     </tr>
     <tr *ngIf='fullRuleWords.length > 0'>
@@ -108,20 +112,22 @@
       #questAccum0
       class=' is-small'
       value= {{questionsIn[qx].accum[0]}}
-      (change)=questAccumChg(questAccum0.value,qx,0)              
+      (change)=questAccumChg(questAccum0.value,qx,0)
+      (blur)="handleBlur('questAccum0')"          
       autocomplete="off">  &nbsp;
-      
     <input  size=20
       #questAccum1
       class='is-small'
       value= {{questionsIn[qx].accum[1]}}
-      (change)=questAccumChg(questAccum1.value,qx,1)             
+      (change)=questAccumChg(questAccum1.value,qx,1)
+      (blur)="handleBlur('questAccum1')"          
       autocomplete="off"> &nbsp; 
     <input  size=20
         #questAccum2
         class=' is-small'
         value= {{questionsIn[qx].accum[2]}}
-        (change)=questAccumChg(questAccum2.value,qx,2)             
+        (change)=questAccumChg(questAccum2.value,qx,2)
+        (blur)="handleBlur('questAccum2')"          
         autocomplete="off">  
   </td>
   </tr>
@@ -152,7 +158,8 @@
         class=' is-small '
         value= {{questionsIn[qx].acaFrame}}
         size="45"
-        (change)=acaFrameChg(acaFrame.value,qx)              
+        (change)=acaFrameChg(acaFrame.value,qx)   
+        (blur)="handleBlur('acaFrame')"          
         autocomplete="off"></td> </tr>
     <tr>
       <th>Answer Choice</th>
@@ -183,7 +190,8 @@
   class=' is-small '
   value= {{questionsIn[qx].aca[ax]}}
   size="15"
-  (change)=questAcaChg(aca.value,qx,ax)              
+  (change)=questAcaChg(aca.value,qx,ax) 
+  (blur)="handleBlur('aca')"          
   autocomplete="off"> 
 </td>  
   <td>
@@ -192,7 +200,8 @@
   class=' is-small '
   value= {{questionsIn[qx].acaPointVals[ax]}}
   size="2"
-  (change)=questAcaPointValChg(pointVal.value,qx,ax)              
+  (change)=questAcaPointValChg(pointVal.value,qx,ax)
+  (blur)="handleBlur('pointVal')"          
   autocomplete="off">   
 </td>
 <td><button 
