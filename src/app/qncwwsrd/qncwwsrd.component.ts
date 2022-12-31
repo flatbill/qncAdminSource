@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core'
 import { EventEmitter, Output     } from '@angular/core'
-import api from 'src/utils/api'
+import apiFauna from 'src/utils/apiFauna'
 
 @Component({
   selector: 'app-qncwwsrd',
@@ -22,15 +22,12 @@ export class QncwwsrdComponent implements OnInit {
   rangeTxtRows = 3
   verifyDelete = false
   fieldsDisabled = false
-
+  someFieldWasChanged = false
+  rangerArray = []
   ngOnInit() {
-    console.log('runn wwsrd ngOnInit')
-    // console.log(this.scoreboardNbrIn)
-    // console.table(this.scoreboardsIn)
-    //console.log(this.scoreboardsIn[0].scoreboardNbr) blank scoreboardsIn?
-    // if (this.scoreboardsIn2.length == 0) {
-    //   this.scoreboardsIn2 = this.scoreboardsIn 
-    // }  
+    console.log('running wwsrd ngOnInit')
+    console.log('scoreboardsIn at ngOnit wwsrd:')
+    console.table(this.scoreboardsIn)
     if (this.scoreboardNbrIn==-1){
       // no scoreboards exist. add a starter scoreboard.
       this.addButClick()
@@ -75,16 +72,19 @@ export class QncwwsrdComponent implements OnInit {
   
   addButClick(){
     this.msg1 = 'edit this new scoreboard.'
-    let newScoreboardNbr = '01'
+    let newScoreboardNbr = '1'
     if (this.scoreboardsIn.length > 0) {
       //  set new scoreboard nbr to one bigger than max scoreboard nbr
       let scoreboardNbrMax = 
         Math.max.apply(Math, this.scoreboardsIn.map(function(s) { return s.scoreboardNbr }))
-      newScoreboardNbr = (scoreboardNbrMax + 1).toString().padStart(3, '0')
+      newScoreboardNbr = (scoreboardNbrMax + 1).toString() //.padStart(3, '0')
     } // end if scoreboardsIn.length > 0
-    let newScoreboardName = 'sb' + newScoreboardNbr //.substr(1, 1) 
-    let newScoreboardSeq  = '0'+ newScoreboardNbr 
+    let newScoreboardName = 'sb' + newScoreboardNbr //.padStart(3, '0')
+    let newScoreboardSeq  = newScoreboardNbr 
     // what scoreboard sequence is for: reports list scoreboards in sequence.
+    this.setRanges(
+      this.scoreboardsIn[0].qCnt,
+      this.scoreboardsIn[0].maxPoints) //billy
     this.scoreboardsIn.push(
       {
        cust: this.custIn,
@@ -92,29 +92,37 @@ export class QncwwsrdComponent implements OnInit {
        scoreboardNbr: newScoreboardNbr,
        scoreboardName: newScoreboardName,
        scoreboardSeq: newScoreboardSeq,
-       ranges: [
-        {
-         rangeName: 'low',
-         rangeNbr: '1',
-         rangeStart: '00',
-         rangeEnd: '33',
-         rangeTxt: 'text for this range goes here'
-        },
-        {
-          rangeName: 'medium',
-          rangeNbr: '1',
-          rangeStart: '34',
-          rangeEnd: '66',
-          rangeTxt: 'text for this range goes here'
-         },
-         {
-          rangeName: 'high',
-          rangeNbr: '1',
-          rangeStart: '67',
-          rangeEnd: '99',
-          rangeTxt: 'text for this range goes here'
-         }
-       ]
+       ranges: this.rangerArray
+      //  ranges: [
+      //   {
+      //    rangeName: 'low',
+      //    rangeNbr: '1',
+      //    rangeStart: '00',
+      //    rangeEnd: '33',
+      //    rangeTxt: 'low '
+      //   },
+      //   {
+      //     rangeName: 'medium',
+      //     rangeNbr: '2',
+      //     rangeStart: '34',
+      //     rangeEnd: '66',
+      //     rangeTxt: 'med'
+      //    },
+      //    {
+      //     rangeName: 'high',
+      //     rangeNbr: '3',
+      //     rangeStart: '67',
+      //     rangeEnd: '999',
+      //     rangeTxt: 'high'
+      //    },
+      //    {
+      //     rangeName: 'higher',
+      //     rangeNbr: '3',
+      //     rangeStart: '67',
+      //     rangeEnd: '999',
+      //     rangeTxt: 'high'
+      //    }
+      //  ]
       //  scoreboardNbr: newscoreboardNbr,
       }
     )
@@ -170,7 +178,7 @@ export class QncwwsrdComponent implements OnInit {
     this.fieldsDisabled = false
   } // end cancelDelete
 
-  saveButClick(){
+  saveButClick(){ //not used. instead, we autosave.
     // console.log('running saveButClick')
     // call the database api
     // we are working with one scoreboard.
@@ -180,6 +188,7 @@ export class QncwwsrdComponent implements OnInit {
 
   saveScoreboard(){
     console.log('running wwsrd saveScoreboard')
+    this.someFieldWasChanged = true  
     this.buildScoreboardObj() // uses current sx
     if (this.pendingAddSx >= 0) {
       this.launchQtAddScoreboard()
@@ -188,8 +197,8 @@ export class QncwwsrdComponent implements OnInit {
       //  this is a changed scoreboard:
       this.launchQtUpdateScoreboard()
     }
-    if ( ! this.msg1.includes('scoreboard saved')) {
-      this.msg1 = this.msg1 + ' scoreboard saved.'
+    if ( ! this.msg1.includes('scoreboard autosaved')) {
+      this.msg1 = this.msg1 + ' scoreboard autosaved.'
     }
   } // end saveScoreboard
 
@@ -248,7 +257,7 @@ export class QncwwsrdComponent implements OnInit {
 
   launchQtAddScoreboard(){
     console.log('running  wwsrd launchQtAddScoreboard')
-    api.qtAddScoreboard(this.scoreboardObj)
+    apiFauna.qtAddScoreboard(this.scoreboardObj)
     .then ((qtDbRtnObj) => { this.qtDbDataObj = qtDbRtnObj.data})
     // return from this on-the-fly function is implied  
     .catch(() => {
@@ -259,7 +268,7 @@ export class QncwwsrdComponent implements OnInit {
 
   launchQtUpdateScoreboard(){
     console.log('running  wwsrd launchQtUpdateScoreboard')
-    api.qtUpdateScoreboard(this.scoreboardObj)
+    apiFauna.qtUpdateScoreboard(this.scoreboardObj)
     .then ((qtDbRtnObj) => {this.qtDbDataObj = qtDbRtnObj.data})
     // return from  on-the-fly function is implied. 
     .catch(() => {
@@ -270,7 +279,7 @@ export class QncwwsrdComponent implements OnInit {
 
   launchQtDeleteScoreboard(){
     console.log('running  wwsrd launchQtDeleteScoreboard')
-    api.qtDeleteScoreboard(this.scoreboardObj)
+    apiFauna.qtDeleteScoreboard(this.scoreboardObj)
     .then ((qtDbRtnObj) => {this.qtDbDataObj = qtDbRtnObj.data})
     // return from this on-the-fly function is implied  
     .catch(() => {
@@ -325,5 +334,141 @@ rangeTxtChg(newRangeTxt,sx,rx){
   this.scoreboardsIn[sx].ranges[rx].rangeTxt = newRangeTxt.trim()
   this.saveScoreboard()
 }
+
+handleBlur(inputFieldNameParmIn){
+  console.log('running handleBlur')
+  // lotsa work just to reset msg1 when he exits a field (blur)
+  if (this.someFieldWasChanged) {
+    this.someFieldWasChanged = false
+    return // dont run any blur logic, cuz he changed an input field.
+  } else {
+    this.msg1 = 'edit scoreboard details.' //this.msg1 + ' and blur occurred'
+  }
+  this.someFieldWasChanged = false
+} // end handleBlur
+
+// handleBlur(htmlInputFieldDomObjParmIn){
+//   learn about html dom for input fields
+//   if(htmlInputFieldDomObjParmIn.name.length > 0){alert('wingo')}
+//   if(htmlInputFieldDomObjParmIn.id.length > 0){alert('wingo2')}
+//   console.log('332 htmlInputFieldParmIn:')
+//   console.table(htmlInputFieldDomObjParmIn)
+//   //console.table(Object.keys(htmlInputFieldDomObjParmIn)) //useless?
+//   }
+
+
+setRanges(questCount,biggestChoice){
+  // selzer Dec 2022 automatically compute ranges,
+// based on the questions that are already setup
+// how many questions add to this scoreboard?
+// if he hits the biggest choice, how many points is this?
+// (assume all questions have the same biggest choice)
+//..
+// do we have access to the question list?
+// ..
+questCount = 10 // temp, kill later
+biggestChoice = 8 // temp, kill later
+let maxPoints = questCount * biggestChoice
+// count questions for this scoreboard
+// look thru all questions, find biggestChoice
+let vlBottom = 0   
+let vlTop    = maxPoints * .25             //20
+let qlBottom = maxPoints * .25 + .001            //around 20 
+let qlTop    = maxPoints * .3125           //25
+let rlBottom = maxPoints * .3125   + .001       //around 25
+let rlTop    = maxPoints * .4375          //35
+let mlBottom = maxPoints * .4375          //35
+let mlTop    = maxPoints * .5     - .001        //around 40
+let mllBottom = maxPoints * .5            //40
+let mllTop    = maxPoints * .5625    -.001     // around 45
+let emBottom = maxPoints  *.5625          //45
+let emTop     = maxPoints *.5625          //45
+let mlhBottom = maxPoints *.5625  + .001   // around 45
+let mlhTop   = maxPoints - (maxPoints * .375)         //50
+let mhBottom = maxPoints - (maxPoints * .375) + .001  //around 50
+let mhTop    = maxPoints - (maxPoints * .3125)           //55
+let rhBottom =  maxPoints - (maxPoints * .3125) +.001    //around 55
+let rhTop    = maxPoints - (maxPoints * .1875)         //65 
+let qhBottom = maxPoints - (maxPoints * .1875) + .001  //around 65
+let qhTop    = maxPoints - (maxPoints * .125)  -.001   //around 70
+let vhBottom = maxPoints - (maxPoints * .125)          // 70 
+let vhTop    = maxPoints
+
+// console.log('vl range: ',vlBottom,vlTop)
+// console.log('ql range: ',qlBottom,qlTop)
+// console.log('rl range: ',rlBottom,rlTop)
+console.log('mlh range: ',mlhBottom,mlhTop)
+// console.log('em range: ',emBottom,emTop)
+this.rangerArray = [
+       {
+         rangeName: 'very low',
+         rangeNbr: '1',
+         rangeStart: '00',
+         rangeEnd: vlTop.toString(),
+         rangeTxt: 'very low'
+        },{
+          rangeName: 'quite low',
+          rangeNbr: '1',
+          rangeStart: qlBottom.toString(),
+          rangeEnd: qlTop.toString(),
+          rangeTxt: 'quite low'
+         },{
+          rangeName: 'reasonably low',
+          rangeNbr: '1',
+          rangeStart: rlBottom.toString(),
+          rangeEnd: rlTop.toString(),
+          rangeTxt: 'reasonably low'
+         },{
+          rangeName: 'middle low',
+          rangeNbr: '1',
+          rangeStart: mlBottom.toString(),
+          rangeEnd: mlTop.toString(),
+          rangeTxt: 'middle low'
+         },{
+          rangeName: 'middle leaning low',
+          rangeNbr: '1',
+          rangeStart: mllBottom.toString(),
+          rangeEnd: mllTop.toString(),
+          rangeTxt: 'middle leaning low'
+         },{
+          rangeName: 'exact middle',
+          rangeNbr: '1',
+          rangeStart: emBottom.toString(),
+          rangeEnd: emTop.toString(),
+          rangeTxt: 'exact middle'
+         },{
+          rangeName: 'middle leaning high',
+          rangeNbr: '1',
+          rangeStart: mlhBottom.toString(),
+          rangeEnd: mlhTop.toString(),
+          rangeTxt: 'middle leaning high'
+         },{
+          rangeName: 'middle high',
+          rangeNbr: '1',
+          rangeStart: mhBottom.toString(),
+          rangeEnd: mhTop.toString(),
+          rangeTxt: 'middle high'
+          },{
+          rangeName: 'reasonably high',
+          rangeNbr: '1',
+          rangeStart: rhBottom.toString(),
+          rangeEnd: rhTop.toString(),
+          rangeTxt: 'reasonably high'
+         },{
+          rangeName: 'quite high',
+          rangeNbr: '1',
+          rangeStart: qhBottom.toString(),
+          rangeEnd: qhTop.toString(),
+          rangeTxt: 'quite high'
+         },{
+          rangeName: 'very high',
+          rangeNbr: '1',
+          rangeStart: vhBottom.toString(),
+          rangeEnd: vhTop.toString(),
+          rangeTxt: 'very high'
+         }
+] // end of rangerArray
+// alert(this.rangerArray.length)
+} // end fun setRanges
 
 } // end export
