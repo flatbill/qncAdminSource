@@ -1,7 +1,8 @@
+// import { asLiteral } from '@angular/compiler/src/render3/view/util'
 import { Component, OnInit } from '@angular/core'
 import { Input, Output }     from '@angular/core'
 import {EventEmitter} from '@angular/core'
-import api from 'src/utils/api'
+import apiFauna from 'src/utils/apiFauna'
 
 // billy, adjust the read limit in app component.
 // make sure ya dont have runaway reads like june23,
@@ -10,7 +11,7 @@ import api from 'src/utils/api'
 // eventually set read limit to something bigger than 13.
 // see app component readManyDbTables.
 
-// billy, maybe rethink invite code to promo.
+// billy, maybe rethink invite code and promo.
 // invitation model A is wedding invitation set.
 // invitation model B is gift certificate.
 // do ya really need an invitation screen?
@@ -36,7 +37,7 @@ import api from 'src/utils/api'
  
 // there's something evil about just setting querystring,
 // instead of the angular way of signaling app component with 
-// cust and qid input and output.  oh well, its an evil world.
+// cust and qid input and output.  oh well, it's an evil world.
 
 @Component({
   selector: 'app-qncpro',
@@ -47,12 +48,12 @@ export class QncproComponent implements OnInit {
   //@Input() subscriberInternalIdIn // from app component subscriptionObj??
   @Input() custIn
   @Input() qidIn
-  @Input() qidsArrayIn
+  @Input() qidArrayIn
   @Input() subscriptionObjIn
   @Input() teamMemberObjIn
   @Input() loadingDataBusyIn
-  @Output() qidSelectOut = new EventEmitter()
-  @Output() qidsArrayOut = new EventEmitter()
+  @Output() surveySelectOut = new EventEmitter()
+  @Output() qidArrayOut = new EventEmitter()
   @Output() subscriptionObjOut = new EventEmitter()
   @Output() teamMemberObjOut = new EventEmitter()
   msg1 = ''
@@ -65,21 +66,24 @@ export class QncproComponent implements OnInit {
   subscriberPlanExpDate = new Date()
   subscriberPlanExpDateTxt = ''
   subscriberInternalId = ''
-  qidsArray = []
+  qidArray = []
   cust = ''
   qid = ''
   showdevNotes = false
   copyingTxt = false // remember when he copies invite text
+  surveyObj = {} 
+  qtDbDataObj = {} 
 
   ngOnInit() { 
     console.log('---+++running pro ngOnInit')
-    // console.table(this.qidsArray) 
+    this.msg1 = 'Qna List'
+    // console.table(this.qidArray) 
     console.log(' pro init subObjIn:')
     console.table(this.subscriptionObjIn)
     //console.log(this.teamMemberSubscriberInternalId)
     this.qid = this.qidIn 
     this.cust = this.custIn
-    this.qidsArray = this.qidsArrayIn
+    //this.qidConvert() // 1time feb2022
     // console.log('pro init teamMemberObjIn:')
     // console.table(this.teamMemberObjIn)
 
@@ -103,7 +107,7 @@ export class QncproComponent implements OnInit {
       this.subscriberPlan     = this.subscriptionObjIn.plan
       this.subscriberPlanExpDateTxt = this.subscriptionObjIn.planExpDate
       this.subscriberInternalId = this.subscriptionObjIn.internalId
-    }
+    }  //end if
 
     //console.log ('114 pro init sub internId save:',this.subscriberInternalIdSave)
     //console.log ('115 pro init sub internId     :',this.subscriberInternalId)
@@ -111,7 +115,7 @@ export class QncproComponent implements OnInit {
     if ( typeof this.subscriptionObjIn.internalId    == 'undefined' 
     ||   this.teamMemberObjIn.subscriberInternalId != this.subscriptionObjIn.internalId) {
       console.log('113 pro subscriber gonna launch launchQtReadSubscriber ...')
-      this.launchQtReadSubscriber()  
+      this.launchQtReadSubscriber()
     } // end if
 
   // if (this.teamMemberObjIn.subscriberInternalId !=
@@ -119,6 +123,12 @@ export class QncproComponent implements OnInit {
   //     console.log('121 pro subscriber gonna launch launchQtReadSubscriber ...')
   //     this.launchQtReadSubscriber()  
   // }
+
+    if (typeof this.qidArrayIn == 'undefined') {
+      this.qidArray = []
+    } else {
+      this.qidArray = this.qidArrayIn
+    } // end if
 
   } // end ngOnInit
 
@@ -128,7 +138,7 @@ export class QncproComponent implements OnInit {
     // can we do a better bulma way to make rows selectable?
     let qlink = 'qlink-' + ix
     let el = document.getElementById(qlink)
-    if (this.qidsArray[ix].qidStatus == 'active'
+    if (this.qidArray[ix].surveyStatus == 'active'
     && ! this.loadingDataBusyIn) {
       el.classList.remove("has-background-success-light")
       el.classList.add("is-clickable")
@@ -159,8 +169,8 @@ export class QncproComponent implements OnInit {
       return
     } 
 
-   if (this.qidsArray[ix].qid == this.qid){
-      this.msg1='this survey is already selected.' 
+   if (this.qidArray[ix].qid == this.qid){
+      this.msg1='this Qna is already selected.' 
       return
    }
 
@@ -173,29 +183,35 @@ export class QncproComponent implements OnInit {
     // if he duznt pay the bill.
     // maybe make em all active by default, except for ed's.
 
-    if (this.qidsArray[ix].qidStatus == 'active') {
+    if (this.qidArray[ix].surveyStatus == 'active') {
       // change querystring:
       this.setQueryString(ix)
-      this.msg1 = 'selected Survey: '
-      + this.qidsArray[ix].qName
+      this.msg1 = 'selected Qna: '
+      + this.qidArray[ix].surveyName
       // we put a green check on the survey row he selects.
       // keep the green check on, until he selects another.
       // control the html green check with this.qid and *ngIf
-      this.qid = this.qidsArray[ix].qid
-      this.qidSelectOut.emit(this.qidsArray[ix].qName) // send Qid Selected Signal to app component.
+      this.qid = this.qidArray[ix].qid
+      // tell app component which Qid Selected:
+      this.surveySelectOut.emit(this.qidArray[ix].surveyName) 
     } else {
-      this.msg1 = 'this survey is inactive, and cannot be selected.'
+      this.msg1 = 'this Qna is inactive, and cannot be selected.'
     } // end if
 
+    // Mar2022 set surveyObj to test updateSurvey fauna function
+    // this.surveyObj = this.surveysArray[ix]
+
+
     // dec 2021 temp. hard code promo:
-    if (this.qidsArray[ix].qName == 'Digital Couch Survey'){}
-    if (this.qidsArray[ix].qName == 'forest city Survey'){}
+    // if (this.qidArray[ix].surveyName == 'Digital Couch Survey'){}
+    // if (this.qidArray[ix].surveyName == 'forest city Survey'){}
+
   }  // end qidChosen
 
   setQueryString(ix){
   console.log('running pro setQueryString')
   let myUrl  = new URL(window.location.href)
-  this.qid  = this.qidsArray[ix].qid
+  this.qid  = this.qidArray[ix].qid
   let leftUrl = myUrl.toString().split("?")[0] //take off old querystring
   let myNewUrl = leftUrl       // + '?qid=4&cust=1'
     + '?qid='  + this.qid
@@ -203,21 +219,21 @@ export class QncproComponent implements OnInit {
   history.pushState({}, null, myNewUrl)
 } // end setQueryString
 
-
   launchQtReadSubscriber() {
     console.log('running  pro launchQtReadSubscriber')
     //console.log('pro 211',this.teamMemberSubscriberInternalId)
     this.msg1 = 'loading subscriber info ...'
-    api.qtReadSubscribers(this.teamMemberSubscriberInternalId)
+    apiFauna.qtReadSubscribers(this.teamMemberSubscriberInternalId)
       .then 
       (   (qtDbRtnObj) => 
         {
-          console.log(' running .then of api.qtReadSubscribers') 
+          console.log(' running .then of apiFauna.qtReadSubscribers') 
           this.buildSubscriptionInfo(qtDbRtnObj)
+          this.launchQtReadSurveys()
         }
       )
-      .catch(() => {  // api.qtReadInvitations returned an error 
-        console.log('api.qtReadSubscriber error. subscriberInternalId: ' 
+      .catch(() => {  // apiFauna.qtReadInvitations returned an error 
+        console.log('apiFauna.qtReadSubscriber error. subscriberInternalId: ' 
         , this.subscriberInternalId)
       })
   } // end launchQtReadSubscriber
@@ -247,32 +263,99 @@ export class QncproComponent implements OnInit {
       console.log('pro buildSubscription info, subscription is expired') 
     }
   
-    console.table(qtDbObj[0].data.qids)
-    this.qidsArray = []
-    for (let i = 0; i < qtDbObj[0].data.qids.length; i++) {
-      this.qidsArray.push(qtDbObj[0].data.qids[i])
-      this.qidsArray[i].qidSelected = false
-    } // end for data qids
-    //console.log('pro qidsArray:')
-    //console.table(this.qidsArray)
-    // console.log(this.qidsArray[0].qName)
+
     this.msg1 = 'showing list of surveys for subscriber: '
     + this.subscriberUserName 
     + '. '  + '\xa0' + '\xa0' + '\xa0' + '\xa0' 
     + 'Click on a Survey.'
-    this.qidsArrayOut.emit(this.qidsArray)
     this.subscriptionObjOut.emit(qtDbObj[0].data)
     //console.log ('288 pro buildSub internId     :',this.subscriberInternalId)
   } // end buildSubscriptionInfo 
 
-  async  copyTxt(qidParm) {
+  launchQtReadSurveys(){
+    console.log('running  pro launchQtReadSurveys')
+    this.msg1 = 'loading surveys info ...'
+    apiFauna.qtReadSurveys(this.cust)
+      .then((qtDbRtnObj) =>   {
+          console.log(' running .then of apiFauna.qtReadSurveys') 
+          this.buildSurveysInfo(qtDbRtnObj)
+          this.sortSurveyArraybyNbr()
+      }) // end then
+      .catch(() => {  // api returned an error 
+        console.log('apiFauna.qtReadSurveys error. cust: ' 
+        , this.cust)
+      }) // end catch
+  } // end launchQtReadSurveys
+
+  buildSurveysInfo(qtDbObj){
+    // qtDbObj is a list of surveys from the data table.
+    console.log('running buildSurveysInfo')
+    console.log('294-0 qtDbObj:')
+    console.table(qtDbObj)
+    console.log('294a')
+    console.table(qtDbObj[0].data)
+    console.log('294b')
+    console.log('299 surveys array')
+    for (let i = 0; i < qtDbObj.length; i++) {
+      console.log('300a')
+      this.qidArray.push(qtDbObj[i].data)
+      this.qidArray[i].surveySelected = false
+      console.log('300b')
+    } // end for
+    console.log('pro 294c qidArray:')
+    console.table(this.qidArray)
+    this.qidArrayOut.emit(this.qidArray)
+    // console.log('313 surveys Array:')
+    // console.table(this.surveysArray)
+    this.msg1 = 'Qna list'
+  }
+  
+  sortSurveyArraybyNbr(){
+    console.log('running sortSurveyArraybyNbr')
+    this.qidArray
+    .sort((a, b) => (Number(a.qid) > Number(b.qid) ) 
+    ? 1 : (a.qid  == b.qid ) 
+    ? ((a.qid > b.qid) ? 1 : -1) : -1 )
+  } // end sortSurveyArraybyNbr
+
+  setIcode(ix){
+    let icodeN = Math.floor((Math.random() * 10000) + 1000)
+    this.qidArray[ix].icode = icodeN.toString()
+    this.launchQtUpdateSurvey(ix)
+  }
+
+  launchQtUpdateSurvey(ix){
+    console.log('running  pro launchQtUpdateSurvey')
+    // Mar2022 this func maybe should be in some other component
+    this.msg1 = 'updating survey info ...'
+    this.copyingTxt = true // a hack to prevent qidChosen again
+    this.surveyObj['cust']   = this.cust
+    this.surveyObj['qid']   = this.qidArray[ix].qid
+    this.surveyObj['surveyName'] = this.qidArray[ix].surveyName
+    this.surveyObj['surveyStatus'] = this.qidArray[ix].surveyStatus
+    this.surveyObj['icode'] = this.qidArray[ix].icode
+    apiFauna.qtUpdateSurvey(this.surveyObj)
+      .then((qtDbRtnObj) => {
+        console.log(' 342 pro running .then of apiFauna.qtUpdateSurvey') 
+        this.msg1 = 'updated Qna info.  ' 
+        + 'Please copy invitation link to paste into invitation emails.'
+      }) // end then
+      .catch(() => {  // api returned an error 
+        console.log('apiFauna.qtUpdateSurvey error. surveyObj: ' )
+        console.table(this.surveyObj)
+      }) // end catch
+  } // end launchQtUpdateSurvey
+
+
+  async  copyTxt(ix) {
     console.log('running pro copyTxt')
     this.msg1 = 'copying invitation text...'
     this.copyingTxt = true
-    let myUrl = 'https://stupefied-elion-621b07.netlify.app/'
-    + '?cust=' + this.cust   // we already loaded cust
-    + '&qid=' + qidParm      // he is selecting this qid
-    + '&promo=' + '90210'      // billy temp promo
+    let myUrl = 'https://qna.flyTechFree.com/' // april 2022
+    + '?cust=' + this.cust                  // we already loaded cust
+    + '&qid=' + this.qidArray[ix].qid      // he is selecting this qid
+    + '&icode=' + this.qidArray[ix].icode  //  invite code
+    + '&promo=' + 'promo711'  //  temp promo
     //console.log('pro copyTxt, qid:', qidParm )
     //console.log('pro copyTxt, cust:', this.cust )
     try {
@@ -282,5 +365,36 @@ export class QncproComponent implements OnInit {
     }
     this.msg1 = 'text copied to clipboard---> ' + myUrl
   }
+  testArray(){
+    let vinny =
+    []
+
+  } // end testArray
+
+  // qidConvert(){
+  // Feb 2022 one time conversion to qtSurvey table
+  //   console.log('running qidConvert ')
+  //   // incoming this.qidArray() has one row per survey.
+  //   for (let i = 0; i < this.qidArray.length; i++) {
+  //     this.surveyObj['cust']   = this.cust
+  //     this.surveyObj['qid']   = this.qidArray[i].qid
+  //     this.surveyObj['surveyName'] = this.qidArray[i].qName
+  //     this.surveyObj['surveyStatus'] = this.qidArray[i].qidStatus
+  //     console.log('294')
+  //     console.table(this.surveyObj)
+  //     this.qidConvertAddSurveyRec()
+  //   } // end for
+  // } // end qidConvert
+
+  // qidConvertAddSurveyRec() {
+  //   console.log('running qidConvertWriteSurveyRec')
+  //   apiFauna.qtAddSurvey(this.surveyObj) 
+  //   .then ((qtDbRtnObj) => { this.qtDbDataObj = qtDbRtnObj.data})
+  //   .catch(() => {
+  //     console.log('qidConvertAddSurveyRec error. surveyObj:' 
+  //     +  this.surveyObj)
+  //   })
+
+  // } // end qidConvertWriteSurveyRec
 
 } // end export QncproComponent
