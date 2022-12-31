@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core'
 import { EventEmitter, Output     } from '@angular/core'
-import api from 'src/utils/api'
+import apiFauna from 'src/utils/apiFauna'
 
 @Component({
   selector: 'app-qncwwgd',
@@ -26,7 +26,7 @@ export class QncwwgdComponent implements OnInit {
   pendingAddGx = -1
   verifyDelete = false
   fieldsDisabled = false
-
+  someFieldWasChanged = false
   ngOnInit() {
     console.log('running wwgd ngOnInit')
     //console.table(this.groupsIn)
@@ -78,20 +78,20 @@ export class QncwwgdComponent implements OnInit {
   addButClick(){
     console.log('running wwgd addButClick')
     this.msg1 = 'edit this new group.'
-    let newGroupNbr = '001'
+    let newGroupNbr = '1'
     if (this.groupsIn.length > 0) {
       //  set new group nbr to one bigger than max group nbr
       let groupNbrMax = 
         Math.max.apply(Math, this.groupsIn.map(function(g) { return g.groupNbr }))
-        newGroupNbr = (groupNbrMax + 1).toString().padStart(3, '0')
+        newGroupNbr = (groupNbrMax + 1).toString() //.padStart(3, '0')
         console.log('new group nbr:',newGroupNbr)
     } //end if
     let newSeq = '1'
-    let newGroupName = 'main'
-    if ( this.groupsIn.findIndex(g => g.groupName == 'main') > -1 ){
-      // group name: main already exists.
-      newGroupName ="grp" + newGroupNbr
-      newSeq = '2'
+    let newGroupName = 'groupMain'
+    if ( this.groupsIn.findIndex(g => g.groupName == 'groupMain') > -1 ){
+      // group name: groupMain already exists.
+      newGroupName ='group'  + newGroupNbr //.padStart(3, '0')
+      newSeq = '1' // Dec 2021 set default to all the same seq: 1
     } // end if
 
 
@@ -114,6 +114,36 @@ export class QncwwgdComponent implements OnInit {
   } // end addButClick
 
   delButClick(){
+    // dec 2022 cant delete if groupMain, or if any questions
+    // already add to this scoreboard.
+    // though, we let him delete dups -- all but the last rec.
+    
+    // if (this.groupsIn[this.gx].groupName=='groupMain'){
+    //   this.msg1='cannot delete group:  groupMain.'
+    //   return
+    // } // end 
+    // console.log('123')
+    // console.table(this.groupsIn)
+    // console.log(this.gx)
+    // console.log(this.groupsIn[this.gx].qCount)
+    // console.log('127 group name:' )
+    // console.log(this.groupsIn[this.gx].groupName)
+    let grpCount = this.groupsIn
+    .filter(g => g.groupName==this.groupsIn[this.gx].groupName).length
+    
+    if (grpCount==1){
+      // this is the only group rec with this groupName
+      if (this.groupsIn[this.gx].qCount > 0 ){
+        this.msg1='cannot delete group: ' 
+        + this.groupsIn[this.gx].groupName
+        + '. There are questions that belong to this group.'
+        return
+      } // end if
+      if (this.groupsIn[this.gx].groupName=='groupMain'){
+        this.msg1='cannot delete group:  groupMain.'
+        return
+      } // end 
+    }
     this.msg1=''
     this.verifyDelete=true
     this.fieldsDisabled = true
@@ -162,7 +192,8 @@ export class QncwwgdComponent implements OnInit {
 
   saveGroup(){
     console.log('running wwgd saveGroup')
-    this.msg1 = this.msg1 + ' group saved.'
+    this.someFieldWasChanged = true  
+    this.msg1 = this.msg1 + ' group autosaved.'
     this.buildGroupObj() // uses current gx  billy fix
     if (this.pendingAddGx >= 0) {
       this.launchQtAddGroup()
@@ -186,6 +217,16 @@ export class QncwwgdComponent implements OnInit {
 
   groupNameChg(newGroupName,gx)  {
     console.log('running groupNameChg to ',newGroupName)
+    // dec 2022 don't let him change the group to a name that already exists.
+    let ix = this.groupsIn.findIndex(g=> g.groupName == newGroupName.trim())
+    console.table(this.groupsIn)
+    let el = document.getElementById('groupName')
+    el.classList.remove("has-background-warning")
+    if (ix > -1){
+      el.classList.add('has-background-warning')
+      this.msg1 = 'cannot change to a group that already exists.'
+      return
+    }
     this.msg1 = 'group changed. '
     this.groupsIn[gx].groupName = newGroupName.trim()
     this.saveGroup()
@@ -200,7 +241,7 @@ export class QncwwgdComponent implements OnInit {
 
 launchQtAddGroup(){
   console.log('running wwgd launchQtAddGroup')
-  api.qtAddGroup(this.groupObj)
+  apiFauna.qtAddGroup(this.groupObj)
   .then ((qtDbRtnObj) => { this.qtDbDataObj = qtDbRtnObj.data})
   // return from this on-the-fly function is implied  
   .catch(() => {
@@ -210,7 +251,7 @@ launchQtAddGroup(){
 
 launchQtDeleteGroup(){
   console.log('running  wwgd launchQtDeleteGroup')
-  api.qtDeleteGroup(this.groupObj)
+  apiFauna.qtDeleteGroup(this.groupObj)
   .then ((qtDbRtnObj) => {this.qtDbDataObj = qtDbRtnObj.data})
   // return from this on-the-fly function is implied  
   .catch(() => {
@@ -221,7 +262,7 @@ launchQtDeleteGroup(){
 
 launchQtUpdateGroup(){
   console.log('running  wwrd launchQtUpdateGroup')
-  api.qtUpdateGroup(this.groupObj)
+  apiFauna.qtUpdateGroup(this.groupObj)
   .then ((qtDbRtnObj) => {this.qtDbDataObj = qtDbRtnObj.data})
   // return from  on-the-fly function is implied. 
   .catch(() => {
@@ -229,5 +270,20 @@ launchQtUpdateGroup(){
   })
 
 } // end launchQtUpdateGroup
+
+handleBlur(inputFieldNameParmIn){
+  console.log('252 running handleBlur')
+  // lotsa work just to reset msg1 when he exits a field (blur)
+  if (this.someFieldWasChanged) {
+    this.someFieldWasChanged = false
+    return // dont run any blur logic, cuz he changed an input field.
+  } else {
+    console.log('258')
+    if( this.msg1.length==0){
+      this.msg1 = 'edit group details.' //this.msg1 + ' and blur occurred'
+    }
+  }
+  this.someFieldWasChanged = false
+} // end handleBlur
 
 } // end export component

@@ -13,7 +13,7 @@
 >       cancel </span>
 </span>
 
-<fieldset [disabled]="fieldsDisabled" class='mt-3 '>
+<fieldset [disabled]="fieldsDisabled" class='mt-3 ml-3'>
 <button class='button is-info'
       (click)='prevButClick()'
 >  &#5176; prev</button> &nbsp;
@@ -26,13 +26,13 @@
 <button class='button is-info'
   (click)='delButClick()'
 > delete </button> &nbsp;
-<button class='button is-info'
+<!-- <button class='button is-info'
   (click)='saveButClick()'
-> save </button> &nbsp;
+> save </button> &nbsp; -->
 </fieldset>
 
-<fieldset [disabled]="fieldsDisabled" class='mt-3'>  
-<table class=' table has-background-success-light is-narrow'>
+<fieldset [disabled]="fieldsDisabled" class='mt-3 ml-3'>  
+ <table class=' table has-background-success-light is-narrow'>
   <tr>
     <td><label>group Nbr: </label></td>
     <td><input  disabled
@@ -43,12 +43,13 @@
   </tr>
   <tr>
     <td><label>Group: </label></td>
-    <td><input  
+    <td id='groupName'><input  
       #groupName
       class=' is-small '
       value= {{groupsIn[gx].groupName}}
       size="20"
-      (change)=groupNameChg(groupName.value,gx)              
+      (change)=groupNameChg(groupName.value,gx) 
+      (blur)="handleBlur('groupName')"          
       autocomplete="off"> </td>
   </tr>
   <tr>
@@ -58,9 +59,8 @@
           value= {{groupsIn[gx].seq}}
           size="4"
           (change)=groupSeqChg(seq.value,gx)
+          (blur)="handleBlur('seq')"          
           autocomplete="off" > </td> 
   </tr> 
-  
-</table>
-
+ </table>
 </fieldset>
