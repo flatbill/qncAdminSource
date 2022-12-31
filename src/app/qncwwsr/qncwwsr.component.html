@@ -4,8 +4,22 @@
   {{msg1}} 
 </span>
 
-<table class='table  is-fullwidth ml-3 mr-3 mb-3'>
+<table class='table  is-fullwidth ml-3 mr-3 mb-3 '>
    <thead >
+      <th class='is-clickable' (click)="colHeadClicked('qCnt')" >  Question Count
+        <div *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
+          <span class='tag is-link is-light' (click)="colSort('qCnt','des','qCnt')"> {{symArDn}} </span> 
+          <span class='tag is-link is-light' (click)="colSort('qCnt','asc','qCnt')"> {{symArUp}} </span> 
+          <span class='tag is-link is-light' (click)="colFilt('qCnt','qcnt')"  > {{symFilt}} </span> 
+        </div> 
+      </th>
+      <th class='is-clickable' (click)="colHeadClicked('maxPoints')" >  Max Points
+        <div *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
+          <span class='tag is-link is-light' (click)="colSort('maxPoints','des','maxPoints')"> {{symArDn}} </span> 
+          <span class='tag is-link is-light' (click)="colSort('maxPoints','asc','maxPoints')"> {{symArUp}} </span> 
+          <span class='tag is-link is-light' (click)="colFilt('maxPoints','maxPoints')"  > {{symFilt}} </span> 
+        </div> 
+      </th>
       <th class='is-clickable' (click)="colHeadClicked('scoreboardNbr')" >  Nbr
         <div *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
           <span class='tag is-link is-light' (click)="colSort('scoreboardNbr','des','Scoreboard Nbr')"> {{symArDn}} </span> 
@@ -72,13 +86,17 @@
       <th> &nbsp;</th>
       <th> &nbsp;</th>
    </thead>
-   <tbody class='none'>
+   <tbody class='noneFooBoo'>
      <tr *ngFor='let s of scoreboardsIn, index as sx'
           class='has-background-success-light' 
      >      
      <ng-container *ngIf="s.sbFilterInOut=='in'" >
-       <td class='pl-2'  >      {{s.scoreboardNbr}}  </td> 
-       <td class='pl-3 pr-5y'  > {{s.scoreboardName}}  </td> 
+      <td> <span class='tag'>  {{s.qCnt}}  </span>
+      </td> 
+      <td> <span class='tag'>   {{s.maxPoints}}  </span> 
+      </td> 
+      <td class='pl-2'  >      {{s.scoreboardNbr}}  </td> 
+      <td class='pl-3 pr-5y'  > {{s.scoreboardName}}  </td> 
        <td class='pl-1' > {{s.scoreboardSeq}}  </td> 
        <td class='pl-1' colSpan=3> 
          <table>

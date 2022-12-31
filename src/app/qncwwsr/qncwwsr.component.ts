@@ -1,6 +1,6 @@
 import { Component, OnInit, Input} from '@angular/core'  
 import { EventEmitter, Output } from '@angular/core' 
-import api from 'src/utils/api'
+import apiFauna from 'src/utils/apiFauna'
 
 @Component({
   selector: 'app-qncwwsr',
@@ -13,6 +13,7 @@ export class QncwwsrComponent implements OnInit {
     @Input() qidIn
     @Input() scoreboardsIn
     @Input() filterResetIn
+    @Input() questionsIn
     @Output() scoreboardNbrOut = new EventEmitter() 
     @Output() scoreboardsOut = new EventEmitter() 
     @Output() wwsrdJumpOut = new EventEmitter() 
@@ -35,6 +36,13 @@ export class QncwwsrComponent implements OnInit {
       if (this.filterResetIn) {
         this.resetScoreboardFilter()
       }
+      console.log('questionsIn:')
+      console.table(this.questionsIn)
+      this.countQuestionsPerScoreboard()
+      console.log('scoreboardsIn:')      
+      console.table(this.scoreboardsIn)
+
+
     } // end ngOnInit
 
     detailButClicked(scoreboardNbrParmIn) { 
@@ -185,5 +193,35 @@ export class QncwwsrComponent implements OnInit {
         this.scoreboardsIn[i]['sbFilterInOut'] = 'in'  
       }
     } // end resetScoreboardFilter
-    
+
+    countQuestionsPerScoreboard(){
+      console.log('running wwg countQuestionsPerScoreboard')
+      // for each scoreboard, find all questions that add to this scoreboard.
+      // for each question that adds to this scoreboard,
+      // look thru the question's accum array.
+      // for each question's accum, find the max val that can be added.
+      let qCnt = 0
+      let biggestNbr = 0
+      let maxPoints = 0
+      for (let i = 0; i<this.scoreboardsIn.length; i++){
+        qCnt = 0
+        maxPoints = 0
+        biggestNbr = 0
+        for (let j = 0; j<this.questionsIn.length; j++){
+          for (let k = 0; k<this.questionsIn[j].accum.length; k++){
+            if (this.questionsIn[j].accum[k] == this.scoreboardsIn[i].scoreboardName){
+              qCnt = qCnt + 1
+              // max is complicated.  sheesh.
+              biggestNbr = Math.max.apply(Math, this.questionsIn[j].acaPointVals)
+              maxPoints = maxPoints + biggestNbr
+            } // end if
+          } // end inner for
+        } // end middle for
+        this.scoreboardsIn[i].qCnt = qCnt
+        this.scoreboardsIn[i].maxPoints = maxPoints
+      } // end outer for
+      // console.log('bottom of countQuestionsPerScoreboard')
+      // console.table(this.scoreboardsIn)
+    } // end fun countQuestionsPerScoreboard
+
 } // end export component
