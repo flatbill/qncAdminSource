@@ -1,5 +1,6 @@
 import {  HostListener, Component } from '@angular/core'
-import api from 'src/utils/api'
+import apiFauna from 'src/utils/apiFauna'
+//import GoTrue from 'gotrue-js'
 import { Title } from '@angular/platform-browser'
 @Component({
   selector: 'app-root',
@@ -11,7 +12,7 @@ export class AppComponent {
     if (event.key === "Escape") { this.escKeyWasHit() }
   } // end onKeydownHandler
   public constructor(private titleService: Title) { }
-  compTitle = 'Qnc Login'
+  compTitle = 'Admin Login'
   loadingDataMsg = ''
   loadingDataBusy = false
   showQnc = false  
@@ -48,7 +49,7 @@ export class AppComponent {
   teamMemberUserId     = ''      
   subscriberInternalId = ''
   dbReadCount = 0
-  qidsArray   = []
+  qidArray   = []
   subscriptionObj = new Object
   teamMemberObj   = new Object
   daScoreboardNbr = ''
@@ -60,10 +61,51 @@ export class AppComponent {
   surveyName = ''
   daRuleNbr = ''
   daGroupNbr = ''
+  msg1 = '???'
   //whichMenuOptionToHighlight = ''
   ngOnInit()  {
-    this.titleService.setTitle('Qnc Admin')
+    this.titleService.setTitle('Qna Admin')
+    // this.goTrueConfirmBullshit()
+    //this.goTrueSignOnBullshit()
+    // alert('bottom of ngOnInit')
   } // end ngInit
+  // goTrueAuthBullshit(){
+  // }
+  // goTrueConfirmBullshit(){
+  //   let token = '1234'
+  //   let authz = new GoTrue()
+  //   .confirm(token, true)
+  //   .then((response) => {
+  //     console.log('Confirmation email sent', JSON.stringify({ response }))
+  //   })
+  //   .catch((error) => {
+  //     console.log(error)
+  //   });
+  // }
+
+  // goTrueSignOnBullshit(){
+  //   alert('ready to try gotrue...')
+  //    let authy = new GoTrue(  {
+  //     //APIUrl: "https://clever-williams-469dd0.netlify.com/.netlify/identity",
+  //       APIUrl: "https://qnaadmin.flytechfree.com/.netlify/identity",
+  //     //APIUrl: "https://clever-payne-2da709.netlify.app/.netlify/identity",
+  //     audience: "",   setCookie: false })
+  //     //
+  //     let myErr = '???'
+  //     //let email = this.teamMemberUserId
+  //     let email = 'billselzer@gmail.com'
+  //     let password = 'forgot'
+  //     authy
+  //     .login(email, password)
+
+  //     .then(() => {  //done with login attempt? 
+  //       console.log('we hit .then of login attempt ' ) })
+
+  //     .catch((err) => {
+  //     myErr =`Failed :( ${JSON.stringify(err)}`
+  //     console.log(myErr) }
+  //     ) // end of catch
+  // } // end of goTrueSignOnBullshit
 
   setQueryStringParms(){
       console.log('running setQueryStringParms')
@@ -97,8 +139,8 @@ export class AppComponent {
     this.menuButsAlive = true  //make menu alive
   }
 
-  qidSelected(surveyNameParm){
-    console.log('app running  qidSelected')
+  surveySelected(surveyNameParm){
+    console.log('app running  surveySelected')
     console.log(surveyNameParm)
     this.surveyName = surveyNameParm
     // get here from profile screen. user has selected a qid.
@@ -120,18 +162,18 @@ export class AppComponent {
     this.readManyDbTables()   
   }
 
-  qidsArrayWasBuilt(qidsArrayParm) {
-    console.log('running app qidsArrayWasBuilt')
+  qidArrayWasBuilt(qidArrayParm) {
+    console.log('running app qidArrayWasBuilt')
     // get here from profile screen. 
     // profile screen looks up the subscriber's qids,
-    // and has built the qidsArray.
-    // let's keep a copy of qidsArray in app component,
+    // and has built the qidArray.
+    // let's keep a copy of qidArray in app component,
     // just to carry it around once per login,
-    // instead of re-reading the qidsArray
+    // instead of re-reading the qidArray
     // every time he views the profile.
-    this.qidsArray = qidsArrayParm
-    // console.log('app qidsArray: ')
-    // console.table(this.qidsArray)
+    this.qidArray = qidArrayParm
+    console.log('app qidArray: ')
+    console.table(this.qidArray)
   }
 
   subscriptionObjWasBuilt(subscriptObjParm) { // pro has built this
@@ -148,7 +190,7 @@ export class AppComponent {
     this.showQnc = true
   } //end showQncFun
   showWwqFun(){
-    this.compTitle = 'Qnc Questions'
+    this.compTitle = 'Qna Questions'
     if (this.showQncWwqd) {
       // jumping from wwqd to wwq
       this.wwqFilterReset = false
@@ -159,12 +201,12 @@ export class AppComponent {
     this.showQncWwq = true
   } // end showWwqFun
   showWwqdFun(ev){
-    this.compTitle = 'Qnc Question Detail' 
+    this.compTitle = 'Qna Question Detail' 
     this.setAllShowCompFalse()
     this.showQncWwqd = true 
   } // end showWwqdFun
   showWwgFun(){
-    this.compTitle = 'Qnc Groups' 
+    this.compTitle = 'Qna Groups' 
     if (this.showQncWwgd) {
       // jumping from wwgd to wwg
       this.wwgFilterReset = false
@@ -176,12 +218,12 @@ export class AppComponent {
     this.showQncWwg = true
   } // end showWwgFun
   showWwgdFun(ev){
-    this.compTitle = 'Qnc Group Details' 
+    this.compTitle = 'Qna Group Details' 
     this.setAllShowCompFalse()
     this.showQncWwgd = true 
   } // end showWwgdFun
   showWwrFun(){
-    this.compTitle = 'Qnc Rules' 
+    this.compTitle = 'Qna Rules' 
     if (this.showQncWwrd) {
       // jumping from wwrd to wwr
       this.wwrFilterReset = false
@@ -192,23 +234,23 @@ export class AppComponent {
     this.showQncWwr = true
   } // end showWwrFun
   showWwrdFun(ev){
-    this.compTitle = 'Qnc Rule Details' 
+    this.compTitle = 'Qna Rule Details' 
     this.setAllShowCompFalse()
     this.showQncWwrd = true
   } // end showWwrdFun
   showWwiFun(ev){
-    this.compTitle = 'Qnc Invitations' 
+    this.compTitle = 'Qna Invitations' 
     this.setAllShowCompFalse()
     this.showQncWwi = true
   } // end showWwiFun
   showWwuFun(ev){
-    this.compTitle = 'Qnc Participants' 
+    this.compTitle = 'Qna Participants' 
     this.setAllShowCompFalse()
     this.showQncWwu = true 
   } // end showWwuFun
   showWwsFun(ev){ // jumping to sign on screen.
     console.log('running showWwsFun')
-    this.compTitle = 'Qnc Login' 
+    this.compTitle = 'Qna Admin Login' 
     this.qncAuthorized = false
     this.menuButsAlive = false
     this.surveyMenuButsAlive = false  
@@ -224,7 +266,7 @@ export class AppComponent {
     this.teamMemberUserId     = ''      
     this.subscriberInternalId = ''
     this.dbReadCount = 0
-    this.qidsArray   = []
+    this.qidArray   = []
     this.subscriptionObj = {}
     this.teamMemberObj = {}
     this.scoreboardsArray = []
@@ -237,7 +279,7 @@ export class AppComponent {
   } // end showWwsFun
   showProFun(){
     //alert('239 showProFun')
-    this.compTitle = 'Qnc Profile' 
+    this.compTitle = 'Qna Profile' 
     //this.whichMenuOptionToHighlight = 'profile'
     this.setAllShowCompFalse()
     this.showQncPro = true 
@@ -245,7 +287,7 @@ export class AppComponent {
 
   showWwsrFun(){
     console.log('running showWwsrFun')
-    this.compTitle = 'Qnc Scoreboards' 
+    this.compTitle = 'Qna Scoreboards' 
     if (this.showQncWwsrd) {
       // jumping from wwsrd to wwsr
       this.wwsrFilterReset = false
@@ -258,7 +300,7 @@ export class AppComponent {
 
   showWwsrdFun(ev){
     console.log('running showWwsrdFun')
-    this.compTitle = 'Qnc Scoreboard Detail' 
+    this.compTitle = 'Qna Scoreboard Detail' 
     this.setAllShowCompFalse()
     this.showQncWwsrd = true
   }
@@ -362,15 +404,20 @@ export class AppComponent {
      // alert('i wanna turn menu pro green, man.')
   } // end escKeyWasHit
   
-  sortQuestArraybyNbrAndSeq(){
-    console.log('running sortQuestArraybyNbrAndSeq')
-    //console.log(a[prop].toString().padStart(4,'0'))
-    this.questArray
-    .sort((a, b) => (Number(a.questNbr)  > Number(b.questNbr) ) 
-    ? 1 : (a.questNbr  == b.questNbr ) 
-    ? ((a.questSeq > b.questSeq) ? 1 : -1) : -1 )
-     //console.table(this.questArray)
-  } // end sortQuestArraybyNbrAndSeq
+  // sortQuestArray(){
+  //   console.log('running app sortQuestArray')
+  //   //console.log(a[prop].toString().padStart(4,'0'))
+  //   this.questArray
+  //   // .sort((a, b) => (Number(a.questNbr)  > Number(b.questNbr) ) 
+  //   // ? 1 : (a.questNbr  == b.questNbr ) 
+  //   // ? ((a.questSeq > b.questSeq) ? 1 : -1) : -1 )
+  //   console.log('app 372 questArray:')
+  //   console.table(this.questArray)
+  //    .sort((a, b) => (Number(a.subset)  > Number(b.subset) ) 
+  //    ? 1 : (a.subset  == b.subset ) 
+  //    ? ((a.groupRound > b.groupRound) ? 1 : -1) : -1 )
+ 
+  // } // end sortQuestArray
 
   readManyDbTables() {
     console.log('running app readManyDbTables. read count:',this.dbReadCount)
@@ -391,7 +438,7 @@ export class AppComponent {
   }
 
   launchReadQuestions () {
-  api.qtReadQuestions(this.cust,this.qid)
+  apiFauna.qtReadQuestions(this.cust,this.qid)
       .then 
       (   (qtDbRtnObj) => 
         {
@@ -399,13 +446,13 @@ export class AppComponent {
           // console.log('custAndQid:',this.cust,this.qid)
           // console.table(qtDbRtnObj)
           this.loadQuestionsFromDbToQuestArray(qtDbRtnObj)
-          this.sortQuestArraybyNbrAndSeq()  
+          //this.sortQuestArray()  billy feb11 2022
           this.buildListOfAccumsFromQuestArray()
           this.launchQtReadRules() 
         }
       )
-      .catch(() => {  // api.qtReadQuestions returned an error 
-        console.log('api.qtReadQuestions error.' )
+      .catch(() => {  // apiFauna.qtReadQuestions returned an error 
+        console.log('apiFauna.qtReadQuestions error.' )
       })
   }  // end launchReadAllDbTables
  
@@ -422,17 +469,17 @@ export class AppComponent {
  
   launchQtReadRules() {
   console.log('running LaunchQtReadRules')
-  api.qtReadRules(this.cust,this.qid)
+  apiFauna.qtReadRules(this.cust,this.qid)
     .then 
       (   (qtDbRtnObj) => 
         {
-          console.log(' running .then of api.qtReadRules') 
+          console.log(' running .then of apiFauna.qtReadRules') 
           this.buildListOfRules(qtDbRtnObj)
           this.launchQtReadGroups()
         }
       )
-      .catch(() => {  // api.qtReadRules returned an error 
-        console.log('api.qtReadRules error. cust & qid:' , this.cust, ' ', this.qid)
+      .catch(() => {  // apiFauna.qtReadRules returned an error 
+        console.log('apiFauna.qtReadRules error. cust & qid:' , this.cust, ' ', this.qid)
       })
 
   } //end launchQtReadRules
@@ -449,18 +496,18 @@ export class AppComponent {
  launchQtReadGroups() {
   console.log('running launchQtReadGroups')
   console.log('custAndQid:',this.cust,this.qid)
-  api.qtReadGroups(this.cust,this.qid)
+  apiFauna.qtReadGroups(this.cust,this.qid)
     .then 
       (   (qtDbRtnObj) => 
         {
-          console.log(' running .then of api.qtReadGroups') 
+          console.log(' running .then of apiFauna.qtReadGroups') 
           this.buildListOfGroups(qtDbRtnObj)
           this.launchQtReadScoreboards() //chaining
 
         }
       )
-      .catch(() => {  // api.qtReadGroups returned an error 
-        console.log('api.qtReadGroups error. cust & qid:' , this.cust, ' ', this.qid)
+      .catch(() => {  // apiFauna.qtReadGroups returned an error 
+        console.log('apiFauna.qtReadGroups error. cust & qid:' , this.cust, ' ', this.qid)
       })
   } //end launchQtReadGroups
 
@@ -501,11 +548,11 @@ export class AppComponent {
     console.log('running launchQtReadScoreboards 449')
     // alert(this.cust)
     // alert(this.qid)
-    api.qtReadScoreboards(this.cust,this.qid)
+    apiFauna.qtReadScoreboards(this.cust,this.qid)
       .then 
         (   (qtDbRtnObj) => 
           {
-            console.log(' running .then of api.qtReadScoreboards') 
+            console.log(' running .then of apiFauna.qtReadScoreboards') 
             this.buildListOfScoreboards(qtDbRtnObj)
             // done with  table reads,  set some menu buts alive.
             this.surveyMenuButsAlive = true  
@@ -514,8 +561,8 @@ export class AppComponent {
 
           }
         )
-        .catch(() => {  // api.qtScoreboards returned an error 
-          console.log('api.qtScoreboards error. cust & qid:' , this.cust, ' ', this.qid)
+        .catch(() => {  // apiFauna.qtScoreboards returned an error 
+          console.log('apiFauna.qtScoreboards error. cust & qid:' , this.cust, ' ', this.qid)
         })
   
     } //end launchQtReadScoreboards

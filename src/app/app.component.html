@@ -40,10 +40,10 @@
   [teamMemberObjIn]='teamMemberObj'
   [custIn]='cust'
   [qidIn]='qid'
-  [qidsArrayIn]='qidsArray'
+  [qidArrayIn]='qidArray'
   [loadingDataBusyIn] = 'loadingDataBusy'
-  (qidSelectOut)="qidSelected($event)"
-  (qidsArrayOut)="qidsArrayWasBuilt($event)"
+  (surveySelectOut)="surveySelected($event)"
+  (qidArrayOut)="qidArrayWasBuilt($event)"
   (subscriptionObjOut)="subscriptionObjWasBuilt($event)"
 >
 </app-qncpro>
@@ -74,6 +74,7 @@
   [subsetsQncWwq]="subsetsQncWwq"
   [questionsIn]="questArray"
   [rulesIn]="rulesArray"
+  [groupsIn]="groupArray"
   [filterResetIn]='wwqFilterReset'
   (wwqdJumpOut)="showWwqdFun($event)"
   (questionNbrOut)="setQuestionFromWwqFun($event)"
@@ -108,6 +109,9 @@
   [qidIn]="qid"
   [ruleNbrIn]="daRuleNbr"
   [rulesIn]="rulesArray"
+  [groupsIn]="groupArray"
+  [scoreboardsIn]="scoreboardsArray"
+  [questionsIn]="questArray"
   (wwrJumpOut) = "showWwrFun($event)"
 >
 </app-qncwwrd>
@@ -145,6 +149,7 @@
   [scoreboardNbrIn]="daScoreboardNbr"
   [scoreboardsIn]="scoreboardsArray"
   [filterResetIn]='wwsrFilterReset'
+  [questionsIn]="questArray"   
   (scoreboardNbrOut) =  "setScoreboardNbrFromWwsrFun($event)"
   (scoreboardsOut)   = "setScoreboardsFromWwsrFun($event)"
   (wwsrdJumpOut)     =   "showWwsrdFun($event)"
