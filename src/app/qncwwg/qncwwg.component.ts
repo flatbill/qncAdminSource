@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, 
          EventEmitter, Output } from '@angular/core';
-import api from 'src/utils/api'
+import apiFauna from 'src/utils/apiFauna'
 
 @Component({
   selector: 'app-qncwwg',
@@ -31,7 +31,7 @@ export class QncwwgComponent implements OnInit {
       this.msg1 = 'No groups exist. Click the add button.'
     }
 
-    if (this.filterResetIn) { //billy needs test
+    if (this.filterResetIn) {  
       this.resetGroupsFilter()  
     }
   } // end ngOnInit
@@ -158,7 +158,7 @@ export class QncwwgComponent implements OnInit {
       .filter(q => q.subset.toLowerCase().trim() == this.groupsIn[i].groupName.toLowerCase().trim())
       .length
       // billy, change q.subset to q.groupName after ya fix questions
-      this.groupsIn[i].qCount = qCnt.toString().padStart(3,'0')
+      this.groupsIn[i].qCount = qCnt //qCnt.toString().padStart(3,'0')
     } // end  for
     // console.table(this.groupsIn)
   } // end countQuestionsPerGroup
