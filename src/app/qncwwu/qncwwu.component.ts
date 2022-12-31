@@ -1,13 +1,9 @@
 // @ts-nocheck // bypass typescript checker on this one file.
 // needed cuz jsPDF invokes weird type checks on doc.text(bla,bla)
 
-// billy, how can we cut down on reads to qtUsers ?
-// maybe max out on 25 reads, 
-// and build fauna pagination?
-
 import { Component, OnInit, Input, 
   EventEmitter, Output } from '@angular/core' 
-import api   from 'src/utils/api'
+import apiFauna   from 'src/utils/apiFauna'
 //import jsPDF from 'jspdf'
 @Component({
   selector: 'app-qncwwu',
@@ -34,6 +30,9 @@ export class QncwwuComponent implements OnInit {
   hisScoreStr=''
   assRptFileTxt = ''
   cellBrk =  "\n"+"\"" + "\n"
+  verifyDelete = false
+  deleteIx = -1
+  deleteWhichParticipantFullUserId = ' ' 
   //utcOffset = new Date().getTimezoneOffset()  // in minutes
   constructor() {}
   @Input() custIn  
@@ -47,20 +46,22 @@ export class QncwwuComponent implements OnInit {
     this.scoreboardsArray = this.scoreboardsIn
     this.msg1 = 'loading participants...'
     this.launchQtReadUsers() // this get db users 
+
   } // end ngOnInit
 
   launchQtReadUsers() {
   console.log('running launchQtReadUsers') 
-  api.qtReadUsers(this.custIn, this.qidIn)
+  apiFauna.qtReadUsers(this.custIn, this.qidIn)
     .then 
       (   (qtDbRtnObj) => 
         {
-          console.log(' running .then of api.qtReadUsers') 
+          console.log(' running .then of apiFauna.qtReadUsers') 
           this.buildListOfUsers(qtDbRtnObj)
+
         }
       )
-      .catch(() => {  // api.qtReadUsers returned an error 
-        console.log('api.qtReadUsers error. cust & qid:' 
+      .catch(() => {  // apiFauna.qtReadUsers returned an error 
+        console.log('apiFauna.qtReadUsers error. cust & qid:' 
         , this.custIn, ' ', this.qidIn )
       })
   } //end launchQtReadUsers
@@ -116,11 +117,11 @@ export class QncwwuComponent implements OnInit {
  
 launchQtReadScores()  {
   console.log('running launchQtReadScores') 
-  api.qtReadScores(this.custIn, this.qidIn, this.userId)
+  apiFauna.qtReadScores(this.custIn, this.qidIn, this.userId)
     .then 
       (   (qtDbRtnObj) => 
         {
-          console.log(' running .then of api.qtReadScores') 
+          console.log(' running .then of apiFauna.qtReadScores') 
           this.buildListOfScores(qtDbRtnObj)
           if (this.downloadAssRptPending) {
             this.buildRpt2()
@@ -131,12 +132,58 @@ launchQtReadScores()  {
           }
         }
       )
-      .catch(() => {  // api.qtReadScores returned an error 
-        console.log('api.qtReadScores error. cust & qid & user' 
+      .catch(() => {  // apiFauna.qtReadScores returned an error 
+        console.log('apiFauna.qtReadScores error. cust & qid & user' 
         , this.custIn, ' ', this.qidIn )
       }) 
 
 } //end launchQtReadScores
+
+launchQtMassDeleteAnswers(){
+  console.log('running launchQtMassDeleteAnswers') 
+  apiFauna.qtMassDeleteAnswers(this.custIn, this.qidIn, this.userId)
+  .then 
+      (   (qtDbRtnObj) => 
+        {
+          console.log(' running .then of apiFauna.qtMassDeleteAnswers') 
+        }
+      )
+      .catch(() => {  // apiFauna.qtMassDeleteAnswers returned an error 
+        console.log('apiFauna.qtMassDeleteAnswers error. cust & qid & user' 
+        , this.custIn, ' ', this.qidIn,' ',this.userId )
+      })
+}
+
+launchQtMassDeleteScores(){
+  console.log('running launchQtMassDeleteScores') 
+  apiFauna.qtMassDeleteScores(this.custIn, this.qidIn, this.userId)
+  .then 
+      (   (qtDbRtnObj) => 
+        {
+          console.log(' running .then of apiFauna.qtMassDeleteScores') 
+        }
+      )
+      .catch(() => {  // apiFauna.launchQtMassDeleteScores returned an error 
+        console.log('apiFauna.qtMassDeleteScores error. cust & qid & user' 
+        , this.custIn, ' ', this.qidIn,' ',this.userId )
+      })
+}
+launchQtDeleteParticipant(){
+  console.log('running  wwu launchQtDeleteParticipant')
+  console.log(this.custIn, this.qidIn, this.userId)
+  apiFauna.qtDeleteParticipant(this.custIn, this.qidIn, this.userId)
+  .then 
+      (   (qtDbRtnObj) => 
+        {
+          console.log(' running .then of apiFauna.launchQtDeleteParticipant') 
+        }
+      )
+  // return from this on-the-fly function is implied  
+  .catch(() => {
+    console.log('launchQtDeleteParticipant error. cust & qid & user:' 
+    , this.custIn, ' ', this.qidIn,' ',this.userId ) 
+  })
+}  // end launchQtDeleteParticipant
 
 buildListOfScores(qtDbObj){ 
   console.log('running buildListOfScores')
@@ -191,16 +238,16 @@ for (let i = 0; i < this.scoresArray.length; i++) {
 
 launchQtReadAnswers() {
   console.log('running launchQtReadAnswers') 
-  api.qtReadAnswers(this.custIn, this.qidIn, this.userId)
+  apiFauna.qtReadAnswers(this.custIn, this.qidIn, this.userId)
     .then 
       (   (qtDbRtnObj) => 
         {
-          console.log('running .then of api.qtReadAnswers') 
+          console.log('running .then of apiFauna.qtReadAnswers') 
           this.buildListOfAnswers(qtDbRtnObj)
         }
       )
-      .catch(() => {  // api.qtReadAnswers returned an error 
-        console.log('api.qtReadAnswers error. cust & qid & user: ' 
+      .catch(() => {  // apiFauna.qtReadAnswers returned an error 
+        console.log('apiFauna.qtReadAnswers error. cust & qid & user: ' 
         , this.custIn, ' ', this.qidIn,' ',this.userId)
       })
 } //end launchQtReadAnswers 
@@ -225,13 +272,18 @@ launchQtReadAnswers() {
 
   buildAnswersCsv(){ // append answers into the scores csv file.
     this.scoresTxt = this.scoresTxt + "\r\n" + "\r\n"
-    this.scoresTxt = this.scoresTxt + 'Quest Nbr, Answer, Time Gap' + "\r\n"
+    this.scoresTxt = this.scoresTxt + 'Quest Nbr, Answer, Time Gap , Question Text' + "\r\n"
     let rowX = ''
     for (let i = 0; i < this.answersArray.length; i++) {
+      //  Apr2022 if questTxt not defined, then set it to blank.
+      if (this.answersArray[i].questTxt === undefined) {this.answersArray[i].questTxt=''}
+      let adjQuestTxt = this.answersArray[i].questTxt.replaceAll(',' , ' ')
+      adjQuestTxt = adjQuestTxt.replaceAll(/(\r\n|\r|\n)/g , '')
       rowX = 
          this.answersArray[i].questNbr + ',' 
        + this.answersArray[i].answerPoints + ',' 
-       + this.answersArray[i].timeGap   
+       + this.answersArray[i].timeGap   + ','
+       + adjQuestTxt
       this.scoresTxt = this.scoresTxt + rowX + "\r\n"
     } // end for
   } // end buildAnswersCsv
@@ -251,9 +303,42 @@ launchQtReadAnswers() {
 
   delButClick(ux){
     console.log('running delButClick')
-    this.deleteOneUsersScores(this.usersArray[ux].userId)
-    this.deleteOneUsersAnswers(this.usersArray[ux].userId)
+    this.deleteIx = ux
+    this.deleteWhichParticipantFullUserId = this.usersArray[ux].userId
+    this.verifyDelete=true
+    this.msg1 = ''
+  } // end delButClick
+
+  proceedWithDelete(){
+    console.log('running proceedWithDelete')
+    this.deleteOneUsersScores(this.deleteIx)
+    this.deleteOneUsersAnswers(this.deleteIx)
+    this.deleteOneUsersParticipant(this.deleteIx)
+    this.removeParticipantFromUserArray(this.deleteIx)
+    this.verifyDelete=false
+  } // end proceedWithDelete
+
+  cancelDelete(){
+    this.verifyDelete = false
+    this.deleteIx = -1
+  } // end cancelDelete
+
+  deleteOneUsersAnswers(ux){
+    console.log('running deleteOneUsersAnswers')
+    this.userId = this.usersArray[ux].userId
+    this.launchQtMassDeleteAnswers()
   }
+  
+  deleteOneUsersParticipant(ux){
+    console.log('running deleteOneUsersParticipant')
+    this.userId = this.usersArray[ux].userId
+    this.launchQtDeleteParticipant()
+  }
+
+  removeParticipantFromUserArray(ux){
+    console.log('running removeParticipantFromUserArray')
+    this.usersArray.splice(ux,1) 
+  }  // end removeParticipantFromUserArray
 
 buildRpt2(){
   console.log('292 running buildRpt2')
@@ -308,7 +393,7 @@ setScoresArrayAssTxt(scoreboardIx,hisScore){
       this.assTxt += '"'
       this.assTxt += 'weef'
       this.assTxt = this.scoreboardsArray[scoreboardIx].ranges[j].rangeTxt
-      this.assTxt += '"'
+      //this.assTxt += '"'
 
       j = 9999  // we have a hit.  exit the range check loop
 
@@ -316,20 +401,15 @@ setScoresArrayAssTxt(scoreboardIx,hisScore){
   }  // end for
 } // end setScoresArrayAssTxt
 
-deleteOneUsersScores(userIdParmIn){
-  console.log('running deleteOneUsersScores. user id:')
-  console.log(userIdParmIn)
-  // write new api for deleteScoresOneUser.
-  // kinda like mass delete, but limit to just one user.
-  // qtScoresX2 is cust + qid + quserId
+deleteOneUsersScores(ux){
+  console.log('running deleteOneUsersScores')
+  this.userId = this.usersArray[ux].userId
+  this.launchQtMassDeleteScores()
 } // end deleteOneUsersScores
 
-deleteOneUsersAnswers(userIdParmIn){
-  console.log('running deleteOneUsersAnswers. user id:')
-  console.log(userIdParmIn)
-  // write new api for deleteAnswersOneUser.
-  // kinda like mass delete, but limit to just one user.
-  // qtAnswersX2 is cust + qid + quserId
-}
+// scrollDude1() { //elegant, but not used.
+//   let elem = document.getElementById('anchorName1')
+//   elem.scrollIntoView()
+// }
 
 } // end export qncwwu
