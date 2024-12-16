@@ -1,0 +1,142 @@
+
+<span class='mt-1 tag is-dark is-small is-vcentered ml-3' 
+    *ngIf='msg1.length > 0'>
+    {{msg1}} 
+</span>
+
+<span *ngIf='verifyDelete' class=''>
+  <span class='ml-3'> are you sure you want to delete? </span>
+  <span class='tag is-small is-info m-1 is-clickable' (click)='proceedWithDelete()'
+>       delete now </span> 
+  <span class='tag is-small is-info m-1 is-clickable'(click)='cancelDelete()'
+>       cancel </span>
+</span>
+
+<fieldset [disabled]="fieldsDisabled" class='mt-3 ml-3'>
+  <button class='button is-info'
+        (click)='prevButClick()'
+  >  &#5176; prev</button> &nbsp;
+  <button class='button is-info'
+      (click)='nextButClick()'
+  > next &#5171;  </button> &nbsp;
+  <button class='button is-info'
+     (click)='addButClick()'
+  > add  </button> &nbsp;
+  <button class='button is-info'
+    (click)='delButClick()'
+  > delete </button> &nbsp;
+</fieldset>
+
+<fieldset [disabled]="fieldsDisabled" class='mt-3  ml-3'>
+    <table class=' table has-background-success-light is-narrow'>
+      <tr>
+        <td><label>Scoreboard nbr: </label></td>
+        <td><input  disabled
+          class='has-background-success-light '
+          value= {{scoreboardsIn[sx].scoreboardNbr}}
+          size="4">
+        </td>
+      </tr>
+
+      <tr><td><label>Scoreboard Name: </label></td>
+        <td><input 
+          #scoreboardName
+          value= {{scoreboardsIn[sx].scoreboardName}}
+          size="14"
+          autocomplete="off"          
+          (change)=scoreboardNameChg(scoreboardName.value,sx) 
+          (blur)="handleBlur('scoreboardName')"          
+          ></td> </tr>  
+      <tr *ngIf='msg1.length == -666' ><td><label>Scoreboard Seq: </label></td>
+          <!-- dec 2022 hide scoreboard sequence.  I think this is no longer used.    -->
+        <td><input 
+              #scoreboardSeq
+              value= {{scoreboardsIn[sx].scoreboardSeq}}
+              size="14"
+              autocomplete="off"
+              (change)=scoreboardSeqChg(scoreboardSeq.value,sx)
+              (blur)="handleBlur('scoreboardSeq')"          
+              
+          ></td> </tr> 
+    </table>
+      <table class=' mt-3 table has-background-info-light is-narrow'>
+       <thead>
+        <tr>
+          <th> Range </th>
+          <th> Name </th>
+          <th> Start </th>
+          <th> End </th>
+          <th> Text  &nbsp;&nbsp;&nbsp;
+            <button 
+            class='button is-info is-small'
+            (click)='addRangeButClick()'>
+            add range</button> </th>
+          <th>&nbsp;</th>
+        </tr>
+       </thead>
+      <tbody>
+        <tr *ngFor="let r of rangeArray; let rx=index" > 
+          <td>
+            <input 
+              disabled 
+              class=' is-small '
+              value= {{r.rangeNbr}}
+              size="2"
+              autocomplete="off"> 
+          </td>  
+          <td>
+            <input   
+              #rangeName
+              class=' is-small '
+              value= {{r.rangeName}}
+              size="11"
+              (change)=rangeNameChg(rangeName.value,rx) 
+              (blur)="handleBlur('rangeName')"          
+              autocomplete="off">   
+          </td>
+
+          <td>
+            <input   
+              #rangeStart
+              class=' is-small '
+              value= {{r.rangeStart}}
+              size="3"
+              (change)=rangeStartChg(rangeStart.value,rx) 
+              (blur)="handleBlur('rangeStart')"          
+              autocomplete="off">   
+          </td>
+          <td>
+            <input  
+            #rangeEnd 
+            class=' is-small '
+            value= {{r.rangeEnd}}
+            size="3"
+            (change)=rangeEndChg(rangeEnd.value,rx)
+            (blur)="handleBlur('rangeEnd')"          
+            autocomplete="off">   
+          </td>
+          <td>
+            <textarea  
+            #rangeTxt
+            rows={{rangeTxtRows}}
+            cols={{rangeTxtCols}}
+            class=' textarea'
+            value= {{r.rangeTxt}}
+            (change)=rangeTxtChg(rangeTxt.value,rx)   
+            (blur)="handleBlur('rangeTxt')"          
+            overflow="auto"  
+            autocomplete="off"> </textarea>  
+          </td>
+
+
+          <td><button 
+            class='button is-info is-small'
+            (click)='delRangeButClick(rx)'>
+            delete range</button></td>
+        </tr>
+      </tbody>
+    </table>
+</fieldset>
+
+<br><br>
+<span id='htmlIdBottomOfPage'> </span>

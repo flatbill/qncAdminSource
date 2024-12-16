@@ -1,0 +1,70 @@
+<span class='tag is-dark is-small is-vcentered ml-3' 
+      *ngIf='msg1.length > 0'>
+      {{msg1}} 
+</span>
+
+<table class='table is-fullwidth ml-3 mr-3 mb-3 '>
+  <thead> 
+    <th class='is-clickable' 
+      (click)="colHeadclick('nbr')" >
+      <span>  Question Count</span>  
+      <span *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
+        <span class='tag is-link is-light' (click)="colSort('qCount','des','Count')"> {{symArDn}} </span> 
+        <span class='tag is-link is-light' (click)="colSort('qCount','asc','Count')"> {{symArUp}} </span> 
+        <span class='tag is-link is-light' (click)="colFilt('qCount','qCount')"> {{symFilt}} </span>
+      </span> 
+    </th>
+    <th class='is-clickable' 
+      (click)="colHeadclick('nbr')" >
+      <span>Nbr</span>  
+      <span *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
+        <span class='tag is-link is-light' (click)="colSort('groupNbr','des','Group Nbr')"> {{symArDn}} </span> 
+        <span class='tag is-link is-light' (click)="colSort('groupNbr','asc','Group Nbr')"> {{symArUp}} </span> 
+        <span class='tag is-link is-light' (click)="colFilt('groupNbr','groupNbr')"> {{symFilt}} </span>
+      </span> 
+    </th>
+    <th class='is-clickable' 
+      (click)="colHeadclick('nbr')" >
+      <span>   Group </span>  
+      <span *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
+        <span class='tag is-link is-light' (click)="colSort('groupName','des','Group Name')"> {{symArDn}} </span> 
+        <span class='tag is-link is-light' (click)="colSort('groupName','asc','Group Name')"> {{symArUp}} </span> 
+        <span class='tag is-link is-light' (click)="colFilt('groupName','groupName')"> {{symFilt}} </span>
+      </span> 
+    </th>
+    <th class='is-clickable' 
+      (click)="colHeadclick('nbr')" >
+      <span>   Round </span>  
+      <span *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
+        <span class='tag is-link is-light' (click)="colSort('seq','des','Round')"> {{symArDn}} </span> 
+        <span class='tag is-link is-light' (click)="colSort('seq','asc','Round')"> {{symArUp}} </span> 
+        <span class='tag is-link is-light' (click)="colFilt('seq','Round')"> {{symFilt}} </span>
+      </span> 
+    </th>    
+    <th> 
+      <button 
+        class='button is-small is-info'
+        (click)=addButclick()
+      >
+        add new 
+      </button>
+    </th> 
+  </thead>
+  <tbody>
+    <tr *ngFor='let g of groupsIn, index as gx'
+      class='has-background-success-light'> 
+      <ng-container *ngIf="g.filterInOut=='in'" >
+        <td><span class='tag is-small is-rounded'>&nbsp;{{g.qCount}}&nbsp;</span></td>
+        <td>{{g.groupNbr}}</td>
+        <td>{{g.groupName}}</td>
+        <td>{{g.seq}}</td>
+      <td>        
+       <button class='button is-small is-info' 
+             (click)=detailButclick(g.groupNbr,gx)> 
+          detail
+       </button> 
+      </td>
+    </ng-container>
+    </tr>
+  </tbody>
+</table>

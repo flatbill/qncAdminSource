@@ -1,0 +1,69 @@
+<!-- <button (click)=OneTimeMassDeleteAnswersAndScores()>
+   mass delete stray answers and scores
+</button> -->
+<span class='tag is-dark is-small is-vcentered ml-3' 
+   *ngIf='msg1.length > 0'>
+   {{msg1}} 
+   <!-- &#9675;
+   &#9682;
+   &#9679; -->
+</span>
+
+<table  class='table is-fullwidth ml-3 mr-3 mb-3'>
+   <thead> 
+    <th> </th>
+    <th *ngIf='!verifyDelete'>id</th>
+    <th>first name</th>
+     <th>last name</th>
+     <th>date time</th>
+     <th>status</th>
+     <th>count</th>
+    <!-- blank th over buttons: -->
+    <th> </th>  
+    <th> </th>
+     
+   </thead>
+   <tbody>
+   <tr *ngFor='let u of usersArray, index as ux'
+       class='has-background-success-light'> 
+       <td>
+        <span *ngIf=!verifyDelete
+          id={{ux}}
+          class='tag is-clickable is-small is-info' 
+          (click)=delButClick(ux)> 
+          delete
+       </span> 
+        <span *ngIf='verifyDelete && u.qUserId==userToDelete'
+                      class='tag is-clickable is-small is-info' 
+          (click)=proceedWithDelClick()> 
+          delete now 
+        </span> 
+        <span *ngIf='verifyDelete && u.qUserId==userToDelete'
+           class='tag is-clickable is-small is-info ml-1' 
+          (click)=cancelDelClick()> 
+          cancel
+        </span> 
+
+       </td>
+
+       <td *ngIf='!verifyDelete'>{{u.qUserId}}</td>
+       <td>{{u.firstName}}</td>
+       <td>{{u.lastName}}</td>
+       <td>{{u.localUserDateTime}}</td>
+       <td>{{u.status}}</td>
+       <td>{{u.answerCnt}}</td>
+       <td>   
+        <span *ngIf='!verifyDelete' class='tag is-clickable is-small is-info' 
+        (click)=scoresCsvButClick(ux)> 
+          get scores csv
+       </span> 
+       </td>
+       <td>   
+        <span *ngIf='!verifyDelete' class='tag is-clickable is-small is-info' 
+          (click)=assCsvButClick(ux)> 
+          get assessment csv
+       </span> 
+      </td>
+   </tr>
+   </tbody>
+</table>

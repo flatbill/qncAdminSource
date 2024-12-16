@@ -1,0 +1,113 @@
+
+ <span class='ml-3 mt-1 tag is-dark is-small is-vcentered' 
+   *ngIf='msg1.length > 0'>
+   {{msg1}} 
+</span>
+
+<section >
+      <div class="columns ">
+        <div class="column is-5-tablet is-4-desktop is-3-widescreen">
+          <span class="box ml-3 mt-3 has-background-success-light">
+            <div class="field" >
+              <label for="" class="label">User Id</label>
+              <!-- <div > -->
+                <input 
+                  id='teamMemberUserId'
+                  value={{teamMemberUserId}}
+                  (change)=teamMemberUserIdChg($event)
+                  placeholder="my user Id" class="input">
+              <!-- </div> -->
+            </div>
+            <div class="field">  
+              <label for="" class="label"  >Password </label>
+                <input 
+                type="password" 
+                id='password' 
+                value={{teamMemberPass}}
+                (change)=teamMemberPassChg($event)
+                placeholder="my Qnc password" class="input">
+                <span class='is-clickable' 
+                     (click)=togglePasswordEye($event)
+                     (mouseover)=tooltipsy($event)
+                     (mouseout)=tooltipsy($event)
+                     >👁️</span>
+                <span class='noClass ' 
+                  id="eyeToolTip"> {{eyeToolTipText}}
+                </span>
+            </div>
+            
+            <div class="field">
+              <button 
+                class='button is-link is-left is-small is-outlined'
+                (click)='doSign()'>
+                Login
+              </button>
+            </div>
+          </span>
+        </div>
+      </div>
+</section>
+
+
+<section *ngIf=showdevNotes class='ml-3 mr-3 mt-3 box has-background-danger-light'>
+<textarea cols=120 rows=20 class='has-background-danger-light ml-3 pl-3'>
+wws  Login.
+shown as first screen, and shown after Logout.   
+
+ Login for customers like Ed, Bill, Fred, Barney
+Appears as start page for  qnc.netlify.app 
+
+after login, jump to Profile.
+Jun2021 dont show menu buttons until qncAuthorized. controlled by app component.
+signHtml has a GO button, will launch validateUser()
+validateUser() will read fauna cust db by name, match encrypted pass
+cust 1 is user ed        Ed Murray       pass: --------  has tests 1,2,3,4,5
+cust 2 is user bill	     Bill Selzer     pass: --------
+ 
+  ===================
+  prompt for cust credentials
+  validate credentials against cust table.
+  cust means customer of qnc.
+  the customer needs to sign on this screen,
+  to enable him to edit questions, etc.
+
+  auth0 hints:
+  https://docs.netlify.com/visitor-access/oauth-provider-tokens/
+  might need app name finalized 
+  before i can tie it to netlify auth0.
+
+bare bones cust table in fauna:
+Selzer Software Services will add a rec to the fauna cust table,
+everytime SSS gets a new cust, or wants a subscription.
+in the cust table, there is a cust id & pass.
+edMurray    (his userId. his choice.)
+edMurray17@comcast.com (his email address. his choice.)
+pass: use decoder to store a passwd.
+--------
+Your missing an important concept here.
+Multiple Admins can work for one company.
+A company has a subscription,
+but an admin is part of the cust team.
+Netlify has a higher price tag on their
+multi-person subscription. (they call it 'team')
+?? will my customers have more than one admin??
+?? should I charge more for multiple admins??
+maybe early on, i expect a cust will have a
+single admin.  If there are multiple people involved,
+then can share the same login.
+
+ 
+the cust is the company that has a subscription.
+the admin is the user of qnc Admin app.
+maybe I need two tables.
+
+the cust table has info about the subscribing company.
+the admin table has info about a specific person,
+or for cheapskates, the admin is a shared account.
+
+subscriber:  the company that is a customer of SSS
+teamMember:  the admin that works for a subscriber.
+for small companies, subscriber and teamMember are the same person.
+
+</textarea>
+</section>

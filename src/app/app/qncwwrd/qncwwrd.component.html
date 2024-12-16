@@ -1,0 +1,173 @@
+  <!-- rule rec: ruleNbr, accum , oper, thresh, subset -->
+
+<span class='mt-1 tag is-dark is-small is-vcentered ml-3' 
+    *ngIf='msg1.length > 0'>
+    {{msg1}} 
+</span>
+
+<span *ngIf='verifyDelete' class=''>
+  <span class='ml-3'> are you sure you want to delete? </span>
+  <button class='button is-small is-info m-1 ' (click)='proceedWithDelete()'
+>       delete now </button> 
+  <button class='button is-small is-info m-1 ' (click)='cancelDelete()'
+>       cancel </button>
+</span>
+
+<fieldset [disabled]="fieldsDisabled" class='mt-3 ml-3 '>
+  <button class='button is-info is-small'
+        (click)='prevButClick()'
+  >  &#5176; prev</button> &nbsp;
+  <button class='button is-info is-small'
+      (click)='nextButClick()'
+  > next &#5171;  </button> &nbsp;
+  <button class='button is-info is-small'
+     (click)='addButClick()'
+  > add  </button> &nbsp;
+
+  <button class='button is-info is-small'
+    (click)='delButClick()'
+  > delete </button> &nbsp;
+
+  <!-- <button class='button is-info'
+    (click)='saveButClick()'
+  > save </button> &nbsp; -->
+</fieldset>
+
+<fieldset [disabled]="fieldsDisabled" class='mt-3 ml-3 '>
+  <table class=' table has-background-success-light is-narrow'>
+  <tr>
+    <td><label>Rule nbr: </label></td>
+    <td><input  disabled
+      class='has-background-success-light '
+      value= {{rulesIn[rx].ruleNbr}}
+      size="4"
+      autocomplete="off"></td>
+  </tr>
+  <tr>
+    <td><label>Scoreboard: </label></td>
+    <td><input  readonly   id='ruleScoreboard'
+      #ruleScoreboard
+      class=' is-small has-background-success-light '
+      value= {{rulesIn[rx].accum}}
+      size="20"
+      (focusout)="screenFieldLostFocus('ruleScoreboard',$event)"
+      (focus)="screenFieldGotFocus('ruleScoreboard')"                
+      (change)=ruleScoreboardChg(ruleScoreboard.value,rx) 
+      autocomplete="off">
+    </td>
+    <span *ngIf='showScoreboardList' class="menu box mr-2">
+      <ul class="menu-list has-text-centered" >
+        <b>--scoreboard list--</b>
+        <li *ngFor='let s of scoreboardsIn, index as sx'> 
+          <button [id]="'scoreboardListItem' + sx"
+           class='button is-info is-small mt-1 is-fullwidth'
+           (focusout)='screenFieldLostFocus("scoreboardListItem",$event)'
+           (click)='scoreboardChosen(scoreboardsIn[sx].scoreboardName,rx)' 
+           (focus)='screenFieldGotFocus("scoreboardListItem")'>
+           {{scoreboardsIn[sx].scoreboardName}} 
+          </button>
+        </li>
+      </ul>
+    </span>
+   
+
+  </tr>
+  <tr>
+  </tr>
+  <tr>
+  <td><label>Operation: </label></td>
+  <td><input readonly  id='ruleOperHtmlId'
+    #ruleOper
+    class='mr-2 has-background-success-light'
+    value= {{rulesIn[rx].oper}}
+    (change)=ruleOperChg(ruleOper.value,rx) 
+    autocomplete="off">    </td>
+
+    <button  *ngFor='let j of operArray, index as jx' [id]=jx
+      class='button is-small is-info mt-1 mr-2'
+      (click)='operButClick(operArray[jx],rx)'
+    > 
+      {{operArray[jx]}} 
+  </button> 
+  </tr>
+  <tr>
+    <td><label>Threshold: </label></td>
+    <td><input  id='ruleThresh'
+       #ruleThresh
+       type='text'
+       class=' is-small '
+       value= {{rulesIn[rx].thresh}}
+       size="20"
+       (focus)="screenFieldGotFocus('ruleThresh')"              
+       (change)='ruleThreshChg(ruleThresh.value,rx)'
+       autocomplete='off'> </td>
+  </tr>
+  <tr>
+    <td><label>will trigger Group: </label></td>
+    <td><input  readonly id="ruleGroup" 
+      class=' is-small has-background-success-light'
+      #ruleGroup
+       type='text'
+       value= {{rulesIn[rx].subset}}
+       size="20"
+       (focus)="screenFieldGotFocus('ruleGroup')" 
+       (focusout)="screenFieldLostFocus('ruleGroup',$event)"
+       (change)='ruleGroupChg(ruleGroup.value,rx)'
+       autocomplete='off'> </td>
+       <span *ngIf='showGroupList' class="menu box mr-2">
+        <ul class="menu-list has-text-centered" >
+          <b>--group list--</b>
+          <li *ngFor='let s of groupsIn, index as gx'> 
+            <button [id]="'groupListItem' + gx"
+             class='button is-info is-small mt-1 is-fullwidth'
+             (focus)='screenFieldGotFocus("groupListItem")'
+             (focusout)="screenFieldLostFocus('groupListItem',$event)"
+             (click)='groupChosen(groupsIn[gx].groupName,rx)' >
+             {{groupsIn[gx].groupName}} 
+            </button>
+          </li>
+        </ul>
+      </span>
+  
+  </tr>
+    
+  </table>
+
+  <!-- <span class="menu">
+    <ul class="menu-list">
+      <li *ngFor='let s of scoreboardsIn, index as sx'> 
+        <a (click)='scoreboardChosen(scoreboardsIn[sx].scoreboardName,rx)' >
+          {{scoreboardsIn[sx].scoreboardName}} </a>
+      </li>
+    </ul>
+  </span> -->
+
+
+  <!-- <aside class="menu columns">
+    <ul class="menu-list column is-one-fifth">
+      <li *ngFor='let j of operArray, index as jx' [id]=jx> 
+        <a (click)='scoreboardChosen(jx)' >{{operArray[jx]}} </a>
+      </li>
+    </ul>
+  </aside> -->
+
+  <div class='box mr-6 ml-2 mt-2 has-background-info-light'>
+    When a participant takes the survey,  
+    his {{wordAnswerOrAnswers}} to <b>{{rulesIn[rx].questCount}}</b> 
+    {{wordQuestionOrQuestions}} points to scoreboard <b>{{rulesIn[rx].accum}}</b>. 
+   <br>
+
+    When scoreboard <b>{{rulesIn[rx].accum}}</b> total points
+    are <b>{{rulesIn[rx].oper}}</b> the point threshold 
+    of <b>{{rulesIn[rx].thresh}}</b>,     
+    then we will follow up with questions in group <b>{{rulesIn[rx].subset}}</b>. 
+    <br><br>
+    Triggered group <b>{{rulesIn[rx].subset}}</b> 
+    has <b>{{groupQuestCount}}</b>
+    {{wordsAboutGroup}}
+    <b>{{groupRound}}</b>.
+    
+  </div>
+  <span id='htmlIdBottomOfPage'> </span>
+</fieldset>
+

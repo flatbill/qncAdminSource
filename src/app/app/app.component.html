@@ -1,0 +1,198 @@
+      
+     @if(showQncMen){
+     <app-qncmen 
+       [authIn]='qncAuthorized'
+       [showMenButsIn]='menuButsAlive'
+       [showSurveyMenButsIn]='surveyMenuButsAlive'
+       [compTitleIn] = 'compTitle'
+       [surveyNameIn]="surveyName"
+       [loadingDataMsg] = 'loadingDataMsg'
+       (wwqJumpOut)="showWwqFun()"
+       (wwgJumpOut)="showWwgFun()"
+       (wwrJumpOut)="showWwrFun()"
+       (wwiJumpOut)="showWwiFun($event)"
+       (wwuJumpOut)="showWwuFun($event)"
+       (wwsJumpOut)="showWwsFun($event)"
+       (proJumpOut)="showProFun()"
+       (wwsrJumpOut)="showWwsrFun()"
+     >
+     </app-qncmen>}
+     
+     <!-- @if(showQnc){
+       <app-qnc    
+         [subsetsIn]="subsetArray"
+         [questionsIn]="questArray"
+         [showQnc]="showQnc" 
+       >
+     </app-qnc>} -->
+
+     @if(showQncPro){
+     <app-qncpro 
+       [subscriberInternalIdIn]='subscriberInternalId'
+       [subscriptionObjIn]='subscriptionObj'
+       [teamMemberObjIn]='teamMemberObj'
+       [custIn]='cust'
+       [qidIn]='qid'
+       [qidArrayIn]='qidArray'
+       [loadingDataBusyIn] = 'loadingDataBusy'
+       [faunaOrSupabaseIn]="faunaOrSupabase"
+       (surveySelectOut)="surveySelected($event)"
+       (qidArrayOut)="qidArrayWasBuilt($event)"
+       (subscriptionObjOut)="subscriptionObjWasBuilt($event)"
+     >
+     </app-qncpro>} 
+
+     @if(showQncWwg){
+     <app-qncwwg   
+        [questionsIn]="questArray"
+        [groupsIn]="groupArray"
+        [filterResetIn]='wwgFilterReset'
+        (wwgdJumpOut) = "showWwgdFun($event)"
+        (groupsOut)   = "setGroupsFromWwgFun($event)"
+        (groupNbrOut) = "setGroupNbrFromWwgFun($event)"
+        >
+     </app-qncwwg>
+    } 
+     
+     @if(showQncWwgd){
+     <app-qncwwgd 
+       [custIn]="cust"
+       [qidIn]="qid"
+       [groupNbrIn]="daGroupNbr"
+       [groupsIn]='groupArray'
+       [faunaOrSupabaseIn]="faunaOrSupabase"
+       (wwgJumpOut)="showWwgFun()"
+     >
+     </app-qncwwgd>
+    }
+
+     <!-- [subsetIn]="subset"
+     [subsetsQncWwq]="subsetsQncWwq" -->
+     @if(showQncWwq){
+     <app-qncwwq  
+       [custIn]="cust"
+       [qidIn]="qid"
+       [questionsIn]="questArray"
+       [rulesIn]="rulesArray"
+       [groupsIn]="groupArray"
+       [filterResetIn]='wwqFilterReset'
+       (wwqdJumpOut)="showWwqdFun($event)"
+       (questionNbrOut)="setQuestionFromWwqFun($event)"
+       (questionsOut)="setQuestionsFromWwqFun($event)"
+     > 
+     </app-qncwwq>
+    }
+
+     <!-- [subsetsIn]="subsetArray" -->
+     @if(showQncWwqd){
+     <app-qncwwqd  
+       [custIn]="cust"
+       [qidIn]="qid"
+       [questionNbrIn]="daQuestion"
+       [questionsIn]="questArray"
+       [rulesIn]="rulesArray"
+       [faunaOrSupabaseIn]="faunaOrSupabase"
+       (wwqJumpOut)="showWwqFun()"
+     >
+     </app-qncwwqd>
+    }
+     
+
+     <!-- [subsetsIn]="subsetArray" -->
+     @if(showQncWwr){ 
+     <app-qncwwr 
+       [questionsIn]="questArray"
+       [rulesIn]="rulesArray"
+       [filterResetIn]='wwrFilterReset'
+       (rulesOut)    =" setRulesFromWwrFun($event)"
+       (ruleNbrOut)  = "setRuleNbrFromWwrFun($event)"
+       (wwrdJumpOut) = "showWwrdFun($event)"
+     >
+     </app-qncwwr>
+    }
+     
+
+     @if(showQncWwrd){ 
+     <app-qncwwrd 
+       [custIn]="cust"
+       [qidIn]="qid"
+       [ruleNbrIn]="daRuleNbr"
+       [rulesIn]="rulesArray"
+       [groupsIn]="groupArray"
+       [scoreboardsIn]="scoreboardsArray"
+       [questionsIn]="questArray"
+       [faunaOrSupabaseIn]="faunaOrSupabase"
+       (wwrJumpOut) = "showWwrFun()"
+     >
+     </app-qncwwrd>
+    }
+
+     @if(showQncWwi){ 
+     <app-qncwwi  
+       [custIn]="cust"
+       [qidIn]="qid"
+       (qncJumpOut) = "showQncFun()"
+     >
+     </app-qncwwi>
+    }
+     
+     @if(showQncWwu){
+     <app-qncwwu 
+       [custIn]="cust"
+       [qidIn]="qid" 
+       [scoreboardsIn]="scoreboardsArray"
+       [scoreboardRangesIn]="scoreboardRangesArray"
+       [surveyNameIn]="surveyName"
+       [xxAnswersIn]="answersArrayForEtl"
+       [faunaOrSupabaseIn]="faunaOrSupabase"
+     >
+     </app-qncwwu>
+    }
+     
+     @if(showQncWws){ 
+     <app-qncwws  
+       [firstLoginIn] = 'firstLogin'
+       [authIn]='qncAuthorized'
+       [faunaOrSupabaseIn]="faunaOrSupabase"
+       (qncSetAuthOnOut) = "setAuthOnFun()"
+       (proJumpOut)="showProFun()"
+       (teamMemberObjOut)="teamMemberObjWasBuilt($event)"
+     >
+     </app-qncwws>
+    } 
+     
+      <!-- @if(showQncConv){}
+     <app-qncconv></app-qncconv> -->
+      
+
+     <!-- [scoreboardNbrIn]="daScoreboardNbr" -->
+     @if(showQncWwsr){
+     <app-qncwwsr 
+       [custIn]="cust"
+       [qidIn]="qid"
+       [scoreboardsIn]="scoreboardsArray"
+       [scoreboardRangesIn]="scoreboardRangesArray"
+       [filterResetIn]='wwsrFilterReset'
+       [questionsIn]="questArray"   
+       (scoreboardNbrOut) =  "setScoreboardNbrFromWwsrFun($event)"
+       (scoreboardsOut)   = "setScoreboardsFromWwsrFun($event)"
+       (wwsrdJumpOut)     =   "showWwsrdFun($event)"
+     >
+     </app-qncwwsr>
+    }
+
+     <!-- [rulesIn]="rulesArray"
+     [subsetsIn]="subsetArray" -->
+     @if(showQncWwsrd){
+     <app-qncwwsrd 
+       [custIn]="cust"
+       [qidIn]="qid"
+       [scoreboardNbrIn]="daScoreboardNbr"
+       [scoreboardsIn]="scoreboardsArray"
+       [scoreboardRangesIn]="scoreboardRangesArray"
+       [faunaOrSupabaseIn]="faunaOrSupabase"
+       (wwsrJumpOut)="showWwsrFun()"
+     >
+     </app-qncwwsrd>
+    }
+    

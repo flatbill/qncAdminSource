@@ -1,0 +1,158 @@
+<div class='is-fullwidth has-background-warning is-size-5'>
+   &nbsp; Work With Groups wwg
+   &nbsp;&nbsp;&nbsp;  
+  <input id='htmlIdSubsetInput'
+       type="text"  size="14" 
+      value={{subsetIn}}  
+      (blur)='subsetBlurred()'
+      class='button is-info'
+      (focus)='subsetFocused()'
+    (change) ="subsetChanged($event) " 
+    autocomplete="off"
+  >
+
+
+  <!-- <span class='is-size-7'>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    qncwwg.component.html
+  </span> -->
+ 
+  <a class='button has-background-warning is-small is-pulled-right '
+   (click)='jumpToQnc()'>
+    done &#10060; 
+  </a>  
+  <a class='button has-background-warning is-small is-pulled-right '
+   (click)='showHideHelp()'>
+    help &#10068; 
+  </a>
+  <span class='is-pulled-right'>&nbsp;</span>
+  <span class='tag is-pulled-right is-small is-dark is-vcentered' 
+        *ngIf='msg1.length > 0'>
+    {{msg1}} </span>
+  
+  <!-- <div *ngIf=radioButsDisabledYn> 
+   &nbsp; First, rename this new group &uarr; </div> -->
+
+</div>
+
+<br>
+
+<div class=" has-background-danger-light">
+
+  <fieldset  [disabled]=radioButsDisabledYn >
+    <label class="checkbox" >
+      <input type="checkbox" 
+         id='htmlIdCheckboxNoRules'
+         (change)="radioButHit('noRules')"
+         [checked]="anyRulesNo">
+         <span class='has-text-weight-bold'> always </span>
+         ask <span class='has-text-weight-semibold'> {{subsetIn}}</span>
+         questions
+    </label>
+    <br>
+    <label class="checkbox" >
+      <input type="checkbox" 
+         id='htmlIdCheckboxYesRules'
+         (change)="radioButHit('yesRules')"
+         [checked]="anyRulesYes">
+         <span class='has-text-weight-bold'> sometimes </span>
+         ask <span class='has-text-weight-semibold'> {{subsetIn}}</span>
+         questions
+    </label>
+    <span> &#11107;</span>
+  </fieldset>
+</div>
+
+<span *ngIf='showDeleteRulesButTf'>
+  <span class=' has-background-warning is-small' >
+     delete All Conditional Rules ? 
+  </span>
+  &nbsp;
+ <button class='button is-danger is-small'
+   (click)="chkDeleteAllRules('yes')" >
+   yes 
+ </button> 
+ &nbsp;
+ <button class='button is-danger is-small'
+   (click)="chkDeleteAllRules('no')" >
+   no 
+</button>
+
+</span>  
+
+<br>
+<section class='has-background-info-light' >
+  {{wordsThatPrefaceRules}} 
+  <span class='has-text-weight-semibold'>{{subsetIn}}</span>
+ <div *ngFor='let r of rulesArrayThisGroup, index as rx'> 
+  <div *ngIf="r.subset == subsetIn ">
+    <div class='columns is-gapless is-multiline'> 
+      <input    id="{{ 'accum' + rx }}"
+             class='column button is-small is-info mb-1 '
+             value={{r.accum}}
+             autocomplete="off"
+           (blur)=ruleBlur(rx) 
+           (click)='ruleClick(r,rx)'
+           (focus)='ruleClick(r,rx)'
+          (change)=accumChange($event,rx) >              
+          &nbsp;
+      <input    id="{{ 'oper' + rx }}"
+             class='column button is-small is-info mb-1'
+             value={{r.oper}}
+             autocomplete="off"
+             maxlength="2"
+            (blur)=ruleBlur(rx) 
+           (click)='ruleClick(r,rx)'
+           (focus)='ruleClick(r,rx)'
+          (change)=operChange($event,rx) >              
+            &nbsp;
+      <input    id="{{ 'thresh' + rx }}"
+             class='column button is-small is-info mb-1'
+             value={{r.thresh}}
+             autocomplete="off" 
+            (blur)=ruleBlur(rx) 
+           (click)='ruleClick(r,rx)'
+           (focus)='ruleClick(r,rx)' 
+          (change)=threshChange($event,rx) > 
+           &nbsp;
+      <button    id="{{ 'saveRuleBut' + rx }}"
+              class='column button is-small is-link mb-1 ' 
+            (click)='ruleSaveClick(rx)' 
+         [disabled]=true >
+        save &nbsp;  
+        <span id="{{ 'saveCheckMark' + rx }}"
+           class='is-invisible'>
+          &#10003; </span>
+    </button> &nbsp;
+      <button  id="{{ 'deleteBut' + rx }}"
+           class='column button is-small is-link mb-1' 
+         (click)='ruleDeleteClick(rx)'  >
+        delete  
+    </button> &nbsp;
+    
+      <div class="column"></div>
+      <div class="column"></div>
+      <div class="column"></div>
+      <div class="column"></div>
+ 
+    </div> 
+  </div>
+
+</div>
+<br>
+<button 
+  [disabled]=newRuleButDisabledYn  
+  class='button is-small is-info mb-1 '
+(click)='newRuleClick()' >
+<span class='is-size-4y' >
+    new rule  &#10133; &#9997; 
+</span>
+</button>
+
+</section>
+
+<br>
+<button class='button is-success is-small'
+(click)='jumpToWwq()'>
+  Questions
+</button>

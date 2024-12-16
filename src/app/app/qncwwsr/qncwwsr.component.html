@@ -1,0 +1,71 @@
+<span class='tag is-dark is-small is-vcentered ml-3' 
+  *ngIf='msg1.length > 0'>   {{msg1}} 
+</span>
+
+<table class='table  is-fullwidth ml-3 mr-3 mb-3 '>
+   <thead >
+      <th class='is-clickable' (click)="colHeadClick('qCnt')" >  Question Count
+        <div *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
+          <span class='tag is-link is-light' (click)="colSort('qCnt','des','qCnt')"> {{symArDn}} </span> 
+          <span class='tag is-link is-light' (click)="colSort('qCnt','asc','qCnt')"> {{symArUp}} </span> 
+          <span class='tag is-link is-light' (click)="colFilt('qCnt','question count')"  > {{symFilt}} </span> 
+        </div> 
+      </th>
+      <th class='is-clickable' (click)="colHeadClick('maxPoints')" >  Max Points
+        <div *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
+          <span class='tag is-link is-light' (click)="colSort('maxPoints','des','maxPoints')"> {{symArDn}} </span> 
+          <span class='tag is-link is-light' (click)="colSort('maxPoints','asc','maxPoints')"> {{symArUp}} </span> 
+          <span class='tag is-link is-light' (click)="colFilt('maxPoints','max points')"  > {{symFilt}} </span> 
+        </div> 
+      </th>
+      <th class='is-clickable' (click)="colHeadClick('scoreboardNbr')" >  Nbr
+        <div *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
+          <span class='tag is-link is-light' (click)="colSort('scoreboardNbr','des','Scoreboard Nbr')"> {{symArDn}} </span> 
+          <span class='tag is-link is-light' (click)="colSort('scoreboardNbr','asc','Scoreboard Nbr')"> {{symArUp}} </span> 
+          <span class='tag is-link is-light' (click)="colFilt('scoreboardNbr','scoreboard Nbr')"  > {{symFilt}} </span> 
+        </div> 
+      </th>
+      <th class='is-clickable' (click)="colHeadClick('scoreboard')" > Scoreboard
+        <div *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> &nbsp;
+          <span class='tag is-link is-light' (click)="colSort('scoreboardName','des','Scoreboard Name')"> {{symArDn}} </span> 
+          <span class='tag is-link is-light' (click)="colSort('scoreboardName','asc','Scoreboard Name')"> {{symArUp}} </span> 
+          <span class='tag is-link is-light' (click)="colFilt('scoreboardName','scoreboard')"  > {{symFilt}} </span> 
+        </div> 
+      </th>
+      <th class='is-clickable' (click)="colHeadClick('rangeTxt')" > Ranges
+        <!-- sort/filter ranges duznt work cuz ranges are different table -->
+        <!-- <div *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> &nbsp;
+          <span class='tag is-link is-light' (click)="colSort('rangeName','des','Range Name')"> {{symArDn}} </span> 
+          <span class='tag is-link is-light' (click)="colSort('rangeName','asc','Range Name')"> {{symArUp}} </span> 
+          <span class='tag is-link is-light' (click)="colFilt('rangeName','range')"  > {{symFilt}} </span> 
+        </div>  -->
+      </th>
+      <th> 
+        <button class='button is-small is-info' (click)=addButClick()>
+          add new 
+        </button>
+      </th> 
+   </thead>
+   <tbody>
+     <tr class='has-background-success-light' *ngFor='let s of scoreboardsIn'>      
+      <ng-container *ngIf="s.filterInOut=='in'" >
+        <td> <span class='tag'>  {{s.qCnt}}      </span>  </td> 
+        <td> <span class='tag'>  {{s.maxPoints}} </span>  </td> 
+        <td> {{s.scoreboardNbr}}  </td> 
+        <td> {{s.scoreboardName}} </td> 
+        <td> 
+         <ng-container *ngFor="let r of scoreboardRangesIn">
+           <ng-container *ngIf='r.scoreboardNbr == s.scoreboardNbr && r.rCnt <=4 '>
+             <span class='has-text-weight-semiboldy'>{{r.rangeName}} </span>
+           </ng-container>
+         </ng-container>
+        </td>
+        <td>
+         <button class='button is-small is-info' (click)=detailButClick(s.scoreboardNbr)> 
+           detail 
+         </button>
+        </td>
+     </ng-container>
+     </tr>
+   </tbody> 
+</table>

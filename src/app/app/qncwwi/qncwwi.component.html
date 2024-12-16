@@ -1,0 +1,93 @@
+    
+    <span class='tag is-dark is-small is-vcentered ml-3' 
+      *ngIf='msg1.length > 0'>
+      {{msg1}} 
+    </span>
+
+ <table class='table is-fullwidth'>
+   <thead> 
+     <th>invite code</th>
+     <th>invitation link</th>
+     <!-- blank th over buttons: -->
+     <th> </th>  
+     <th> </th>
+   </thead>
+   <tbody>
+   <tr *ngFor='let i of invitesArray, index as ix'
+       class='has-background-success-light'> 
+
+       <td> {{i.icode}} </td>
+       <td id="ilink-{{ix}}">{{i.ilink}}</td>
+       <td>   
+        <button class='button is-small is-info' 
+              (click)=copyButClick(i.ilink)> 
+           copy Link 
+        </button> 
+     </td>
+       <td>   
+        <button class='button is-small is-info' 
+              (click)=detailButClick(i)> 
+           details 
+        </button> 
+     </td>
+   </tr>
+   </tbody>
+ </table>
+
+ <div class='box mt-3 ml-3 has-background-danger-light'>
+<textarea class='ml-3 pl-3 has-background-danger-light' cols=120 rows=20 >
+  ed emails a link, link has imbedded icode, 
+  icode must have matching data
+  maybe a fauna table that has 'invitation' info.
+  this is an edit screen for invitation info?
+  what does an invitation rec look like?
+  icode field. 90210. a key so that a user can take the survey.
+  ilink field. a URL.  https:\\bla.com?cust=1&qid=1&icode=90210
+  so, who is this customer? 1 2 3
+  and what survey is he working on?  1 2 3
+  icode is just a key. dont tie other things to it.
+  when a participant uses the ilink, prompt the participant to identify himself.
+  this will append the participant to the user list.
+  ------
+  -- invitations
+what is the mission?  why have a database table for this?
+we want to provide the admin with a single link to send to participants.
+what about a button on the profile screen for this? similar to existing Copy Link button?
+click here to copy an invite code into computer memory. He can paste it into an email.
+what about invite code?  maybe we need someplace to store an invite code.
+maybe the invitations table houses a couple hundred guids,
+and when creating a new survey, we tie one of those guids to it, as an invite code.
+like a set of wedding invitations, they are ready to be sent out to individual participants.
+at the time of sending, each wedding invitation is the same.
+when a person receives the invitation, he can go to the wedding.
+but a person might clone his invitation, and give it to strangers!
+So, maybe we need two models for guids in the invitation.
+model A: a guid is unique to a survey.  Many people can take the survey with the same guid.
+model A is similar to Ed's invite code.  like a wedding invitation.
+model B: a guid is unique to a (survey + survey taker).  
+model B is more like a gift certificate, targeting only one person. used up on its first use.
+https://www.uuidgenerator.net/guid
+0718439f-3438-4a2c-a784-0333d497127c
+
+	https://stupefied-elion-621b07.netlify.app/?qid=4&cust=1&icode=90210
+	or instead:
+		https://stupefied-elion-621b07.netlify.app/?icode=0718439f-3438-4a2c-a784-0333d497127c
+		the survey should look up the guid in the invitations table,
+		and deduce the cust and qid.
+
+maybe investigate known survey tools for a model for invitations or gift certificates.
+maybe model B (gift certificate) can be table-designed now, but a future feature.
+
+June17 idea on guid :  invitation Expiration Date
+usually one invitation per survey.  have the invitation EXPIRE.
+the survey admin can control the expiration date.
+
+survey model A)  a subscriber-controlled survey
+    participants need an invite code
+
+survey model B)  a free-form  survey 
+    participants dont need an invite code
+    they might even start a survey without sign on?
+    
+</textarea>
+</div>

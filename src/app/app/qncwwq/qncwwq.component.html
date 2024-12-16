@@ -1,0 +1,99 @@
+<span class='tag is-dark is-small is-vcentered ml-3' 
+  *ngIf='msg1.length > 0'>
+  {{msg1}} 
+</span>
+
+<table class='table is-fullwidth ml-3 mr-3 mb-3'>
+  <thead class='none'>
+    <th class='is-clickable'
+      (click)="colHeadClick('grp')" >
+      Round
+      <span *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
+        <span class='tag is-link is-light' (click)="colSort('groupRound','des','Round')"> {{symArDn}} </span> 
+        <span class='tag is-link is-light' (click)="colSort('groupRound','asc','Round')"> {{symArUp}} </span> 
+        <span class='tag is-link is-light' (click)="colFilt('groupRound','Round')"  > {{symFilt}} </span> 
+      </span> 
+    </th> 
+    <th class='is-clickable'
+      (click)="colHeadClick('seq')" > 
+        Seq
+        <span *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
+          <span class='tag is-link is-light' (click)="colSort('questSeq','des','Sequence')"> {{symArDn}} </span> 
+          <span class='tag is-link is-light' (click)="colSort('questSeq','asc','Sequence')"> {{symArUp}} </span> 
+          <span class='tag is-link is-light' (click)="colFilt('questSeq','Sequence')"  > {{symFilt}} </span> 
+        </span> 
+    </th>
+    <th class='is-clickable'
+        (click)="colHeadClick('grp')" >
+        Group
+        <span *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
+          <span class='tag is-link is-light' (click)="colSort('subset','des','Group')"> {{symArDn}} </span> 
+          <span class='tag is-link is-light' (click)="colSort('subset','asc','Group')"> {{symArUp}} </span> 
+          <span class='tag is-link is-light' (click)="colFilt('subset','Group')"  > {{symFilt}} </span> 
+        </span> 
+    </th> 
+    <th class='is-clickable'
+        (click)="colHeadClick('pre')" >
+        Pre-Question 
+        <span *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
+          <span class='tag is-link is-light' (click)="colSort('preQuest','des','pre-Question')"> {{symArDn}} </span> 
+          <span class='tag is-link is-light' (click)="colSort('preQuest','asc','pre-Question')"> {{symArUp}} </span> 
+          <span class='tag is-link is-light' (click)="colFilt('preQuest','Pre-Quest')" > {{symFilt}} </span> 
+        </span> 
+    </th>
+    <th class='is-clickable' (click)="colHeadClick('nbr')" >
+      <span>  Nbr</span>  
+      <span *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
+        <span class='tag is-link is-light' (click)="colSort('questNbr','des', 'question nbr')"> {{symArDn}} </span> 
+        <span class='tag is-link is-light' (click)="colSort('questNbr','asc', 'question nbr')"> {{symArUp}} </span> 
+        <span class='tag is-link is-light' (click)="colFilt('questNbr','question nbr')"> {{symFilt}} </span>
+      </span> 
+    </th>
+    <th class='is-clickable' (click)="colHeadClick('qTxt')" >
+      Question
+      <span *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
+          <!-- &nbsp;  -->
+          <span class='tag is-link is-light' (click)="colSort('questTxt','des','Question Text')"> {{symArDn}} </span> 
+          <span class='tag is-link is-light' (click)="colSort('questTxt','asc','Question Text')"> {{symArUp}} </span> 
+          <span class='tag is-link is-light' (click)="colFilt('questTxt','Question Text')" > {{symFilt}} </span> 
+      </span> 
+    </th>
+    <th class='is-clickable' (click)="colHeadClick('accum')" >
+      Scoreboard
+      <span *ngIf='colHeadSf' class='tags has-addons is-flex-wrap-nowrap'> 
+        <span class='tag is-link is-light' (click)="colSort('accum','des','Scoreboard')"> {{symArDn}} </span> 
+        <span class='tag is-link is-light' (click)="colSort('accum','asc','Scoreboard')"> {{symArUp}} </span> 
+        <span class='tag is-link is-light' (click)="colFilt('accum','Scoreboard')"  > {{symFilt}} </span> 
+      </span> 
+    </th>
+    <th></th>
+    <th></th>
+    <th> 
+      <button class='button is-small is-info' (click)=addButClick() >
+        add new
+      </button> 
+    </th> 
+  </thead>
+  <tbody>
+    <tr *ngFor='let q of questionsIn, index as qx' class='has-background-success-light' >    
+      <ng-container *ngIf="q.filterInOut=='in'" >
+        <td> {{q.groupRound}}  </td> 
+        <td> {{q.questSeq}}  </td> 
+        <td> {{q.subset}}    </td> 
+        <td> {{q.preQuest}}  </td> 
+        <td class='pl-3 pr-3'  > {{q.questNbr}}  </td> 
+        <td> {{q.questTxt}}  </td> 
+        <td> {{q.accum[0]}}  </td> 
+        <td> {{q.accum[1]}}  </td> 
+        <td> {{q.accum[2]}}  </td> 
+        <td class='mr-2'> 
+        <button class='button is-small is-info' 
+          (click)=detailButClick(q.questNbr)> 
+          detail
+        </button>        
+        </td>
+      </ng-container> 
+
+    </tr>
+  </tbody> 
+</table>
